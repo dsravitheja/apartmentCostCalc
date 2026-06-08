@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apartment Cost Analyzer — Hyderabad</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #222222;
+    --border: #2e2e2e;
+    --accent: #c9a84c;
+    --accent2: #e8c96a;
+    --accent-dim: rgba(201,168,76,0.12);
+    --green: #5cb88a;
+    --red: #e07070;
+    --blue: #6fa3d6;
+    --text: #f0ede6;
+    --text-dim: #888;
+    --text-mid: #bbb;
+    --highlight-bg: rgba(201,168,76,0.08);
+    --highlight-border: rgba(201,168,76,0.4);
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ---- HEADER ---- */
+  .header {
+    background: linear-gradient(135deg, #141414 0%, #1e1b14 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 24px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 120% at 80% 50%, rgba(201,168,76,0.06) 0%, transparent 70%);
+  }
+  .header-inner { max-width: 960px; margin: 0 auto; position: relative; }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+  }
+  .header p {
+    color: var(--text-dim);
+    font-size: 13px;
+    margin-top: 4px;
+    font-weight: 300;
+  }
+
+  /* ---- MAIN LAYOUT ---- */
+  .main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  /* ---- QUICK CALC BANNER ---- */
+  .quick-calc-card {
+    background: var(--accent-dim);
+    border: 1px solid var(--highlight-border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .quick-calc-card .qc-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .quick-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .quick-row .qf {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 140px;
+  }
+  .quick-row .qf label {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .quick-row .qf input {
+    font-family: 'DM Mono', monospace;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--accent2);
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--highlight-border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    outline: none;
+    width: 100%;
+  }
+  .quick-row .qf input:focus { border-color: var(--accent); }
+  .quick-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-width: 160px;
+    text-align: center;
+  }
+  .quick-result .ql { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+  .quick-result .qv {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.1;
+    margin-top: 2px;
+  }
+  .quick-result .qv2 { font-size: 13px; color: var(--text-dim); margin-top: 2px; }
+
+  /* ---- SECTION TITLES ---- */
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 0 2px;
+    margin-bottom: 14px;
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ---- GRID ---- */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 600px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 640px) {
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 400px) {
+    .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* ---- FIELD ---- */
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .field label {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 500;
+  }
+  .field-hint {
+    font-size: 10px;
+    color: #555;
+    margin-top: -3px;
+  }
+  .field input, .field select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 9px 12px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+  .field input:focus, .field select:focus {
+    border-color: var(--accent);
+    background: var(--surface2);
+  }
+  .field.highlight input {
+    border-color: var(--highlight-border);
+    background: var(--highlight-bg);
+    color: var(--accent2);
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .field.highlight label {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .field input[type="checkbox"] {
+    width: auto;
+    accent-color: var(--accent);
+  }
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+  }
+  .checkbox-row label { font-size: 13px; color: var(--text-mid); text-transform: none; letter-spacing: 0; cursor: pointer; }
+  .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; }
+
+  /* ---- TOTAL DISPLAY ---- */
+  .total-card {
+    background: linear-gradient(135deg, #1c1a11 0%, #1a1a1a 100%);
+    border: 1px solid var(--accent);
+    border-radius: 14px;
+    padding: 28px 24px;
+    text-align: center;
+    margin: 28px 0 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .total-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 200px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .total-label {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .total-value {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(34px, 8vw, 56px);
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .total-cr {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .total-sub {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .total-sub-item { text-align: center; }
+  .total-sub-item .ts-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+  .total-sub-item .ts-value { font-family: 'DM Mono', monospace; font-size: 14px; color: var(--text); font-weight: 500; margin-top: 2px; }
+
+  /* ---- COLLAPSIBLE SECTIONS ---- */
+  .collapse-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .collapse-card:hover { border-color: #444; }
+  .collapse-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+    gap: 12px;
+  }
+  .collapse-header:hover { background: rgba(255,255,255,0.02); }
+  .collapse-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+  }
+  .collapse-amount {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-mid);
+  }
+  .collapse-arrow {
+    width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .collapse-card.open .collapse-arrow { transform: rotate(180deg); }
+  .collapse-body {
+    display: none;
+    border-top: 1px solid var(--border);
+    padding: 16px 18px;
+  }
+  .collapse-card.open .collapse-body { display: block; }
+
+  /* ---- BREAKDOWN ROWS ---- */
+  .br-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 0;
+    border-bottom: 1px solid #1e1e1e;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .br-row:last-child { border-bottom: none; }
+  .br-row .br-label { font-size: 12px; color: var(--text-dim); flex: 1; min-width: 160px; }
+  .br-row .br-calc { font-size: 11px; color: #555; flex: 1; text-align: center; }
+  .br-row .br-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    text-align: right;
+    font-weight: 500;
+    min-width: 100px;
+  }
+  .br-row.total-row {
+    background: rgba(201,168,76,0.06);
+    border-radius: 5px;
+    padding: 8px 10px;
+    margin-top: 6px;
+    border-bottom: none;
+  }
+  .br-row.total-row .br-label { color: var(--accent); font-weight: 600; font-size: 13px; }
+  .br-row.total-row .br-val { color: var(--accent); font-size: 14px; }
+
+  /* ---- LOAN CARDS ---- */
+  .loan-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 14px;
+    margin-top: 6px;
+  }
+  .loan-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 16px;
+  }
+  .loan-card .lc-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+  .loan-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 5px 0;
+    border-bottom: 1px solid #1c1c1c;
+  }
+  .loan-stat:last-child { border-bottom: none; }
+  .loan-stat .ls-label { font-size: 11px; color: var(--text-dim); }
+  .loan-stat .ls-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .loan-stat .ls-val.big {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--green);
+  }
+  .loan-stat .ls-val.total { color: var(--red); }
+
+  .rate-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .rate-row label { font-size: 12px; color: var(--text-dim); }
+  .rate-row input[type=range] {
+    flex: 1;
+    min-width: 120px;
+    accent-color: var(--accent);
+  }
+  .rate-row .rate-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent2);
+    min-width: 50px;
+  }
+
+  /* ---- PAYMENT SCHEDULE ---- */
+  .pay-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .pay-table th {
+    text-align: left;
+    padding: 7px 10px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+  }
+  .pay-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid #1c1c1c;
+    font-family: 'DM Mono', monospace;
+  }
+  .pay-table td:last-child { text-align: right; color: var(--accent2); }
+  .pay-table td:first-child { color: var(--text-dim); font-family: 'DM Sans', sans-serif; }
+  .pay-table tr:last-child td { border-bottom: none; font-weight: 600; color: var(--accent); }
+
+  /* ---- BUTTONS ---- */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #0f0f0f;
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-mid);
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-green {
+    background: rgba(92,184,138,0.15);
+    border: 1px solid rgba(92,184,138,0.4);
+    color: var(--green);
+  }
+  .btn-green:hover { background: rgba(92,184,138,0.25); }
+
+  /* ---- TOAST ---- */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #2a2a2a;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 13px;
+    color: var(--text);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 9999;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ---- PRINT/EXPORT SURFACE ---- */
+  #export-surface {
+    background: #fff;
+    color: #111;
+    font-family: 'DM Sans', sans-serif;
+    padding: 32px;
+    min-width: 700px;
+    display: none;
+  }
+
+  /* small helpers */
+  .dimtext { color: var(--text-dim); }
+  .mono { font-family: 'DM Mono', monospace; }
+  .mt8 { margin-top: 8px; }
+  .mt16 { margin-top: 16px; }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 480px) {
+    .btn { padding: 10px 16px; font-size: 12px; }
+    .collapse-header { padding: 12px 14px; }
+    .collapse-body { padding: 14px; }
+    .total-card { padding: 22px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <h1>Apartment Cost Analyzer</h1>
+    <p>Hyderabad · Detailed cost breakdown, loan scenarios & export</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- QUICK CALC -->
+  <div class="section-title">⚡ Quick Calculation</div>
+  <div class="quick-calc-card">
+    <div class="qc-label">Instant estimate — base cost only</div>
+    <div class="quick-row">
+      <div class="qf">
+        <label>Carpet Area (sft)</label>
+        <input type="number" id="q-sqft" value="1500" oninput="updateQuick()">
+      </div>
+      <div class="qf">
+        <label>Rate (₹ / sft)</label>
+        <input type="number" id="q-rate" value="7500" oninput="updateQuick()">
+      </div>
+      <div class="quick-result">
+        <div class="ql">Base Cost</div>
+        <div class="qv" id="q-result">₹1.13 Cr</div>
+        <div class="qv2" id="q-result2">₹1,12,50,000</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== INPUTS ===== -->
+  <div class="section-title">🏢 Property Details</div>
+  <div class="grid-2">
+    <div class="field highlight">
+      <label>Carpet Area (sq ft)</label>
+      <input type="number" id="sqft" value="1500" oninput="calculate()" placeholder="e.g. 1500">
+    </div>
+    <div class="field highlight">
+      <label>Base Price (₹ / sft)</label>
+      <input type="number" id="baseRate" value="7500" oninput="calculate()" placeholder="e.g. 7500">
+    </div>
+    <div class="field">
+      <label>Amenities / Clubhouse (₹ / sft)</label>
+      <input type="number" id="amenitiesRate" value="400" oninput="calculate()">
+    </div>
+    <div class="field">
+      <label>Floor Number</label>
+      <input type="number" id="floor" value="1" min="1" oninput="calculate()">
+      <span class="field-hint">Floor rise charges apply from 6th floor onwards (₹25/sft/floor)</span>
+    </div>
+    <div class="field">
+      <label>Car Parking (₹) — 2 slots B2B</label>
+      <input type="number" id="parking" value="400000" oninput="calculate()">
+    </div>
+    <div class="field">
+      <label>Floor Rise Rate (₹/sft/floor above 5th)</label>
+      <input type="number" id="floorRiseRate" value="25" oninput="calculate()">
+    </div>
+  </div>
+
+  <div class="section-title">✨ Premium Charges</div>
+  <div class="grid-2">
+    <div class="checkbox-row">
+      <input type="checkbox" id="eastFacing" onchange="calculate()">
+      <label for="eastFacing">East Facing Premium (₹100/sft)</label>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="cornerFacing" onchange="calculate()">
+      <label for="cornerFacing">Corner Facing Premium (₹100/sft)</label>
+    </div>
+  </div>
+
+  <div class="section-title">📋 Additional Charges</div>
+  <div class="grid-2">
+    <div class="field">
+      <label>Legal & Documentation (₹)</label>
+      <input type="number" id="legal" value="25000" oninput="calculate()">
+    </div>
+    <div class="field">
+      <label>Legal GST (%)</label>
+      <input type="number" id="legalGst" value="18" oninput="calculate()">
+    </div>
+    <div class="field">
+      <label>Advance Maintenance (₹/sft/month)</label>
+      <input type="number" id="maintRate" value="4" oninput="calculate()">
+      <span class="field-hint">Charged for 24 months</span>
+    </div>
+    <div class="field">
+      <label>Maintenance GST (%)</label>
+      <input type="number" id="maintGst" value="18" oninput="calculate()">
+    </div>
+    <div class="field">
+      <label>Corpus Fund (₹/sft)</label>
+      <input type="number" id="corpus" value="100" oninput="calculate()">
+    </div>
+  </div>
+
+  <div class="section-title">🏛️ Registration & GST</div>
+  <div class="grid-3">
+    <div class="field">
+      <label>Stamp Duty (%)</label>
+      <input type="number" id="stampDuty" value="4" step="0.1" oninput="calculate()">
+      <span class="field-hint">Telangana: 4%</span>
+    </div>
+    <div class="field">
+      <label>Registration Fee (%)</label>
+      <input type="number" id="regFee" value="0.5" step="0.1" oninput="calculate()">
+      <span class="field-hint">Hyderabad: 0.5%</span>
+    </div>
+    <div class="field">
+      <label>GST on Construction (%)</label>
+      <input type="number" id="gstRate" value="5" step="0.5" oninput="calculate()">
+      <span class="field-hint">Under-construction: 5%</span>
+    </div>
+  </div>
+
+  <!-- ===== TOTAL ===== -->
+  <div class="total-card">
+    <div class="total-label">Total Cost to Purchase</div>
+    <div class="total-value" id="totalDisplay">₹0</div>
+    <div class="total-cr" id="totalCrDisplay"></div>
+    <div class="total-sub">
+      <div class="total-sub-item">
+        <div class="ts-label">Base Sale Value</div>
+        <div class="ts-value mono" id="saleValueDisplay">—</div>
+      </div>
+      <div class="total-sub-item">
+        <div class="ts-label">Govt. Charges</div>
+        <div class="ts-value mono" id="govtDisplay">—</div>
+      </div>
+      <div class="total-sub-item">
+        <div class="ts-label">Other Charges</div>
+        <div class="ts-value mono" id="otherDisplay">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COLLAPSIBLE BREAKDOWN ===== -->
+  <div class="section-title mt16">📊 Detailed Breakdown</div>
+
+  <!-- Base Cost -->
+  <div class="collapse-card open" id="card-base">
+    <div class="collapse-header" onclick="toggleCard('card-base')">
+      <span class="collapse-title">Base Construction Cost</span>
+      <span class="collapse-amount" id="ch-base">—</span>
+      <span class="collapse-arrow">▼</span>
+    </div>
+    <div class="collapse-body">
+      <div class="br-row"><span class="br-label">Base Price</span><span class="br-calc" id="calc-base"></span><span class="br-val" id="val-base">—</span></div>
+      <div class="br-row"><span class="br-label">Amenities / Clubhouse</span><span class="br-calc" id="calc-amenities"></span><span class="br-val" id="val-amenities">—</span></div>
+      <div class="br-row"><span class="br-label">Floor Rise Charges</span><span class="br-calc" id="calc-floor"></span><span class="br-val" id="val-floor">—</span></div>
+      <div class="br-row"><span class="br-label">Car Parking (2 slots)</span><span class="br-calc"></span><span class="br-val" id="val-parking">—</span></div>
+      <div class="br-row"><span class="br-label">East Facing Premium</span><span class="br-calc" id="calc-east"></span><span class="br-val" id="val-east">—</span></div>
+      <div class="br-row"><span class="br-label">Corner Facing Premium</span><span class="br-calc" id="calc-corner"></span><span class="br-val" id="val-corner">—</span></div>
+      <div class="br-row total-row"><span class="br-label">Sale Value (for GST & Reg)</span><span class="br-calc"></span><span class="br-val" id="val-salevalue">—</span></div>
+    </div>
+  </div>
+
+  <!-- GST -->
+  <div class="collapse-card" id="card-gst">
+    <div class="collapse-header" onclick="toggleCard('card-gst')">
+      <span class="collapse-title">GST on Construction</span>
+      <span class="collapse-amount" id="ch-gst">—</span>
+      <span class="collapse-arrow">▼</span>
+    </div>
+    <div class="collapse-body">
+      <div class="br-row"><span class="br-label">GST Base (Sale Value)</span><span class="br-calc" id="calc-gstbase"></span><span class="br-val" id="val-gstbase">—</span></div>
+      <div class="br-row"><span class="br-label">GST Rate</span><span class="br-calc" id="calc-gstrate"></span><span class="br-val" id="val-gstamt">—</span></div>
+      <div class="br-row dimtext" style="font-size:11px; padding:4px 0;"><span style="flex:1; color:#555;">Note: 5% applies to under-construction flats (no ITC). Completed flats: 0%.</span></div>
+    </div>
+  </div>
+
+  <!-- Registration -->
+  <div class="collapse-card" id="card-reg">
+    <div class="collapse-header" onclick="toggleCard('card-reg')">
+      <span class="collapse-title">Registration & Stamp Duty</span>
+      <span class="collapse-amount" id="ch-reg">—</span>
+      <span class="collapse-arrow">▼</span>
+    </div>
+    <div class="collapse-body">
+      <div class="br-row"><span class="br-label">Stamp Duty</span><span class="br-calc" id="calc-stamp"></span><span class="br-val" id="val-stamp">—</span></div>
+      <div class="br-row"><span class="br-label">Registration Fee</span><span class="br-calc" id="calc-regfee"></span><span class="br-val" id="val-regfee">—</span></div>
+      <div class="br-row total-row"><span class="br-label">Total Registration</span><span class="br-calc"></span><span class="br-val" id="val-regtotal">—</span></div>
+      <div class="br-row dimtext" style="font-size:11px; padding:4px 0;"><span style="flex:1; color:#555;">TDS 1% of sale consideration to be deducted & deposited by purchaser.</span></div>
+    </div>
+  </div>
+
+  <!-- Other charges -->
+  <div class="collapse-card" id="card-other">
+    <div class="collapse-header" onclick="toggleCard('card-other')">
+      <span class="collapse-title">Legal, Maintenance & Corpus</span>
+      <span class="collapse-amount" id="ch-other">—</span>
+      <span class="collapse-arrow">▼</span>
+    </div>
+    <div class="collapse-body">
+      <div class="br-row"><span class="br-label">Legal & Documentation</span><span class="br-calc" id="calc-legal"></span><span class="br-val" id="val-legal">—</span></div>
+      <div class="br-row"><span class="br-label">GST on Legal</span><span class="br-calc" id="calc-legalgst"></span><span class="br-val" id="val-legalgst">—</span></div>
+      <div class="br-row"><span class="br-label">Advance Maintenance (24 months)</span><span class="br-calc" id="calc-maint"></span><span class="br-val" id="val-maint">—</span></div>
+      <div class="br-row"><span class="br-label">GST on Maintenance</span><span class="br-calc" id="calc-maintgst"></span><span class="br-val" id="val-maintgst">—</span></div>
+      <div class="br-row"><span class="br-label">Corpus Fund</span><span class="br-calc" id="calc-corpus"></span><span class="br-val" id="val-corpus">—</span></div>
+      <div class="br-row total-row"><span class="br-label">Total Other Charges</span><span class="br-calc"></span><span class="br-val" id="val-othertotal">—</span></div>
+    </div>
+  </div>
+
+  <!-- Payment Schedule -->
+  <div class="collapse-card" id="card-payment">
+    <div class="collapse-header" onclick="toggleCard('card-payment')">
+      <span class="collapse-title">Payment Schedule (Construction-Linked)</span>
+      <span class="collapse-amount" id="ch-payment">—</span>
+      <span class="collapse-arrow">▼</span>
+    </div>
+    <div class="collapse-body">
+      <table class="pay-table">
+        <thead>
+          <tr><th>Milestone</th><th>%</th><th>Amount</th></tr>
+        </thead>
+        <tbody id="pay-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== LOAN ANALYSIS ===== -->
+  <div class="section-title mt16">🏦 Loan Analysis</div>
+
+  <div class="collapse-card" id="card-loan">
+    <div class="collapse-header" onclick="toggleCard('card-loan')">
+      <span class="collapse-title">EMI Scenarios — 20% Down Payment</span>
+      <span class="collapse-amount" id="ch-loan">3 scenarios</span>
+      <span class="collapse-arrow">▼</span>
+    </div>
+    <div class="collapse-body">
+      <div class="rate-row">
+        <label>Home Loan Interest Rate</label>
+        <input type="range" id="loanRate" min="7" max="14" step="0.1" value="8.75" oninput="updateLoanRate()">
+        <span class="rate-val" id="loanRateDisplay">8.75%</span>
+      </div>
+      <div class="rate-row" style="margin-top:-8px; margin-bottom: 0;">
+        <label style="flex:1; font-size:11px; color:#555;">Current SBI avg. ~8.75% p.a. (2025). Adjust above ↑</label>
+      </div>
+      <div class="loan-grid" id="loan-cards-container" style="margin-top:16px;"></div>
+    </div>
+  </div>
+
+  <!-- ===== EXPORT ===== -->
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="exportImage()">📸 Save as Image</button>
+    <button class="btn btn-green" onclick="exportExcel()">📊 Download Excel</button>
+    <button class="btn btn-secondary" onclick="resetForm()">↺ Reset</button>
+  </div>
+
+</div><!-- /main -->
+
+<!-- Export surface (hidden, used for image capture) -->
+<div id="export-surface"></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =========================================================
+// UTILITY
+// =========================================================
+function fmt(n) {
+  if (isNaN(n) || n === null || n === undefined) return '—';
+  return '₹' + Math.round(n).toLocaleString('en-IN');
+}
+function fmtCr(n) {
+  if (!n) return '';
+  const cr = n / 1e7;
+  if (cr >= 1) return `(₹${cr.toFixed(2)} Cr)`;
+  const lac = n / 1e5;
+  return `(₹${lac.toFixed(2)} L)`;
+}
+function inCr(n) {
+  const cr = n / 1e7;
+  if (cr >= 1) return `₹${cr.toFixed(2)} Cr`;
+  return `₹${(n/1e5).toFixed(2)} L`;
+}
+function v(id) { return parseFloat(document.getElementById(id).value) || 0; }
+function chk(id) { return document.getElementById(id).checked; }
+function set(id, txt) { const el = document.getElementById(id); if(el) el.textContent = txt; }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function toggleCard(id) {
+  const c = document.getElementById(id);
+  c.classList.toggle('open');
+}
+
+// =========================================================
+// QUICK CALC
+// =========================================================
+function updateQuick() {
+  const sqft = parseFloat(document.getElementById('q-sqft').value) || 0;
+  const rate = parseFloat(document.getElementById('q-rate').value) || 0;
+  const total = sqft * rate;
+  document.getElementById('q-result').textContent = total ? inCr(total) : '—';
+  document.getElementById('q-result2').textContent = total ? fmt(total) : '';
+}
+
+// =========================================================
+// MAIN CALCULATE
+// =========================================================
+let calcData = {};
+
+function calculate() {
+  const sqft = v('sqft');
+  const baseRate = v('baseRate');
+  const amenitiesRate = v('amenitiesRate');
+  const floor = v('floor');
+  const parking = v('parking');
+  const floorRiseRate = v('floorRiseRate');
+  const eastFacing = chk('eastFacing') ? 100 : 0;
+  const cornerFacing = chk('cornerFacing') ? 100 : 0;
+  const legalBase = v('legal');
+  const legalGstPct = v('legalGst');
+  const maintRate = v('maintRate');
+  const maintGstPct = v('maintGst');
+  const corpusRate = v('corpus');
+  const stampDutyPct = v('stampDuty');
+  const regFeePct = v('regFee');
+  const gstPct = v('gstRate');
+
+  // Base
+  const baseAmt = sqft * baseRate;
+  const amenitiesAmt = sqft * amenitiesRate;
+  const floorsAbove5 = Math.max(0, floor - 5);
+  const floorRiseAmt = sqft * floorRiseRate * floorsAbove5;
+  const eastAmt = sqft * eastFacing;
+  const cornerAmt = sqft * cornerFacing;
+
+  // Sale value = base components (used for GST & registration)
+  const saleValue = baseAmt + amenitiesAmt + floorRiseAmt + parking + eastAmt + cornerAmt;
+
+  // GST
+  const gstAmt = saleValue * gstPct / 100;
+
+  // Registration
+  const stampAmt = saleValue * stampDutyPct / 100;
+  const regFeeAmt = saleValue * regFeePct / 100;
+  const regTotal = stampAmt + regFeeAmt;
+
+  // Other
+  const legalGstAmt = legalBase * legalGstPct / 100;
+  const legalTotal = legalBase + legalGstAmt;
+  const maintAmt = sqft * maintRate * 24;
+  const maintGstAmt = maintAmt * maintGstPct / 100;
+  const maintTotal = maintAmt + maintGstAmt;
+  const corpusAmt = sqft * corpusRate;
+  const otherTotal = legalTotal + maintTotal + corpusAmt;
+
+  const grandTotal = saleValue + gstAmt + regTotal + otherTotal;
+
+  // Store
+  calcData = { sqft, baseRate, amenitiesRate, floor, parking, floorRiseRate,
+    eastFacing, cornerFacing, legalBase, legalGstPct, maintRate, maintGstPct,
+    corpusRate, stampDutyPct, regFeePct, gstPct,
+    baseAmt, amenitiesAmt, floorsAbove5, floorRiseAmt, eastAmt, cornerAmt,
+    saleValue, gstAmt, stampAmt, regFeeAmt, regTotal,
+    legalGstAmt, legalTotal, maintAmt, maintGstAmt, maintTotal, corpusAmt,
+    otherTotal, grandTotal };
+
+  renderAll();
+}
+
+function renderAll() {
+  const d = calcData;
+
+  // Total
+  set('totalDisplay', fmt(d.grandTotal));
+  set('totalCrDisplay', fmtCr(d.grandTotal));
+  set('saleValueDisplay', inCr(d.saleValue));
+  set('govtDisplay', inCr(d.gstAmt + d.regTotal));
+  set('otherDisplay', inCr(d.otherTotal));
+
+  // Base card
+  set('ch-base', inCr(d.saleValue));
+  set('calc-base', `${d.sqft} × ₹${d.baseRate}`);
+  set('val-base', fmt(d.baseAmt));
+  set('calc-amenities', `${d.sqft} × ₹${d.amenitiesRate}`);
+  set('val-amenities', fmt(d.amenitiesAmt));
+  set('calc-floor', d.floorsAbove5 > 0 ? `${d.sqft} × ₹${d.floorRiseRate} × ${d.floorsAbove5} floors` : 'Not applicable');
+  set('val-floor', d.floorsAbove5 > 0 ? fmt(d.floorRiseAmt) : '₹0');
+  set('val-parking', fmt(d.parking));
+  set('calc-east', d.eastFacing > 0 ? `${d.sqft} × ₹100` : '—');
+  set('val-east', d.eastFacing > 0 ? fmt(d.eastAmt) : '—');
+  set('calc-corner', d.cornerFacing > 0 ? `${d.sqft} × ₹100` : '—');
+  set('val-corner', d.cornerFacing > 0 ? fmt(d.cornerAmt) : '—');
+  set('val-salevalue', fmt(d.saleValue));
+
+  // GST
+  set('ch-gst', fmt(d.gstAmt));
+  set('calc-gstbase', fmt(d.saleValue));
+  set('val-gstbase', fmt(d.saleValue));
+  set('calc-gstrate', `${d.gstPct}% of ${inCr(d.saleValue)}`);
+  set('val-gstamt', fmt(d.gstAmt));
+
+  // Reg
+  set('ch-reg', fmt(d.regTotal));
+  set('calc-stamp', `${d.stampDutyPct}% of ${inCr(d.saleValue)}`);
+  set('val-stamp', fmt(d.stampAmt));
+  set('calc-regfee', `${d.regFeePct}% of ${inCr(d.saleValue)}`);
+  set('val-regfee', fmt(d.regFeeAmt));
+  set('val-regtotal', fmt(d.regTotal));
+
+  // Other
+  set('ch-other', fmt(d.otherTotal));
+  set('calc-legal', `Base ₹${d.legalBase.toLocaleString('en-IN')}`);
+  set('val-legal', fmt(d.legalBase));
+  set('calc-legalgst', `${d.legalGstPct}% on ₹${d.legalBase.toLocaleString('en-IN')}`);
+  set('val-legalgst', fmt(d.legalGstAmt));
+  set('calc-maint', `${d.sqft} × ₹${d.maintRate} × 24 mo`);
+  set('val-maint', fmt(d.maintAmt));
+  set('calc-maintgst', `${d.maintGstPct}% of maintenance`);
+  set('val-maintgst', fmt(d.maintGstAmt));
+  set('calc-corpus', `${d.sqft} × ₹${d.corpusRate}`);
+  set('val-corpus', fmt(d.corpusAmt));
+  set('val-othertotal', fmt(d.otherTotal));
+
+  // Payment schedule
+  const sv = d.saleValue;
+  const payMilestones = [
+    ['Booking Amount', Math.max(sv * 0.10, 1000000)],
+    ['On AOS (within 15 days of booking)', sv * 0.20 - Math.max(sv * 0.10, 1000000)],
+    ['On Completion of Foundation', sv * 0.15],
+    ['On Completion of 2 Basement Slabs', sv * 0.15],
+    ['On Completion of 3rd Floor Slab', sv * 0.10],
+    ['On Completion of 7th Floor Slab', sv * 0.10],
+    ['On Completion of 10th Floor Slab', sv * 0.10],
+    ['On Completion of Brickwork', sv * 0.10],
+    ['On Completion of Tiles & Flooring', sv * 0.05],
+    ['21 Days Before Registration/Handover', sv * 0.05 + d.gstAmt + d.regTotal + d.otherTotal],
+  ];
+  set('ch-payment', inCr(sv));
+  const tbody = document.getElementById('pay-tbody');
+  tbody.innerHTML = '';
+  let running = 0;
+  payMilestones.forEach(([label, amt], i) => {
+    running += amt;
+    const pct = i < 9 ? `${[10,20,15,15,10,10,10,10,5,5][i]}%` : '+Charges';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${label}</td><td class="dimtext mono">${pct}</td><td>${fmt(amt)}</td>`;
+    tbody.appendChild(tr);
+  });
+  const totRow = document.createElement('tr');
+  totRow.innerHTML = `<td>TOTAL</td><td></td><td>${fmt(d.grandTotal)}</td>`;
+  tbody.appendChild(totRow);
+
+  // Loan
+  renderLoans();
+}
+
+// =========================================================
+// LOAN CALCULATOR
+// =========================================================
+function updateLoanRate() {
+  const rate = document.getElementById('loanRate').value;
+  document.getElementById('loanRateDisplay').textContent = parseFloat(rate).toFixed(2) + '%';
+  renderLoans();
+}
+
+function calcEMI(principal, annualRate, years) {
+  const r = annualRate / 12 / 100;
+  const n = years * 12;
+  if (r === 0) return principal / n;
+  return principal * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+}
+
+function renderLoans() {
+  const grandTotal = calcData.grandTotal || 0;
+  const rate = parseFloat(document.getElementById('loanRate').value);
+  const downPct = 20;
+  const downAmt = grandTotal * downPct / 100;
+  const loanAmt = grandTotal - downAmt;
+
+  const scenarios = [
+    { label: '20yr · 20% Down', years: 20 },
+    { label: '30yr · 20% Down', years: 30 },
+    { label: '15yr · 20% Down', years: 15 },
+  ];
+
+  const container = document.getElementById('loan-cards-container');
+  container.innerHTML = '';
+
+  scenarios.forEach(sc => {
+    const emi = calcEMI(loanAmt, rate, sc.years);
+    const totalPaid = emi * sc.years * 12;
+    const totalInterest = totalPaid - loanAmt;
+
+    const card = document.createElement('div');
+    card.className = 'loan-card';
+    card.innerHTML = `
+      <div class="lc-title">${sc.label}</div>
+      <div class="loan-stat">
+        <span class="ls-label">Monthly EMI</span>
+        <span class="ls-val big">${fmt(emi)}</span>
+      </div>
+      <div class="loan-stat">
+        <span class="ls-label">Down Payment (20%)</span>
+        <span class="ls-val">${inCr(downAmt)}</span>
+      </div>
+      <div class="loan-stat">
+        <span class="ls-label">Loan Amount (80%)</span>
+        <span class="ls-val">${inCr(loanAmt)}</span>
+      </div>
+      <div class="loan-stat">
+        <span class="ls-label">Total Interest Paid</span>
+        <span class="ls-val total">${inCr(totalInterest)}</span>
+      </div>
+      <div class="loan-stat">
+        <span class="ls-label">Total Amount Paid</span>
+        <span class="ls-val">${inCr(totalPaid + downAmt)}</span>
+      </div>
+      <div class="loan-stat">
+        <span class="ls-label">Interest Rate</span>
+        <span class="ls-val">${rate.toFixed(2)}% p.a.</span>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// =========================================================
+// EXPORT — IMAGE (via canvas screenshot of a rendered summary)
+// =========================================================
+function exportImage() {
+  const d = calcData;
+  if (!d.grandTotal) { showToast('Please enter property details first'); return; }
+
+  const rate = parseFloat(document.getElementById('loanRate').value);
+  const loanAmt = d.grandTotal * 0.8;
+  const emi20 = calcEMI(loanAmt, rate, 20);
+  const emi30 = calcEMI(loanAmt, rate, 30);
+
+  // Build a clean export canvas
+  const canvas = document.createElement('canvas');
+  const scale = 2;
+  canvas.width = 800 * scale;
+  canvas.height = 980 * scale;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
+
+  const W = 800, H = 980;
+  const pad = 40;
+
+  // Background
+  ctx.fillStyle = '#0f0f0f';
+  ctx.fillRect(0, 0, W, H);
+
+  // Gold top bar
+  ctx.fillStyle = '#c9a84c';
+  ctx.fillRect(0, 0, W, 4);
+
+  // Header
+  ctx.fillStyle = '#c9a84c';
+  ctx.font = 'bold 28px Georgia, serif';
+  ctx.fillText('Apartment Cost Analysis', pad, 54);
+  ctx.fillStyle = '#666';
+  ctx.font = '13px Arial';
+  ctx.fillText('Hyderabad · Generated ' + new Date().toLocaleDateString('en-IN'), pad, 76);
+
+  // Separator
+  ctx.fillStyle = '#2a2a2a';
+  ctx.fillRect(pad, 90, W - pad*2, 1);
+
+  // Big total
+  ctx.fillStyle = '#888';
+  ctx.font = '12px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('TOTAL COST TO PURCHASE', W/2, 125);
+  ctx.fillStyle = '#c9a84c';
+  ctx.font = 'bold 48px Georgia, serif';
+  ctx.fillText(fmt(d.grandTotal), W/2, 178);
+  ctx.fillStyle = '#666';
+  ctx.font = '15px Arial';
+  ctx.fillText(fmtCr(d.grandTotal), W/2, 202);
+  ctx.textAlign = 'left';
+
+  // Separator
+  ctx.fillStyle = '#2a2a2a';
+  ctx.fillRect(pad, 218, W - pad*2, 1);
+
+  // Three columns summary
+  const summCols = [
+    ['Property Area', `${d.sqft} sft`, ''],
+    ['Base Rate', `₹${d.baseRate}/sft`, ''],
+    ['Floor', `${d.floor}th`, ''],
+    ['Sale Value', inCr(d.saleValue), fmt(d.saleValue)],
+    ['GST (' + d.gstPct + '%)', inCr(d.gstAmt), fmt(d.gstAmt)],
+    ['Stamp + Reg', inCr(d.regTotal), fmt(d.regTotal)],
+    ['Legal+Maint+Corpus', inCr(d.otherTotal), fmt(d.otherTotal)],
+    ['Total', inCr(d.grandTotal), fmt(d.grandTotal)],
+  ];
+
+  let y = 250;
+  const COL1 = pad, COL2 = 320, COL3 = 560;
+
+  ctx.font = '10px Arial';
+  ctx.fillStyle = '#555';
+  ctx.fillText('COMPONENT', COL1, y);
+  ctx.fillText('AMOUNT', COL2, y);
+  ctx.fillText('EXACT', COL3, y);
+  y += 8;
+  ctx.fillStyle = '#2a2a2a';
+  ctx.fillRect(pad, y, W - pad*2, 1);
+  y += 14;
+
+  summCols.forEach((row, i) => {
+    const isLast = i === summCols.length - 1;
+    ctx.fillStyle = isLast ? '#c9a84c' : (i % 2 === 0 ? '#bbb' : '#888');
+    ctx.font = isLast ? 'bold 14px Arial' : '13px Arial';
+    ctx.fillText(row[0], COL1, y);
+    ctx.fillStyle = isLast ? '#c9a84c' : '#ddd';
+    ctx.font = isLast ? 'bold 14px "DM Mono", monospace' : '13px monospace';
+    ctx.fillText(row[1], COL2, y);
+    ctx.fillStyle = '#666';
+    ctx.font = '12px monospace';
+    ctx.fillText(row[2], COL3, y);
+    y += 22;
+    if (!isLast) {
+      ctx.fillStyle = '#1c1c1c';
+      ctx.fillRect(pad, y - 6, W - pad*2, 1);
+    }
+  });
+
+  y += 16;
+  ctx.fillStyle = '#2a2a2a';
+  ctx.fillRect(pad, y, W - pad*2, 1);
+  y += 24;
+
+  // Loan section
+  ctx.fillStyle = '#6fa3d6';
+  ctx.font = 'bold 14px Arial';
+  ctx.fillText('LOAN ANALYSIS  (20% Down · ' + rate.toFixed(2) + '% p.a.)', pad, y);
+  y += 20;
+
+  const loanRows = [
+    ['Down Payment (20%)', inCr(d.grandTotal * 0.2)],
+    ['Loan Amount (80%)', inCr(loanAmt)],
+    ['EMI — 20 Year Loan', fmt(emi20) + '/month'],
+    ['EMI — 30 Year Loan', fmt(emi30) + '/month'],
+    ['Total Interest (20yr)', inCr(emi20*240 - loanAmt)],
+    ['Total Interest (30yr)', inCr(emi30*360 - loanAmt)],
+  ];
+
+  loanRows.forEach((row, i) => {
+    ctx.fillStyle = '#888';
+    ctx.font = '13px Arial';
+    ctx.fillText(row[0], pad, y);
+    ctx.fillStyle = i < 2 ? '#ddd' : '#5cb88a';
+    ctx.font = '13px monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText(row[1], W - pad, y);
+    ctx.textAlign = 'left';
+    y += 22;
+    ctx.fillStyle = '#1c1c1c';
+    ctx.fillRect(pad, y - 6, W - pad*2, 1);
+  });
+
+  y += 20;
+
+  // Payment schedule header
+  ctx.fillStyle = '#c9a84c';
+  ctx.font = 'bold 14px Arial';
+  ctx.fillText('PAYMENT SCHEDULE (Construction-Linked Plan)', pad, y);
+  y += 18;
+
+  const payMilestones = [
+    ['Booking', Math.max(d.saleValue * 0.10, 1000000)],
+    ['AOS (15 days)', d.saleValue * 0.20 - Math.max(d.saleValue * 0.10, 1000000)],
+    ['Foundation', d.saleValue * 0.15],
+    ['2 Basement Slabs', d.saleValue * 0.15],
+    ['3rd Floor Slab', d.saleValue * 0.10],
+    ['7th Floor Slab', d.saleValue * 0.10],
+    ['10th Floor Slab', d.saleValue * 0.10],
+    ['Brickwork', d.saleValue * 0.10],
+    ['Tiles & Flooring', d.saleValue * 0.05],
+    ['21 days before Handover', d.saleValue * 0.05 + d.gstAmt + d.regTotal + d.otherTotal],
+  ];
+  payMilestones.forEach(([label, amt]) => {
+    ctx.fillStyle = '#888';
+    ctx.font = '12px Arial';
+    ctx.fillText(label, pad, y);
+    ctx.fillStyle = '#ddd';
+    ctx.font = '12px monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText(fmt(amt), W - pad, y);
+    ctx.textAlign = 'left';
+    y += 20;
+  });
+
+  // Footer
+  ctx.fillStyle = '#333';
+  ctx.fillRect(pad, H - 36, W - pad*2, 1);
+  ctx.fillStyle = '#444';
+  ctx.font = '11px Arial';
+  ctx.fillText('Generated by Apartment Cost Analyzer · ' + new Date().toLocaleString('en-IN'), pad, H - 16);
+  ctx.textAlign = 'right';
+  ctx.fillText('Prices in INR · All charges approximate', W - pad, H - 16);
+  ctx.textAlign = 'left';
+
+  // Download
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'apartment_cost_analysis.png';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Image saved!');
+  }, 'image/png');
+}
+
+// =========================================================
+// EXPORT — EXCEL (pure JS, no CDN required)
+// Using uncompressed ZIP (STORE method) — fully offline
+// =========================================================
+function exportExcel() {
+  const d = calcData;
+  if (!d.grandTotal) { showToast('Please enter property details first'); return; }
+
+  const rate = parseFloat(document.getElementById('loanRate').value);
+  const loanAmt = d.grandTotal * 0.8;
+  const emi20 = calcEMI(loanAmt, rate, 20);
+  const emi30 = calcEMI(loanAmt, rate, 30);
+  const emi15 = calcEMI(loanAmt, rate, 15);
+
+  // --- Build the worksheet XML rows ---
+  const rows = [];
+  function addRow(cols) { rows.push(cols); }
+  function addBlank() { rows.push([]); }
+
+  addRow(['Apartment Cost Analysis — Hyderabad', '', '', '']);
+  addRow(['Generated on', new Date().toLocaleDateString('en-IN'), '', '']);
+  addBlank();
+  addRow(['PROPERTY INPUTS', '', '', '']);
+  addRow(['Carpet Area (sft)', d.sqft, '', '']);
+  addRow(['Base Rate (₹/sft)', d.baseRate, '', '']);
+  addRow(['Floor Number', d.floor, '', '']);
+  addRow(['Amenities Rate (₹/sft)', d.amenitiesRate, '', '']);
+  addRow(['Car Parking', d.parking, '', '']);
+  addRow(['East Facing Premium', d.eastFacing > 0 ? '₹100/sft (Yes)' : 'No', '', '']);
+  addRow(['Corner Facing Premium', d.cornerFacing > 0 ? '₹100/sft (Yes)' : 'No', '', '']);
+  addBlank();
+  addRow(['COST BREAKDOWN', 'Amount (₹)', 'Amount (Cr/L)', '']);
+  addRow(['Base Price', d.baseAmt, inCr(d.baseAmt), `${d.sqft} sft × ₹${d.baseRate}`]);
+  addRow(['Amenities / Clubhouse', d.amenitiesAmt, inCr(d.amenitiesAmt), `${d.sqft} × ₹${d.amenitiesRate}`]);
+  addRow(['Floor Rise Charges', d.floorRiseAmt, inCr(d.floorRiseAmt), d.floorsAbove5 > 0 ? `${d.floorsAbove5} floors above 5th` : 'Not applicable']);
+  addRow(['Car Parking', d.parking, inCr(d.parking), '2 slots back-to-back']);
+  addRow(['East Facing Premium', d.eastAmt, inCr(d.eastAmt), '']);
+  addRow(['Corner Facing Premium', d.cornerAmt, inCr(d.cornerAmt), '']);
+  addRow(['SALE VALUE (for GST & Reg)', d.saleValue, inCr(d.saleValue), '']);
+  addBlank();
+  addRow(['GST on Construction', d.gstAmt, inCr(d.gstAmt), `${d.gstPct}% of Sale Value`]);
+  addRow(['Stamp Duty', d.stampAmt, inCr(d.stampAmt), `${d.stampDutyPct}% of Sale Value`]);
+  addRow(['Registration Fee', d.regFeeAmt, inCr(d.regFeeAmt), `${d.regFeePct}% of Sale Value`]);
+  addRow(['Total Govt. Charges', d.gstAmt + d.regTotal, inCr(d.gstAmt + d.regTotal), '']);
+  addBlank();
+  addRow(['Legal & Documentation', d.legalBase, inCr(d.legalBase), '']);
+  addRow(['GST on Legal', d.legalGstAmt, inCr(d.legalGstAmt), `${d.legalGstPct}%`]);
+  addRow(['Advance Maintenance (24mo)', d.maintAmt, inCr(d.maintAmt), `${d.sqft} × ₹${d.maintRate} × 24`]);
+  addRow(['GST on Maintenance', d.maintGstAmt, inCr(d.maintGstAmt), `${d.maintGstPct}%`]);
+  addRow(['Corpus Fund', d.corpusAmt, inCr(d.corpusAmt), `${d.sqft} × ₹${d.corpusRate}`]);
+  addRow(['Total Other Charges', d.otherTotal, inCr(d.otherTotal), '']);
+  addBlank();
+  addRow(['GRAND TOTAL COST', d.grandTotal, inCr(d.grandTotal), '*** Total Cost to Purchase ***']);
+  addBlank();
+  addRow(['LOAN ANALYSIS', '', '', '']);
+  addRow(['Interest Rate', rate + '%', '', '']);
+  addRow(['Down Payment (20%)', d.grandTotal * 0.2, inCr(d.grandTotal * 0.2), '']);
+  addRow(['Loan Amount (80%)', loanAmt, inCr(loanAmt), '']);
+  addBlank();
+  addRow(['Scenario', 'Monthly EMI', 'Total Interest', 'Total Paid']);
+  addRow(['20yr @ ' + rate.toFixed(2) + '%', emi20, emi20*240 - loanAmt, emi20*240 + d.grandTotal*0.2]);
+  addRow(['30yr @ ' + rate.toFixed(2) + '%', emi30, emi30*360 - loanAmt, emi30*360 + d.grandTotal*0.2]);
+  addRow(['15yr @ ' + rate.toFixed(2) + '%', emi15, emi15*180 - loanAmt, emi15*180 + d.grandTotal*0.2]);
+  addBlank();
+  addRow(['PAYMENT SCHEDULE', '', '', '']);
+  addRow(['Milestone', 'Amount (₹)', '% of Sale Value', '']);
+
+  const svv = d.saleValue;
+  const payM = [
+    ['Booking Amount', Math.max(svv * 0.10, 1000000), '10% or ₹10L'],
+    ['On AOS (15 days)', svv * 0.20 - Math.max(svv * 0.10, 1000000), '20% less Booking'],
+    ['Foundation', svv * 0.15, '15%'],
+    ['2 Basement Slabs', svv * 0.15, '15%'],
+    ['3rd Floor Slab', svv * 0.10, '10%'],
+    ['7th Floor Slab', svv * 0.10, '10%'],
+    ['10th Floor Slab', svv * 0.10, '10%'],
+    ['Brickwork', svv * 0.10, '10%'],
+    ['Tiles & Flooring', svv * 0.05, '5%'],
+    ['21 days before Handover', svv * 0.05 + d.gstAmt + d.regTotal + d.otherTotal, '5% + All Charges'],
+  ];
+  payM.forEach(r => addRow([r[0], r[1], r[2], '']));
+  addRow(['TOTAL', d.grandTotal, '100% + Charges', '']);
+
+  // --- Build XML ---
+  // Shared strings
+  const strings = [];
+  const strMap = {};
+  function getSI(s) {
+    const str = String(s);
+    if (strMap[str] === undefined) { strMap[str] = strings.length; strings.push(str); }
+    return strMap[str];
+  }
+
+  // Pre-register all strings
+  rows.forEach(row => row.forEach(cell => { if (isNaN(cell) || typeof cell === 'string') getSI(cell); }));
+
+  const colName = (n) => {
+    let s = '';
+    while (n >= 0) { s = String.fromCharCode(65 + n % 26) + s; n = Math.floor(n / 26) - 1; }
+    return s;
+  };
+
+  let sheetXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<sheetData>`;
+
+  rows.forEach((row, ri) => {
+    if (row.length === 0) return;
+    sheetXml += `<row r="${ri+1}">`;
+    row.forEach((cell, ci) => {
+      const ref = colName(ci) + (ri+1);
+      const val = String(cell);
+      if (val === '' || val === 'undefined') return;
+      const num = parseFloat(val);
+      if (!isNaN(num) && val.trim() !== '' && typeof cell === 'number') {
+        sheetXml += `<c r="${ref}"><v>${Math.round(num * 100) / 100}</v></c>`;
+      } else {
+        const si = getSI(val);
+        sheetXml += `<c r="${ref}" t="s"><v>${si}</v></c>`;
+      }
+    });
+    sheetXml += `</row>`;
+  });
+  sheetXml += `</sheetData>
+<cols>
+<col min="1" max="1" width="40" customWidth="1"/>
+<col min="2" max="2" width="20" customWidth="1"/>
+<col min="3" max="3" width="18" customWidth="1"/>
+<col min="4" max="4" width="40" customWidth="1"/>
+</cols>
+</worksheet>`;
+
+  const ssXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${strings.length}" uniqueCount="${strings.length}">
+${strings.map(s => `<si><t xml:space="preserve">${escXml(s)}</t></si>`).join('')}
+</sst>`;
+
+  const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+<Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>
+<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
+</Types>`;
+
+  const rels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+</Relationships>`;
+
+  const wbRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
+<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/>
+<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+</Relationships>`;
+
+  const wb = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<sheets><sheet name="Cost Analysis" sheetId="1" r:id="rId1"/></sheets>
+</workbook>`;
+
+  const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<fonts count="2">
+<font><sz val="11"/><name val="Calibri"/></font>
+<font><b/><sz val="12"/><name val="Calibri"/><color rgb="FFC9A84C"/></font>
+</fonts>
+<fills count="2">
+<fill><patternFill patternType="none"/></fill>
+<fill><patternFill patternType="gray125"/></fill>
+</fills>
+<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>
+<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
+<cellXfs count="3">
+<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
+<xf numFmtId="4" fontId="0" fillId="0" borderId="0" xfId="0"/>
+<xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0"/>
+</cellXfs>
+<numFmts count="1"><numFmt numFmtId="4" formatCode="#,##0"/></numFmts>
+</styleSheet>`;
+
+  function escXml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+  }
+
+  // Build ZIP (uncompressed STORE method)
+  const enc = new TextEncoder();
+  function makeEntry(name, data) {
+    const nameBytes = enc.encode(name);
+    const dataBytes = typeof data === 'string' ? enc.encode(data) : data;
+    const crc = crc32(dataBytes);
+    const localHeader = new Uint8Array(30 + nameBytes.length);
+    const dv = new DataView(localHeader.buffer);
+    dv.setUint32(0, 0x04034b50, true);  // signature
+    dv.setUint16(4, 20, true);           // version needed
+    dv.setUint16(6, 0, true);            // flags
+    dv.setUint16(8, 0, true);            // compression (STORE)
+    dv.setUint16(10, 0, true);           // mod time
+    dv.setUint16(12, 0, true);           // mod date
+    dv.setUint32(14, crc, true);         // crc32
+    dv.setUint32(18, dataBytes.length, true); // compressed size
+    dv.setUint32(22, dataBytes.length, true); // uncompressed size
+    dv.setUint16(26, nameBytes.length, true); // filename length
+    dv.setUint16(28, 0, true);           // extra field length
+    localHeader.set(nameBytes, 30);
+    return { name, nameBytes, dataBytes, crc, localHeader, offset: 0 };
+  }
+
+  function crc32(data) {
+    let crc = 0xFFFFFFFF;
+    const table = crc32.table || (crc32.table = (() => {
+      const t = new Uint32Array(256);
+      for (let i = 0; i < 256; i++) {
+        let c = i;
+        for (let j = 0; j < 8; j++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+        t[i] = c;
+      }
+      return t;
+    })());
+    for (let i = 0; i < data.length; i++) crc = table[(crc ^ data[i]) & 0xFF] ^ (crc >>> 8);
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+
+  const files = [
+    makeEntry('[Content_Types].xml', contentTypes),
+    makeEntry('_rels/.rels', rels),
+    makeEntry('xl/workbook.xml', wb),
+    makeEntry('xl/_rels/workbook.xml.rels', wbRels),
+    makeEntry('xl/worksheets/sheet1.xml', sheetXml),
+    makeEntry('xl/sharedStrings.xml', ssXml),
+    makeEntry('xl/styles.xml', styles),
+  ];
+
+  // Calculate offsets
+  let offset = 0;
+  files.forEach(f => { f.offset = offset; offset += f.localHeader.length + f.dataBytes.length; });
+
+  // Central directory
+  const cdEntries = files.map(f => {
+    const cd = new Uint8Array(46 + f.nameBytes.length);
+    const dv = new DataView(cd.buffer);
+    dv.setUint32(0, 0x02014b50, true); // signature
+    dv.setUint16(4, 20, true);          // version made
+    dv.setUint16(6, 20, true);          // version needed
+    dv.setUint16(8, 0, true);           // flags
+    dv.setUint16(10, 0, true);          // compression
+    dv.setUint16(12, 0, true);          // mod time
+    dv.setUint16(14, 0, true);          // mod date
+    dv.setUint32(16, f.crc, true);      // crc32
+    dv.setUint32(20, f.dataBytes.length, true); // comp size
+    dv.setUint32(24, f.dataBytes.length, true); // uncomp size
+    dv.setUint16(28, f.nameBytes.length, true); // name length
+    dv.setUint16(30, 0, true);          // extra
+    dv.setUint16(32, 0, true);          // comment
+    dv.setUint16(34, 0, true);          // disk start
+    dv.setUint16(36, 0, true);          // int attrs
+    dv.setUint32(38, 0, true);          // ext attrs
+    dv.setUint32(42, f.offset, true);   // local header offset
+    cd.set(f.nameBytes, 46);
+    return cd;
+  });
+
+  const cdSize = cdEntries.reduce((s, c) => s + c.length, 0);
+  const eocd = new Uint8Array(22);
+  const eodv = new DataView(eocd.buffer);
+  eodv.setUint32(0, 0x06054b50, true);  // signature
+  eodv.setUint16(4, 0, true);           // disk number
+  eodv.setUint16(6, 0, true);           // start disk
+  eodv.setUint16(8, files.length, true);// entries on disk
+  eodv.setUint16(10, files.length, true);// total entries
+  eodv.setUint32(12, cdSize, true);     // cd size
+  eodv.setUint32(16, offset, true);     // cd offset
+  eodv.setUint16(20, 0, true);          // comment length
+
+  // Assemble
+  const total = offset + cdSize + 22;
+  const buf = new Uint8Array(total);
+  let pos = 0;
+  files.forEach(f => {
+    buf.set(f.localHeader, pos); pos += f.localHeader.length;
+    buf.set(f.dataBytes, pos); pos += f.dataBytes.length;
+  });
+  cdEntries.forEach(cd => { buf.set(cd, pos); pos += cd.length; });
+  buf.set(eocd, pos);
+
+  const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'apartment_cost_analysis.xlsx';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Excel file downloaded!');
+}
+
+// =========================================================
+// RESET
+// =========================================================
+function resetForm() {
+  document.getElementById('sqft').value = 1500;
+  document.getElementById('baseRate').value = 7500;
+  document.getElementById('amenitiesRate').value = 400;
+  document.getElementById('floor').value = 1;
+  document.getElementById('parking').value = 400000;
+  document.getElementById('floorRiseRate').value = 25;
+  document.getElementById('eastFacing').checked = false;
+  document.getElementById('cornerFacing').checked = false;
+  document.getElementById('legal').value = 25000;
+  document.getElementById('legalGst').value = 18;
+  document.getElementById('maintRate').value = 4;
+  document.getElementById('maintGst').value = 18;
+  document.getElementById('corpus').value = 100;
+  document.getElementById('stampDuty').value = 4;
+  document.getElementById('regFee').value = 0.5;
+  document.getElementById('gstRate').value = 5;
+  calculate();
+  showToast('Form reset to defaults');
+}
+
+// =========================================================
+// INIT
+// =========================================================
+updateQuick();
+calculate();
+</script>
+</body>
+</html>
