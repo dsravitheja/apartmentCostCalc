@@ -1266,8 +1266,103 @@ function exportImage() {
 
 // =========================================================
 // EXPORT — EXCEL (pure JS, no CDN required)
-// Using uncompressed ZIP (STORE method) — fully offline
+// Verified STORE-method ZIP + correct OOXML structure
 // =========================================================
+
+// --- ZIP builder: byte-explicit little-endian writes ---
+function _u16(buf, o, v) { buf[o]=v&255; buf[o+1]=(v>>8)&255; }
+function _u32(buf, o, v) { buf[o]=v&255; buf[o+1]=(v>>8)&255; buf[o+2]=(v>>16)&255; buf[o+3]=(v>>>24)&255; }
+
+function buildZip(fileDict) {
+  const enc = new TextEncoder();
+  const crcTable = (()=>{
+    const t = new Uint32Array(256);
+    for (let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);t[i]=c;}
+    return t;
+  })();
+  const crc32 = (d)=>{let c=0xFFFFFFFF;for(let i=0;i<d.length;i++)c=crcTable[(c^d[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0;};
+
+  const entries = [];
+  for (const [name, content] of Object.entries(fileDict)) {
+    const nb = enc.encode(name);
+    const db = typeof content === 'string' ? enc.encode(content) : content;
+    const crc = crc32(db);
+    const lh = new Uint8Array(30 + nb.length);
+    _u32(lh,0,0x04034b50); _u16(lh,4,20); _u16(lh,6,0); _u16(lh,8,0);
+    _u16(lh,10,0); _u16(lh,12,0); _u32(lh,14,crc);
+    _u32(lh,18,db.length); _u32(lh,22,db.length);
+    _u16(lh,26,nb.length); _u16(lh,28,0);
+    lh.set(nb, 30);
+    entries.push({nb, db, crc, lh, offset:0});
+  }
+
+  let offset = 0;
+  for (const e of entries) { e.offset = offset; offset += e.lh.length + e.db.length; }
+
+  const cdParts = [];
+  for (const e of entries) {
+    const cd = new Uint8Array(46 + e.nb.length);
+    _u32(cd,0,0x02014b50); _u16(cd,4,20); _u16(cd,6,20); _u16(cd,8,0); _u16(cd,10,0);
+    _u16(cd,12,0); _u16(cd,14,0); _u32(cd,16,e.crc);
+    _u32(cd,20,e.db.length); _u32(cd,24,e.db.length);
+    _u16(cd,28,e.nb.length); _u16(cd,30,0); _u16(cd,32,0);
+    _u16(cd,34,0); _u16(cd,36,0); _u32(cd,38,0); _u32(cd,42,e.offset);
+    cd.set(e.nb, 46);
+    cdParts.push(cd);
+  }
+  const cdSize = cdParts.reduce((s,c)=>s+c.length,0);
+  const eocd = new Uint8Array(22);
+  _u32(eocd,0,0x06054b50); _u16(eocd,4,0); _u16(eocd,6,0);
+  _u16(eocd,8,entries.length); _u16(eocd,10,entries.length);
+  _u32(eocd,12,cdSize); _u32(eocd,16,offset); _u16(eocd,20,0);
+
+  const total = offset + cdSize + 22;
+  const buf = new Uint8Array(total);
+  let pos = 0;
+  for (const e of entries) { buf.set(e.lh,pos); pos+=e.lh.length; buf.set(e.db,pos); pos+=e.db.length; }
+  for (const cd of cdParts) { buf.set(cd,pos); pos+=cd.length; }
+  buf.set(eocd,pos);
+  return buf;
+}
+
+function escX(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function buildSheetXml(rows) {
+  // Collect shared strings
+  const strings = [], strIdx = {};
+  const si = (v) => { const k=String(v); if(strIdx[k]===undefined){strIdx[k]=strings.length;strings.push(k);} return strIdx[k]; };
+
+  // Pre-scan to register all strings
+  rows.forEach(row => row.forEach(cell => {
+    if (typeof cell === 'string' || isNaN(cell)) si(cell === undefined ? '' : cell);
+  }));
+
+  const colLetter = (n) => { let s=''; for(;n>=0;n=Math.floor(n/26)-1) s=String.fromCharCode(65+n%26)+s; return s; };
+
+  let xml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>`;
+  rows.forEach((row, ri) => {
+    if (!row || row.length === 0) return;
+    xml += `<row r="${ri+1}">`;
+    row.forEach((cell, ci) => {
+      if (cell === undefined || cell === null || cell === '') return;
+      const ref = colLetter(ci) + (ri+1);
+      if (typeof cell === 'number' && !isNaN(cell)) {
+        xml += `<c r="${ref}"><v>${cell}</v></c>`;
+      } else {
+        xml += `<c r="${ref}" t="s"><v>${si(cell)}</v></c>`;
+      }
+    });
+    xml += `</row>`;
+  });
+  xml += `</sheetData><cols><col min="1" max="1" width="42" customWidth="1"/><col min="2" max="2" width="18" customWidth="1"/><col min="3" max="3" width="16" customWidth="1"/><col min="4" max="4" width="40" customWidth="1"/></cols></worksheet>`;
+
+  const ssXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${strings.length}" uniqueCount="${strings.length}">\n${strings.map(s=>`<si><t xml:space="preserve">${escX(s)}</t></si>`).join('\n')}\n</sst>`;
+
+  return { sheetXml: xml, ssXml };
+}
+
 function exportExcel() {
   const d = calcData;
   if (!d.grandTotal) { showToast('Please enter property details first'); return; }
@@ -1347,210 +1442,21 @@ function exportExcel() {
   payM.forEach(r => addRow([r[0], r[1], r[2], '']));
   addRow(['TOTAL', d.grandTotal, '100% + Charges', '']);
 
-  // --- Build XML ---
-  // Shared strings
-  const strings = [];
-  const strMap = {};
-  function getSI(s) {
-    const str = String(s);
-    if (strMap[str] === undefined) { strMap[str] = strings.length; strings.push(str); }
-    return strMap[str];
-  }
+  // --- Build XML parts using helper ---
+  const { sheetXml, ssXml } = buildSheetXml(rows);
 
-  // Pre-register all strings
-  rows.forEach(row => row.forEach(cell => { if (isNaN(cell) || typeof cell === 'string') getSI(cell); }));
+  // OOXML requires numFmts BEFORE fonts; no custom numFmt needed (4 is built-in)
+  const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="1"><font><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs></styleSheet>`;
 
-  const colName = (n) => {
-    let s = '';
-    while (n >= 0) { s = String.fromCharCode(65 + n % 26) + s; n = Math.floor(n / 26) - 1; }
-    return s;
-  };
-
-  let sheetXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-<sheetData>`;
-
-  rows.forEach((row, ri) => {
-    if (row.length === 0) return;
-    sheetXml += `<row r="${ri+1}">`;
-    row.forEach((cell, ci) => {
-      const ref = colName(ci) + (ri+1);
-      const val = String(cell);
-      if (val === '' || val === 'undefined') return;
-      const num = parseFloat(val);
-      if (!isNaN(num) && val.trim() !== '' && typeof cell === 'number') {
-        sheetXml += `<c r="${ref}"><v>${Math.round(num * 100) / 100}</v></c>`;
-      } else {
-        const si = getSI(val);
-        sheetXml += `<c r="${ref}" t="s"><v>${si}</v></c>`;
-      }
-    });
-    sheetXml += `</row>`;
+  const buf = buildZip({
+    '[Content_Types].xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`,
+    '_rels/.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`,
+    'xl/workbook.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Cost Analysis" sheetId="1" r:id="rId1"/></sheets></workbook>`,
+    'xl/_rels/workbook.xml.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`,
+    'xl/worksheets/sheet1.xml': sheetXml,
+    'xl/sharedStrings.xml': ssXml,
+    'xl/styles.xml': styles,
   });
-  sheetXml += `</sheetData>
-<cols>
-<col min="1" max="1" width="40" customWidth="1"/>
-<col min="2" max="2" width="20" customWidth="1"/>
-<col min="3" max="3" width="18" customWidth="1"/>
-<col min="4" max="4" width="40" customWidth="1"/>
-</cols>
-</worksheet>`;
-
-  const ssXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${strings.length}" uniqueCount="${strings.length}">
-${strings.map(s => `<si><t xml:space="preserve">${escXml(s)}</t></si>`).join('')}
-</sst>`;
-
-  const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
-<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
-<Default Extension="xml" ContentType="application/xml"/>
-<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
-<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
-<Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>
-<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
-</Types>`;
-
-  const rels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
-</Relationships>`;
-
-  const wbRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
-<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/>
-<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
-</Relationships>`;
-
-  const wb = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
-<sheets><sheet name="Cost Analysis" sheetId="1" r:id="rId1"/></sheets>
-</workbook>`;
-
-  const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-<fonts count="2">
-<font><sz val="11"/><name val="Calibri"/></font>
-<font><b/><sz val="12"/><name val="Calibri"/><color rgb="FFC9A84C"/></font>
-</fonts>
-<fills count="2">
-<fill><patternFill patternType="none"/></fill>
-<fill><patternFill patternType="gray125"/></fill>
-</fills>
-<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>
-<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
-<cellXfs count="3">
-<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
-<xf numFmtId="4" fontId="0" fillId="0" borderId="0" xfId="0"/>
-<xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0"/>
-</cellXfs>
-<numFmts count="1"><numFmt numFmtId="4" formatCode="#,##0"/></numFmts>
-</styleSheet>`;
-
-  function escXml(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
-  }
-
-  // Build ZIP (uncompressed STORE method)
-  const enc = new TextEncoder();
-  function makeEntry(name, data) {
-    const nameBytes = enc.encode(name);
-    const dataBytes = typeof data === 'string' ? enc.encode(data) : data;
-    const crc = crc32(dataBytes);
-    const localHeader = new Uint8Array(30 + nameBytes.length);
-    const dv = new DataView(localHeader.buffer);
-    dv.setUint32(0, 0x04034b50, true);  // signature
-    dv.setUint16(4, 20, true);           // version needed
-    dv.setUint16(6, 0, true);            // flags
-    dv.setUint16(8, 0, true);            // compression (STORE)
-    dv.setUint16(10, 0, true);           // mod time
-    dv.setUint16(12, 0, true);           // mod date
-    dv.setUint32(14, crc, true);         // crc32
-    dv.setUint32(18, dataBytes.length, true); // compressed size
-    dv.setUint32(22, dataBytes.length, true); // uncompressed size
-    dv.setUint16(26, nameBytes.length, true); // filename length
-    dv.setUint16(28, 0, true);           // extra field length
-    localHeader.set(nameBytes, 30);
-    return { name, nameBytes, dataBytes, crc, localHeader, offset: 0 };
-  }
-
-  function crc32(data) {
-    let crc = 0xFFFFFFFF;
-    const table = crc32.table || (crc32.table = (() => {
-      const t = new Uint32Array(256);
-      for (let i = 0; i < 256; i++) {
-        let c = i;
-        for (let j = 0; j < 8; j++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
-        t[i] = c;
-      }
-      return t;
-    })());
-    for (let i = 0; i < data.length; i++) crc = table[(crc ^ data[i]) & 0xFF] ^ (crc >>> 8);
-    return (crc ^ 0xFFFFFFFF) >>> 0;
-  }
-
-  const files = [
-    makeEntry('[Content_Types].xml', contentTypes),
-    makeEntry('_rels/.rels', rels),
-    makeEntry('xl/workbook.xml', wb),
-    makeEntry('xl/_rels/workbook.xml.rels', wbRels),
-    makeEntry('xl/worksheets/sheet1.xml', sheetXml),
-    makeEntry('xl/sharedStrings.xml', ssXml),
-    makeEntry('xl/styles.xml', styles),
-  ];
-
-  // Calculate offsets
-  let offset = 0;
-  files.forEach(f => { f.offset = offset; offset += f.localHeader.length + f.dataBytes.length; });
-
-  // Central directory
-  const cdEntries = files.map(f => {
-    const cd = new Uint8Array(46 + f.nameBytes.length);
-    const dv = new DataView(cd.buffer);
-    dv.setUint32(0, 0x02014b50, true); // signature
-    dv.setUint16(4, 20, true);          // version made
-    dv.setUint16(6, 20, true);          // version needed
-    dv.setUint16(8, 0, true);           // flags
-    dv.setUint16(10, 0, true);          // compression
-    dv.setUint16(12, 0, true);          // mod time
-    dv.setUint16(14, 0, true);          // mod date
-    dv.setUint32(16, f.crc, true);      // crc32
-    dv.setUint32(20, f.dataBytes.length, true); // comp size
-    dv.setUint32(24, f.dataBytes.length, true); // uncomp size
-    dv.setUint16(28, f.nameBytes.length, true); // name length
-    dv.setUint16(30, 0, true);          // extra
-    dv.setUint16(32, 0, true);          // comment
-    dv.setUint16(34, 0, true);          // disk start
-    dv.setUint16(36, 0, true);          // int attrs
-    dv.setUint32(38, 0, true);          // ext attrs
-    dv.setUint32(42, f.offset, true);   // local header offset
-    cd.set(f.nameBytes, 46);
-    return cd;
-  });
-
-  const cdSize = cdEntries.reduce((s, c) => s + c.length, 0);
-  const eocd = new Uint8Array(22);
-  const eodv = new DataView(eocd.buffer);
-  eodv.setUint32(0, 0x06054b50, true);  // signature
-  eodv.setUint16(4, 0, true);           // disk number
-  eodv.setUint16(6, 0, true);           // start disk
-  eodv.setUint16(8, files.length, true);// entries on disk
-  eodv.setUint16(10, files.length, true);// total entries
-  eodv.setUint32(12, cdSize, true);     // cd size
-  eodv.setUint32(16, offset, true);     // cd offset
-  eodv.setUint16(20, 0, true);          // comment length
-
-  // Assemble
-  const total = offset + cdSize + 22;
-  const buf = new Uint8Array(total);
-  let pos = 0;
-  files.forEach(f => {
-    buf.set(f.localHeader, pos); pos += f.localHeader.length;
-    buf.set(f.dataBytes, pos); pos += f.dataBytes.length;
-  });
-  cdEntries.forEach(cd => { buf.set(cd, pos); pos += cd.length; });
-  buf.set(eocd, pos);
 
   const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
   const url = URL.createObjectURL(blob);
@@ -1559,7 +1465,7 @@ ${strings.map(s => `<si><t xml:space="preserve">${escXml(s)}</t></si>`).join('')
   a.download = 'apartment_cost_analysis.xlsx';
   a.click();
   URL.revokeObjectURL(url);
-  showToast('Excel file downloaded!');
+  showToast('Excel downloaded!');
 }
 
 // =========================================================
