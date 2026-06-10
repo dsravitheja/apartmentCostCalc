@@ -2,547 +2,330 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#c9a84c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AptCost">
+<link rel="manifest" href="manifest.json">
 <title>Apartment Cost Analyzer — Hyderabad</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
 
-  :root {
-    --bg: #0f0f0f;
-    --surface: #1a1a1a;
-    --surface2: #222222;
-    --border: #2e2e2e;
-    --accent: #c9a84c;
-    --accent2: #e8c96a;
-    --accent-dim: rgba(201,168,76,0.12);
-    --green: #5cb88a;
-    --red: #e07070;
-    --blue: #6fa3d6;
-    --text: #f0ede6;
-    --text-dim: #888;
-    --text-mid: #bbb;
-    --highlight-bg: rgba(201,168,76,0.08);
-    --highlight-border: rgba(201,168,76,0.4);
-    --radius: 10px;
-  }
+:root {
+  --bg: #0f0f0f;
+  --surface: #1a1a1a;
+  --surface2: #222;
+  --surface3: #181818;
+  --border: #2e2e2e;
+  --accent: #c9a84c;
+  --accent2: #e8c96a;
+  --accent-dim: rgba(201,168,76,0.12);
+  --green: #5cb88a;
+  --red: #e07070;
+  --blue: #6fa3d6;
+  --purple: #9b7fd4;
+  --text: #f0ede6;
+  --text-dim: #888;
+  --text-mid: #bbb;
+  --hl-bg: rgba(201,168,76,0.08);
+  --hl-border: rgba(201,168,76,0.4);
+  --radius: 10px;
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    line-height: 1.6;
-    min-height: 100vh;
-  }
+/* ── HEADER ─────────────────────────────── */
+.header {
+  background: linear-gradient(135deg,#141414 0%,#1e1b14 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 26px 24px 22px;
+  position: relative; overflow: hidden;
+}
+.header::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse 60% 120% at 80% 50%, rgba(201,168,76,.06) 0%, transparent 70%);
+}
+.header-inner { max-width: 960px; margin: 0 auto; position: relative; }
+.header h1 { font-family:'Playfair Display',serif; font-size:clamp(20px,4vw,32px); font-weight:700; color:var(--accent); letter-spacing:.01em; line-height:1.2; }
+.header p { color:var(--text-dim); font-size:13px; margin-top:4px; font-weight:300; }
 
-  /* ---- HEADER ---- */
-  .header {
-    background: linear-gradient(135deg, #141414 0%, #1e1b14 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 28px 24px 24px;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse 60% 120% at 80% 50%, rgba(201,168,76,0.06) 0%, transparent 70%);
-  }
-  .header-inner { max-width: 960px; margin: 0 auto; position: relative; }
-  .header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(22px, 4vw, 34px);
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 0.01em;
-    line-height: 1.2;
-  }
-  .header p {
-    color: var(--text-dim);
-    font-size: 13px;
-    margin-top: 4px;
-    font-weight: 300;
-  }
+/* ── MAIN ────────────────────────────────── */
+.main { max-width: 960px; margin: 0 auto; padding: 22px 16px 80px; }
 
-  /* ---- MAIN LAYOUT ---- */
-  .main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
+/* ── SECTION TITLE ───────────────────────── */
+.section-title {
+  font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--accent); padding:0 2px; margin-bottom:14px; margin-top:28px;
+  display:flex; align-items:center; gap:10px;
+}
+.section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+.section-title:first-child { margin-top:0; }
 
-  /* ---- QUICK CALC BANNER ---- */
-  .quick-calc-card {
-    background: var(--accent-dim);
-    border: 1px solid var(--highlight-border);
-    border-radius: var(--radius);
-    padding: 20px 22px;
-    margin-bottom: 28px;
-    position: relative;
-  }
-  .quick-calc-card .qc-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 12px;
-  }
-  .quick-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .quick-row .qf {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex: 1;
-    min-width: 140px;
-  }
-  .quick-row .qf label {
-    font-size: 11px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-  .quick-row .qf input {
-    font-family: 'DM Mono', monospace;
-    font-size: 17px;
-    font-weight: 500;
-    color: var(--accent2);
-    background: rgba(0,0,0,0.3);
-    border: 1px solid var(--highlight-border);
-    border-radius: 6px;
-    padding: 8px 12px;
-    outline: none;
-    width: 100%;
-  }
-  .quick-row .qf input:focus { border-color: var(--accent); }
-  .quick-result {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    min-width: 160px;
-    text-align: center;
-  }
-  .quick-result .ql { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
-  .quick-result .qv {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(22px, 4vw, 30px);
-    font-weight: 700;
-    color: var(--accent);
-    line-height: 1.1;
-    margin-top: 2px;
-  }
-  .quick-result .qv2 { font-size: 13px; color: var(--text-dim); margin-top: 2px; }
+/* ── TOGGLE SWITCH ───────────────────────── */
+.ts-wrap { display:flex; align-items:center; gap:8px; margin-left:auto; }
+.ts-wrap span { font-size:12px; color:var(--text-mid); font-weight:500; text-transform:none; letter-spacing:0; white-space:nowrap; }
+.ts-switch { position:relative; display:inline-block; width:38px; height:22px; flex-shrink:0; }
+.ts-switch input { opacity:0; width:0; height:0; }
+.ts-slider { position:absolute; cursor:pointer; inset:0; background:#333; border-radius:22px; transition:.2s; }
+.ts-slider::before { position:absolute; content:""; height:16px; width:16px; left:3px; top:3px; background:#555; border-radius:50%; transition:.2s; }
+input:checked + .ts-slider { background:rgba(201,168,76,.4); }
+input:checked + .ts-slider::before { background:var(--accent); transform:translateX(16px); }
 
-  /* ---- SECTION TITLES ---- */
-  .section-title {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    padding: 0 2px;
-    margin-bottom: 14px;
-    margin-top: 32px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+/* ── QUICK CALC ──────────────────────────── */
+.quick-calc-card {
+  background:var(--accent-dim); border:1px solid var(--hl-border);
+  border-radius:var(--radius); padding:18px 20px; margin-bottom:14px;
+}
+.qc-top { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
+.qc-badge { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+.qc-inputs { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:12px; }
+@media(max-width:640px){ .qc-inputs { grid-template-columns:1fr 1fr; } }
+.qf { display:flex; flex-direction:column; gap:4px; }
+.qf label { font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.08em; }
+.qf input {
+  font-family:'DM Mono',monospace; font-size:15px; font-weight:500; color:var(--accent2);
+  background:rgba(0,0,0,.3); border:1px solid var(--hl-border); border-radius:6px;
+  padding:7px 10px; outline:none; width:100%;
+}
+.qf input:focus { border-color:var(--accent); }
+.qf.hidden { display:none; }
 
-  /* ---- GRID ---- */
-  .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-  @media (max-width: 600px) {
-    .grid-2 { grid-template-columns: 1fr; }
-  }
-  .grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-  @media (max-width: 640px) {
-    .grid-3 { grid-template-columns: 1fr 1fr; }
-  }
-  @media (max-width: 400px) {
-    .grid-3 { grid-template-columns: 1fr; }
-  }
+.qc-result {
+  background:rgba(0,0,0,.2); border-radius:8px; padding:12px 16px;
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+}
+.qcr-item { display:flex; flex-direction:column; gap:1px; min-width:90px; }
+.qcr-lbl { font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.07em; }
+.qcr-val { font-family:'DM Mono',monospace; font-size:13px; color:var(--text); font-weight:500; }
+.qcr-divider { width:1px; height:36px; background:var(--border); flex-shrink:0; }
+.qcr-total { margin-left:auto; text-align:right; }
+.qcr-total .qcr-lbl { color:var(--accent); }
+.qcr-big { font-family:'Playfair Display',serif; font-size:clamp(20px,4vw,26px); font-weight:700; color:var(--accent); line-height:1.1; }
+.qcr-sub { font-size:11px; color:var(--text-dim); margin-top:2px; }
 
-  /* ---- FIELD ---- */
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  .field label {
-    font-size: 11px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    font-weight: 500;
-  }
-  .field-hint {
-    font-size: 10px;
-    color: #555;
-    margin-top: -3px;
-  }
-  .field input, .field select {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 7px;
-    padding: 9px 12px;
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: 14px;
-    outline: none;
-    width: 100%;
-    transition: border-color 0.15s;
-  }
-  .field input:focus, .field select:focus {
-    border-color: var(--accent);
-    background: var(--surface2);
-  }
-  .field.highlight input {
-    border-color: var(--highlight-border);
-    background: var(--highlight-bg);
-    color: var(--accent2);
-    font-size: 15px;
-    font-weight: 500;
-  }
-  .field.highlight label {
-    color: var(--accent);
-    font-weight: 600;
-  }
-  .field input[type="checkbox"] {
-    width: auto;
-    accent-color: var(--accent);
-  }
-  .checkbox-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 9px 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 7px;
-  }
-  .checkbox-row label { font-size: 13px; color: var(--text-mid); text-transform: none; letter-spacing: 0; cursor: pointer; }
-  .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; }
+/* ── ACTION ROW ──────────────────────────── */
+.action-row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:22px; }
+.action-btn {
+  flex:1; min-width:170px; display:flex; align-items:center; gap:8px;
+  padding:13px 16px; background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); cursor:pointer; color:var(--text-mid);
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+  transition:all .2s; text-align:left;
+}
+.action-btn:hover { border-color:#555; color:var(--text); }
+.action-btn.active { background:var(--accent-dim); border-color:var(--accent); color:var(--accent); }
+.ab-icon { font-size:17px; }
+.ab-label { flex:1; }
+.ab-arrow { font-size:11px; transition:transform .2s; }
+.action-btn.active .ab-arrow { transform:rotate(180deg); }
+.action-utils { display:flex; gap:10px; flex-shrink:0; }
+@media(max-width:560px){
+  .action-btn { min-width:140px; font-size:12px; padding:11px 12px; }
+  .action-utils { width:100%; }
+  .action-utils .btn { flex:1; justify-content:center; }
+}
 
-  /* ---- TOTAL DISPLAY ---- */
-  .total-card {
-    background: linear-gradient(135deg, #1c1a11 0%, #1a1a1a 100%);
-    border: 1px solid var(--accent);
-    border-radius: 14px;
-    padding: 28px 24px;
-    text-align: center;
-    margin: 28px 0 8px;
-    position: relative;
-    overflow: hidden;
-  }
-  .total-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 50%; transform: translateX(-50%);
-    width: 200px; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  }
-  .total-label {
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 6px;
-  }
-  .total-value {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(34px, 8vw, 56px);
-    font-weight: 900;
-    color: var(--accent);
-    line-height: 1;
-    letter-spacing: -0.01em;
-  }
-  .total-cr {
-    font-size: 13px;
-    color: var(--text-dim);
-    margin-top: 6px;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .total-sub {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    flex-wrap: wrap;
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-  }
-  .total-sub-item { text-align: center; }
-  .total-sub-item .ts-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
-  .total-sub-item .ts-value { font-family: 'DM Mono', monospace; font-size: 14px; color: var(--text); font-weight: 500; margin-top: 2px; }
+/* ── SECTION PANELS ──────────────────────── */
+.section-panel { display:none; margin-bottom:20px; }
+.section-panel.open { display:block; }
 
-  /* ---- COLLAPSIBLE SECTIONS ---- */
-  .collapse-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 10px;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-  .collapse-card:hover { border-color: #444; }
-  .collapse-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 18px;
-    cursor: pointer;
-    user-select: none;
-    gap: 12px;
-  }
-  .collapse-header:hover { background: rgba(255,255,255,0.02); }
-  .collapse-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    flex: 1;
-  }
-  .collapse-amount {
-    font-family: 'DM Mono', monospace;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-mid);
-  }
-  .collapse-arrow {
-    width: 20px; height: 20px;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--text-dim);
-    transition: transform 0.2s;
-    font-size: 12px;
-    flex-shrink: 0;
-  }
-  .collapse-card.open .collapse-arrow { transform: rotate(180deg); }
-  .collapse-body {
-    display: none;
-    border-top: 1px solid var(--border);
-    padding: 16px 18px;
-  }
-  .collapse-card.open .collapse-body { display: block; }
+/* ── PANEL CARDS ─────────────────────────── */
+.panel-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:12px; }
+.panel-card-header {
+  display:flex; align-items:center; gap:10px;
+  padding:14px 18px; font-size:13px; font-weight:600; color:var(--text);
+  border-bottom:1px solid var(--border); background:var(--surface2);
+}
+.pch-title { flex:1; }
+.pch-tag { font-size:10px; padding:2px 8px; border-radius:4px; background:var(--accent-dim); color:var(--accent); font-weight:600; text-transform:uppercase; letter-spacing:.06em; white-space:nowrap; }
+.panel-card-body { padding:16px 18px; }
 
-  /* ---- BREAKDOWN ROWS ---- */
-  .br-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 6px 0;
-    border-bottom: 1px solid #1e1e1e;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .br-row:last-child { border-bottom: none; }
-  .br-row .br-label { font-size: 12px; color: var(--text-dim); flex: 1; min-width: 160px; }
-  .br-row .br-calc { font-size: 11px; color: #555; flex: 1; text-align: center; }
-  .br-row .br-val {
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    color: var(--text);
-    text-align: right;
-    font-weight: 500;
-    min-width: 100px;
-  }
-  .br-row.total-row {
-    background: rgba(201,168,76,0.06);
-    border-radius: 5px;
-    padding: 8px 10px;
-    margin-top: 6px;
-    border-bottom: none;
-  }
-  .br-row.total-row .br-label { color: var(--accent); font-weight: 600; font-size: 13px; }
-  .br-row.total-row .br-val { color: var(--accent); font-size: 14px; }
+/* ── GRIDS ───────────────────────────────── */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media(max-width:600px){ .grid-2 { grid-template-columns:1fr; } }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+@media(max-width:640px){ .grid-3 { grid-template-columns:1fr 1fr; } }
+@media(max-width:400px){ .grid-3 { grid-template-columns:1fr; } }
 
-  /* ---- LOAN CARDS ---- */
-  .loan-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 14px;
-    margin-top: 6px;
-  }
-  .loan-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px 16px;
-  }
-  .loan-card .lc-title {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--blue);
-    margin-bottom: 12px;
-  }
-  .loan-stat {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 5px 0;
-    border-bottom: 1px solid #1c1c1c;
-  }
-  .loan-stat:last-child { border-bottom: none; }
-  .loan-stat .ls-label { font-size: 11px; color: var(--text-dim); }
-  .loan-stat .ls-val {
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-  }
-  .loan-stat .ls-val.big {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--green);
-  }
-  .loan-stat .ls-val.total { color: var(--red); }
+/* ── FIELDS ──────────────────────────────── */
+.field { display:flex; flex-direction:column; gap:5px; }
+.field label { font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.07em; font-weight:500; }
+.field-hint { font-size:10px; color:#555; margin-top:-3px; }
+.field input, .field select {
+  background:var(--surface); border:1px solid var(--border); border-radius:7px;
+  padding:9px 12px; color:var(--text); font-family:'DM Mono',monospace; font-size:14px; outline:none; width:100%;
+  transition:border-color .15s;
+}
+.field input:focus, .field select:focus { border-color:var(--accent); background:var(--surface2); }
+.field.highlight input { border-color:var(--hl-border); background:var(--hl-bg); color:var(--accent2); font-size:15px; font-weight:500; }
+.field.highlight label { color:var(--accent); font-weight:600; }
 
-  .rate-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-  }
-  .rate-row label { font-size: 12px; color: var(--text-dim); }
-  .rate-row input[type=range] {
-    flex: 1;
-    min-width: 120px;
-    accent-color: var(--accent);
-  }
-  .rate-row .rate-val {
-    font-family: 'DM Mono', monospace;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--accent2);
-    min-width: 50px;
-  }
+/* ── CHECKBOX FIELD ROWS ─────────────────── */
+.cf-group { border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:12px; }
+.cf-group-title { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:var(--text-dim); padding:7px 14px; background:var(--surface2); border-bottom:1px solid var(--border); }
+.cf-row { display:flex; align-items:center; gap:10px; padding:9px 14px; border-bottom:1px solid var(--border); transition:background .15s; flex-wrap:wrap; }
+.cf-row:last-child { border-bottom:none; }
+.cf-row.cf-disabled { opacity:.4; }
+.cf-row.cf-disabled > *:not(.cf-chk) { pointer-events:none; }
+.cf-chk { width:17px; height:17px; flex-shrink:0; accent-color:var(--accent); cursor:pointer; }
+.cf-label { font-size:13px; color:var(--text-mid); flex:1; cursor:pointer; min-width:120px; }
+.cf-inputs { display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+.cf-input {
+  font-family:'DM Mono',monospace; font-size:13px; color:var(--text);
+  background:var(--surface2); border:1px solid var(--border); border-radius:6px;
+  padding:5px 9px; width:110px; outline:none; text-align:right;
+  transition:border-color .15s;
+}
+.cf-input:focus { border-color:var(--accent); }
+.cf-input.w70 { width:70px; }
+.cf-input.w80 { width:80px; }
+.cf-input.w90 { width:90px; }
+.cf-unit { font-size:11px; color:var(--text-dim); white-space:nowrap; }
+.cf-calc { font-family:'DM Mono',monospace; font-size:12px; color:var(--accent2); min-width:80px; text-align:right; white-space:nowrap; flex-shrink:0; }
 
-  /* ---- PAYMENT SCHEDULE ---- */
-  .pay-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-  }
-  .pay-table th {
-    text-align: left;
-    padding: 7px 10px;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-dim);
-    border-bottom: 1px solid var(--border);
-  }
-  .pay-table td {
-    padding: 7px 10px;
-    border-bottom: 1px solid #1c1c1c;
-    font-family: 'DM Mono', monospace;
-  }
-  .pay-table td:last-child { text-align: right; color: var(--accent2); }
-  .pay-table td:first-child { color: var(--text-dim); font-family: 'DM Sans', sans-serif; }
-  .pay-table tr:last-child td { border-bottom: none; font-weight: 600; color: var(--accent); }
+/* ── MODE TOGGLE (₹/sft vs lump) ────────── */
+.mode-toggle { display:inline-flex; background:var(--surface); border:1px solid var(--border); border-radius:6px; overflow:hidden; flex-shrink:0; }
+.mode-btn { padding:3px 8px; font-size:10px; font-weight:600; letter-spacing:.03em; color:var(--text-dim); background:transparent; border:none; cursor:pointer; transition:all .15s; font-family:'DM Sans',sans-serif; text-transform:uppercase; }
+.mode-btn.active { background:var(--accent); color:#0f0f0f; }
 
-  /* ---- BUTTONS ---- */
-  .btn-row {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-top: 28px;
-  }
-  .btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 22px;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: all 0.15s;
-    letter-spacing: 0.03em;
-    text-decoration: none;
-  }
-  .btn-primary {
-    background: var(--accent);
-    color: #0f0f0f;
-  }
-  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
-  .btn-secondary {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-mid);
-  }
-  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-green {
-    background: rgba(92,184,138,0.15);
-    border: 1px solid rgba(92,184,138,0.4);
-    color: var(--green);
-  }
-  .btn-green:hover { background: rgba(92,184,138,0.25); }
+/* ── TOTAL CARD ──────────────────────────── */
+.total-card {
+  background:linear-gradient(135deg,#1c1a11 0%,#1a1a1a 100%);
+  border:1px solid var(--accent); border-radius:14px;
+  padding:22px 18px; text-align:center; margin:18px 0 8px; position:relative; overflow:hidden;
+}
+.total-card::before {
+  content:''; position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:200px; height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent);
+}
+.total-label { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-dim); margin-bottom:6px; }
+.total-value { font-family:'Playfair Display',serif; font-size:clamp(26px,6vw,46px); font-weight:900; color:var(--accent); line-height:1; }
+.total-cr { font-size:13px; color:var(--text-dim); margin-top:5px; }
+.total-sub { display:flex; justify-content:center; gap:18px; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
+.total-sub-item { text-align:center; }
+.ts-lbl { font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.08em; }
+.ts-val { font-family:'DM Mono',monospace; font-size:13px; color:var(--text); font-weight:500; margin-top:2px; }
 
-  /* ---- TOAST ---- */
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: #2a2a2a;
-    border: 1px solid var(--accent);
-    border-radius: 8px;
-    padding: 12px 20px;
-    font-size: 13px;
-    color: var(--text);
-    transform: translateY(80px);
-    opacity: 0;
-    transition: all 0.3s;
-    z-index: 9999;
-    pointer-events: none;
-  }
-  .toast.show { transform: translateY(0); opacity: 1; }
+/* ── COLLAPSIBLE CARDS ───────────────────── */
+.collapse-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:8px; overflow:hidden; }
+.collapse-card:hover { border-color:#444; }
+.collapse-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; cursor:pointer; user-select:none; gap:12px; }
+.collapse-header:hover { background:rgba(255,255,255,.02); }
+.collapse-title { font-size:13px; font-weight:600; color:var(--text); flex:1; }
+.collapse-amount { font-family:'DM Mono',monospace; font-size:13px; font-weight:500; color:var(--text-mid); }
+.collapse-arrow { width:20px; height:20px; display:flex; align-items:center; justify-content:center; color:var(--text-dim); transition:transform .2s; font-size:12px; flex-shrink:0; }
+.collapse-card.open .collapse-arrow { transform:rotate(180deg); }
+.collapse-body { display:none; border-top:1px solid var(--border); padding:14px 16px; }
+.collapse-card.open .collapse-body { display:block; }
 
-  /* ---- PRINT/EXPORT SURFACE ---- */
-  #export-surface {
-    background: #fff;
-    color: #111;
-    font-family: 'DM Sans', sans-serif;
-    padding: 32px;
-    min-width: 700px;
-    display: none;
-  }
+/* ── BREAKDOWN ROWS ──────────────────────── */
+.br-row { display:flex; justify-content:space-between; align-items:baseline; padding:5px 0; border-bottom:1px solid #1e1e1e; gap:12px; flex-wrap:wrap; }
+.br-row:last-child { border-bottom:none; }
+.br-label { font-size:12px; color:var(--text-dim); flex:1; min-width:130px; }
+.br-calc { font-size:11px; color:#555; flex:1; text-align:center; min-width:70px; }
+.br-val { font-family:'DM Mono',monospace; font-size:13px; color:var(--text); text-align:right; font-weight:500; min-width:85px; }
+.br-row.total-row { background:rgba(201,168,76,.06); border-radius:5px; padding:7px 10px; margin-top:6px; border-bottom:none; }
+.br-row.total-row .br-label { color:var(--accent); font-weight:600; font-size:13px; }
+.br-row.total-row .br-val { color:var(--accent); font-size:14px; }
 
-  /* small helpers */
-  .dimtext { color: var(--text-dim); }
-  .mono { font-family: 'DM Mono', monospace; }
-  .mt8 { margin-top: 8px; }
-  .mt16 { margin-top: 16px; }
+/* ── LOAN SECTION ────────────────────────── */
+.loan-top { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; margin-bottom:14px; }
+.loan-inputs-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:12px; }
+@media(max-width:580px){ .loan-inputs-grid { grid-template-columns:1fr 1fr; } }
+@media(max-width:380px){ .loan-inputs-grid { grid-template-columns:1fr; } }
+.loan-field { display:flex; flex-direction:column; gap:5px; }
+.loan-field label { font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.07em; }
+.loan-field input {
+  background:var(--surface); border:1px solid var(--border); border-radius:7px;
+  padding:9px 12px; color:var(--text); font-family:'DM Mono',monospace; font-size:14px; outline:none; width:100%;
+}
+.loan-field input:focus { border-color:var(--accent); }
+.loan-field input.hl { border-color:var(--hl-border); background:var(--hl-bg); color:var(--accent2); font-size:15px; font-weight:500; }
+.loan-derived-row { display:flex; gap:12px; flex-wrap:wrap; }
+.loan-derived { flex:1; min-width:130px; padding:8px 12px; background:rgba(201,168,76,.06); border-radius:6px; border:1px solid rgba(201,168,76,.2); }
+.ld-lbl { font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.07em; margin-bottom:2px; }
+.ld-val { font-family:'DM Mono',monospace; font-size:15px; color:var(--accent2); font-weight:600; }
+.ld-sub { font-size:11px; color:var(--text-dim); margin-top:1px; }
 
-  /* ---- RESPONSIVE ---- */
-  @media (max-width: 480px) {
-    .btn { padding: 10px 16px; font-size: 12px; }
-    .collapse-header { padding: 12px 14px; }
-    .collapse-body { padding: 14px; }
-    .total-card { padding: 22px 16px; }
-  }
+/* Loan scenario cards */
+.loan-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:14px; }
+@media(max-width:640px){ .loan-grid { grid-template-columns:1fr; } }
+.loan-card { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:16px 14px; }
+.lc-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:var(--blue); margin-bottom:12px; }
+.loan-stat { display:flex; justify-content:space-between; align-items:baseline; padding:5px 0; border-bottom:1px solid #1c1c1c; }
+.loan-stat:last-child { border-bottom:none; }
+.ls-lbl { font-size:11px; color:var(--text-dim); }
+.ls-val { font-family:'DM Mono',monospace; font-size:13px; font-weight:500; color:var(--text); }
+.ls-val.big { font-family:'Playfair Display',serif; font-size:17px; font-weight:700; color:var(--green); }
+.ls-val.red { color:var(--red); }
+.ls-val.blue { color:var(--blue); }
+.yr-break { margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); }
+.yr-break-title { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); margin-bottom:6px; }
+
+/* Custom year section */
+.custom-year-section { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; margin-bottom:14px; }
+.cy-header { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+.cy-header label { font-size:13px; color:var(--text-mid); }
+.cy-input { font-family:'DM Mono',monospace; font-size:15px; color:var(--accent2); background:var(--surface); border:1px solid var(--hl-border); border-radius:6px; padding:5px 10px; width:70px; outline:none; }
+.cy-input:focus { border-color:var(--accent); }
+.cy-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+@media(max-width:640px){ .cy-grid { grid-template-columns:1fr; } }
+.cy-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px; }
+.cy-card-title { font-size:11px; color:var(--blue); font-weight:600; text-transform:uppercase; letter-spacing:.08em; margin-bottom:8px; }
+
+/* Advanced loan */
+.adv-section { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; margin-bottom:14px; }
+.adv-header { display:flex; align-items:center; gap:10px; padding:13px 18px; cursor:pointer; user-select:none; }
+.adv-header:hover { background:rgba(255,255,255,.02); }
+.adv-title { font-size:13px; font-weight:600; color:var(--text); flex:1; }
+.adv-arrow { font-size:12px; color:var(--text-dim); transition:transform .2s; }
+.adv-section.open .adv-arrow { transform:rotate(180deg); }
+.adv-body { display:none; border-top:1px solid var(--border); padding:16px 18px; }
+.adv-section.open .adv-body { display:block; }
+.adv-inputs-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+@media(max-width:500px){ .adv-inputs-grid { grid-template-columns:1fr; } }
+.adv-compare-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+@media(max-width:640px){ .adv-compare-grid { grid-template-columns:1fr; } }
+.adv-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px; }
+.adv-card-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--purple); margin-bottom:10px; }
+
+/* Payment schedule */
+.pay-table { width:100%; border-collapse:collapse; font-size:12px; }
+.pay-table th { text-align:left; padding:6px 10px; font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); border-bottom:1px solid var(--border); }
+.pay-table td { padding:6px 10px; border-bottom:1px solid #1c1c1c; font-family:'DM Mono',monospace; }
+.pay-table td:last-child { text-align:right; color:var(--accent2); }
+.pay-table td:first-child { color:var(--text-dim); font-family:'DM Sans',sans-serif; }
+.pay-table tr:last-child td { border-bottom:none; font-weight:600; color:var(--accent); }
+
+/* ── BUTTONS ─────────────────────────────── */
+.btn-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+.btn { display:flex; align-items:center; gap:7px; padding:10px 18px; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; border:none; transition:all .15s; letter-spacing:.02em; }
+.btn-primary { background:var(--accent); color:#0f0f0f; }
+.btn-primary:hover { background:var(--accent2); transform:translateY(-1px); }
+.btn-secondary { background:transparent; border:1px solid var(--border); color:var(--text-mid); }
+.btn-secondary:hover { border-color:var(--accent); color:var(--accent); }
+.btn-green { background:rgba(92,184,138,.15); border:1px solid rgba(92,184,138,.4); color:var(--green); }
+.btn-green:hover { background:rgba(92,184,138,.25); }
+.btn-blue { background:rgba(111,163,214,.15); border:1px solid rgba(111,163,214,.4); color:var(--blue); }
+.btn-blue:hover { background:rgba(111,163,214,.25); }
+
+/* ── MISC ────────────────────────────────── */
+.toast { position:fixed; bottom:24px; right:24px; background:#2a2a2a; border:1px solid var(--accent); border-radius:8px; padding:12px 20px; font-size:13px; color:var(--text); transform:translateY(80px); opacity:0; transition:all .3s; z-index:9999; pointer-events:none; max-width:300px; }
+.toast.show { transform:translateY(0); opacity:1; }
+.note-text { font-size:11px; color:#555; padding:4px 0; }
+.divider { height:1px; background:var(--border); margin:14px 0; }
+.mono { font-family:'DM Mono',monospace; }
+
+@media(max-width:480px){
+  .btn { padding:9px 12px; font-size:12px; }
+  .collapse-header { padding:11px 14px; }
+  .collapse-body { padding:12px; }
+  .total-card { padding:18px 14px; }
+  .panel-card-body { padding:14px; }
+}
 </style>
 </head>
 <body>
@@ -550,729 +333,1135 @@
 <div class="header">
   <div class="header-inner">
     <h1>Apartment Cost Analyzer</h1>
-    <p>Hyderabad · Detailed cost breakdown, loan scenarios & export</p>
+    <p>Hyderabad · Quick estimate → Detailed breakdown → Loan analysis</p>
   </div>
 </div>
 
 <div class="main">
 
-  <!-- QUICK CALC -->
-  <div class="section-title">⚡ Quick Calculation</div>
-  <div class="quick-calc-card">
-    <div class="qc-label">Instant estimate — base cost only</div>
-    <div class="quick-row">
-      <div class="qf">
-        <label>Carpet Area (sft)</label>
-        <input type="number" id="q-sqft" value="1500" oninput="updateQuick()">
+<!-- ===== QUICK CALC ===== -->
+<div class="section-title">⚡ Quick Estimate</div>
+<div class="quick-calc-card">
+  <div class="qc-top">
+    <span class="qc-badge">Instant estimate</span>
+    <div class="ts-wrap">
+      <label class="ts-switch">
+        <input type="checkbox" id="q-uc" onchange="updateQuick()">
+        <span class="ts-slider"></span>
+      </label>
+      <span>Under Construction</span>
+    </div>
+  </div>
+  <div class="qc-inputs">
+    <div class="qf">
+      <label>Carpet Area (sft)</label>
+      <input type="number" id="q-sqft" value="1500" oninput="updateQuick()">
+    </div>
+    <div class="qf">
+      <label>Rate (₹ / sft)</label>
+      <input type="number" id="q-rate" value="7500" oninput="updateQuick()">
+    </div>
+    <div class="qf">
+      <label>Stamp Duty + Reg (%)</label>
+      <input type="number" id="q-reg" value="4.5" step="0.1" oninput="updateQuick()">
+    </div>
+    <div class="qf hidden" id="qf-gst">
+      <label>GST (%)</label>
+      <input type="number" id="q-gst" value="5" step="0.5" oninput="updateQuick()">
+    </div>
+  </div>
+  <div class="qc-result">
+    <div class="qcr-item">
+      <span class="qcr-lbl">Base Cost</span>
+      <span class="qcr-val" id="qr-base">—</span>
+    </div>
+    <div class="qcr-divider"></div>
+    <div class="qcr-item">
+      <span class="qcr-lbl">Registration</span>
+      <span class="qcr-val" id="qr-reg">—</span>
+    </div>
+    <div class="qcr-item" id="qr-gst-item" style="display:none;">
+      <span class="qcr-lbl">GST</span>
+      <span class="qcr-val" id="qr-gst">—</span>
+    </div>
+    <div class="qcr-total">
+      <span class="qcr-lbl">Estimated Total</span>
+      <div class="qcr-big" id="qr-total">—</div>
+      <div class="qcr-sub" id="qr-total2"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ACTION BUTTONS ===== -->
+<div class="action-row">
+  <button class="action-btn" id="btn-detail" onclick="toggleSection('detail')">
+    <span class="ab-icon">📊</span>
+    <span class="ab-label">Detailed Cost Analysis</span>
+    <span class="ab-arrow">▼</span>
+  </button>
+  <button class="action-btn" id="btn-loan" onclick="toggleSection('loan')">
+    <span class="ab-icon">🏦</span>
+    <span class="ab-label">Loan Analysis</span>
+    <span class="ab-arrow">▼</span>
+  </button>
+  <div class="action-utils">
+    <button class="btn btn-secondary" onclick="exportSnapshot()">📸 Export</button>
+    <button class="btn btn-secondary" onclick="resetAll()">↺ Reset</button>
+  </div>
+</div>
+
+<!-- ===== DETAILED COST ANALYSIS SECTION ===== -->
+<div class="section-panel" id="section-detail">
+
+  <!-- Property Base -->
+  <div class="panel-card">
+    <div class="panel-card-header">
+      <span>🏢</span>
+      <span class="pch-title">Property Base</span>
+      <span class="pch-tag">From Quick Estimate</span>
+    </div>
+    <div class="panel-card-body">
+      <div class="grid-2">
+        <div class="field highlight">
+          <label>Carpet Area (sq ft)</label>
+          <input type="number" id="d-sqft" value="1500" oninput="calcDetail()">
+        </div>
+        <div class="field highlight">
+          <label>Base Rate (₹ / sft)</label>
+          <input type="number" id="d-rate" value="7500" oninput="calcDetail()">
+        </div>
       </div>
-      <div class="qf">
-        <label>Rate (₹ / sft)</label>
-        <input type="number" id="q-rate" value="7500" oninput="updateQuick()">
+    </div>
+  </div>
+
+  <!-- Additional Features -->
+  <div class="panel-card">
+    <div class="panel-card-header"><span>✨</span><span class="pch-title">Additional Features</span></div>
+    <div class="panel-card-body" style="padding:0;">
+      <div class="cf-group" style="margin:0;border:none;border-radius:0;">
+
+        <div class="cf-row" id="cfrow-floor">
+          <input type="checkbox" class="cf-chk" id="d-incl-floor" checked onchange="updateCfRow('floor')">
+          <label class="cf-label" for="d-incl-floor">Floor / Rise Charges</label>
+          <div class="cf-inputs">
+            <span class="cf-unit">Floor</span>
+            <input type="number" class="cf-input w70" id="d-floor" value="1" min="1" oninput="calcDetail()">
+            <span class="cf-unit">Rise ₹/sft/fl</span>
+            <input type="number" class="cf-input w80" id="d-floorrise" value="25" oninput="calcDetail()">
+            <span class="cf-calc" id="dc-floor">₹0</span>
+          </div>
+        </div>
+
+        <div class="cf-row" id="cfrow-parking">
+          <input type="checkbox" class="cf-chk" id="d-incl-parking" checked onchange="updateCfRow('parking')">
+          <label class="cf-label" for="d-incl-parking">Car Parking (2 slots)</label>
+          <div class="cf-inputs">
+            <input type="number" class="cf-input" id="d-parking" value="400000" oninput="calcDetail()">
+            <span class="cf-unit">₹ total</span>
+            <span class="cf-calc" id="dc-parking">—</span>
+          </div>
+        </div>
+
+        <div class="cf-row cf-disabled" id="cfrow-east">
+          <input type="checkbox" class="cf-chk" id="d-incl-east" onchange="updateCfRow('east')">
+          <label class="cf-label" for="d-incl-east">East Facing Premium (₹100/sft)</label>
+          <div class="cf-inputs">
+            <span class="cf-calc" id="dc-east">—</span>
+          </div>
+        </div>
+
+        <div class="cf-row cf-disabled" id="cfrow-corner">
+          <input type="checkbox" class="cf-chk" id="d-incl-corner" onchange="updateCfRow('corner')">
+          <label class="cf-label" for="d-incl-corner">Corner Facing Premium (₹100/sft)</label>
+          <div class="cf-inputs">
+            <span class="cf-calc" id="dc-corner">—</span>
+          </div>
+        </div>
+
       </div>
-      <div class="quick-result">
-        <div class="ql">Base Cost</div>
-        <div class="qv" id="q-result">₹1.13 Cr</div>
-        <div class="qv2" id="q-result2">₹1,12,50,000</div>
+    </div>
+  </div>
+
+  <!-- Additional Charges -->
+  <div class="panel-card">
+    <div class="panel-card-header"><span>📋</span><span class="pch-title">Additional Charges</span></div>
+    <div class="panel-card-body" style="padding:0;">
+      <div class="cf-group" style="margin:0;border:none;border-radius:0;">
+
+        <!-- Amenities -->
+        <div class="cf-row" id="cfrow-amenities">
+          <input type="checkbox" class="cf-chk" id="d-incl-amenities" checked onchange="updateCfRow('amenities')">
+          <label class="cf-label" for="d-incl-amenities">Amenities / Clubhouse</label>
+          <div class="cf-inputs">
+            <div class="mode-toggle">
+              <button class="mode-btn active" id="mb-amenities-sqft" onclick="setMode('amenities','sqft')">₹/sft</button>
+              <button class="mode-btn" id="mb-amenities-lump" onclick="setMode('amenities','lump')">Lump</button>
+            </div>
+            <input type="number" class="cf-input w90" id="d-amenities-sqft" value="400" oninput="calcDetail()">
+            <input type="number" class="cf-input" id="d-amenities-lump" value="0" style="display:none" oninput="calcDetail()">
+            <span class="cf-unit" id="unit-amenities">₹/sft</span>
+            <span class="cf-calc" id="dc-amenities">—</span>
+          </div>
+        </div>
+
+        <!-- Corpus Fund -->
+        <div class="cf-row" id="cfrow-corpus">
+          <input type="checkbox" class="cf-chk" id="d-incl-corpus" checked onchange="updateCfRow('corpus')">
+          <label class="cf-label" for="d-incl-corpus">Corpus Fund</label>
+          <div class="cf-inputs">
+            <div class="mode-toggle">
+              <button class="mode-btn active" id="mb-corpus-sqft" onclick="setMode('corpus','sqft')">₹/sft</button>
+              <button class="mode-btn" id="mb-corpus-lump" onclick="setMode('corpus','lump')">Lump</button>
+            </div>
+            <input type="number" class="cf-input w90" id="d-corpus-sqft" value="100" oninput="calcDetail()">
+            <input type="number" class="cf-input" id="d-corpus-lump" value="0" style="display:none" oninput="calcDetail()">
+            <span class="cf-unit" id="unit-corpus">₹/sft</span>
+            <span class="cf-calc" id="dc-corpus">—</span>
+          </div>
+        </div>
+
+        <!-- Infrastructure Charges -->
+        <div class="cf-row cf-disabled" id="cfrow-infra">
+          <input type="checkbox" class="cf-chk" id="d-incl-infra" onchange="updateCfRow('infra')">
+          <label class="cf-label" for="d-incl-infra">Infrastructure / Dev. Charges</label>
+          <div class="cf-inputs">
+            <div class="mode-toggle">
+              <button class="mode-btn active" id="mb-infra-sqft" onclick="setMode('infra','sqft')">₹/sft</button>
+              <button class="mode-btn" id="mb-infra-lump" onclick="setMode('infra','lump')">Lump</button>
+            </div>
+            <input type="number" class="cf-input w90" id="d-infra-sqft" value="50" oninput="calcDetail()">
+            <input type="number" class="cf-input" id="d-infra-lump" value="0" style="display:none" oninput="calcDetail()">
+            <span class="cf-unit" id="unit-infra">₹/sft</span>
+            <span class="cf-calc" id="dc-infra">—</span>
+          </div>
+        </div>
+
+        <!-- Advance Maintenance -->
+        <div class="cf-row" id="cfrow-maint">
+          <input type="checkbox" class="cf-chk" id="d-incl-maint" checked onchange="updateCfRow('maint')">
+          <label class="cf-label" for="d-incl-maint">Advance Maintenance</label>
+          <div class="cf-inputs">
+            <input type="number" class="cf-input w80" id="d-maint-rate" value="4" oninput="calcDetail()">
+            <span class="cf-unit">₹/sft/mo ×</span>
+            <input type="number" class="cf-input w70" id="d-maint-months" value="24" oninput="calcDetail()">
+            <span class="cf-unit">mo +</span>
+            <input type="number" class="cf-input w70" id="d-maint-gst" value="18" oninput="calcDetail()">
+            <span class="cf-unit">% GST</span>
+            <span class="cf-calc" id="dc-maint">—</span>
+          </div>
+        </div>
+
+        <!-- Legal -->
+        <div class="cf-row" id="cfrow-legal">
+          <input type="checkbox" class="cf-chk" id="d-incl-legal" checked onchange="updateCfRow('legal')">
+          <label class="cf-label" for="d-incl-legal">Legal & Documentation</label>
+          <div class="cf-inputs">
+            <input type="number" class="cf-input" id="d-legal" value="25000" oninput="calcDetail()">
+            <span class="cf-unit">+</span>
+            <input type="number" class="cf-input w70" id="d-legal-gst" value="18" oninput="calcDetail()">
+            <span class="cf-unit">% GST</span>
+            <span class="cf-calc" id="dc-legal">—</span>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 
-  <!-- ===== INPUTS ===== -->
-  <div class="section-title">🏢 Property Details</div>
-  <div class="grid-2">
-    <div class="field highlight">
-      <label>Carpet Area (sq ft)</label>
-      <input type="number" id="sqft" value="1500" oninput="calculate()" placeholder="e.g. 1500">
+  <!-- Government Charges -->
+  <div class="panel-card">
+    <div class="panel-card-header">
+      <span>🏛️</span>
+      <span class="pch-title">Government Charges</span>
+      <span class="pch-tag" id="d-govt-uc-tag" style="display:none;">Under Construction</span>
     </div>
-    <div class="field highlight">
-      <label>Base Price (₹ / sft)</label>
-      <input type="number" id="baseRate" value="7500" oninput="calculate()" placeholder="e.g. 7500">
-    </div>
-    <div class="field">
-      <label>Amenities / Clubhouse (₹ / sft)</label>
-      <input type="number" id="amenitiesRate" value="400" oninput="calculate()">
-    </div>
-    <div class="field">
-      <label>Floor Number</label>
-      <input type="number" id="floor" value="1" min="1" oninput="calculate()">
-      <span class="field-hint">Floor rise charges apply from 6th floor onwards (₹25/sft/floor)</span>
-    </div>
-    <div class="field">
-      <label>Car Parking (₹) — 2 slots B2B</label>
-      <input type="number" id="parking" value="400000" oninput="calculate()">
-    </div>
-    <div class="field">
-      <label>Floor Rise Rate (₹/sft/floor above 5th)</label>
-      <input type="number" id="floorRiseRate" value="25" oninput="calculate()">
-    </div>
-  </div>
-
-  <div class="section-title">✨ Premium Charges</div>
-  <div class="grid-2">
-    <div class="checkbox-row">
-      <input type="checkbox" id="eastFacing" onchange="calculate()">
-      <label for="eastFacing">East Facing Premium (₹100/sft)</label>
-    </div>
-    <div class="checkbox-row">
-      <input type="checkbox" id="cornerFacing" onchange="calculate()">
-      <label for="cornerFacing">Corner Facing Premium (₹100/sft)</label>
+    <div class="panel-card-body">
+      <div class="grid-3">
+        <div class="field">
+          <label>Stamp Duty (%)</label>
+          <input type="number" id="d-stamp" value="4" step="0.1" oninput="calcDetail()">
+          <span class="field-hint">Telangana: 4%</span>
+        </div>
+        <div class="field">
+          <label>Registration Fee (%)</label>
+          <input type="number" id="d-regfee" value="0.5" step="0.1" oninput="calcDetail()">
+          <span class="field-hint">Hyderabad: 0.5%</span>
+        </div>
+        <div class="field" id="d-gst-field" style="display:none;">
+          <label>GST on Construction (%)</label>
+          <input type="number" id="d-gst" value="5" step="0.5" oninput="calcDetail()">
+          <span class="field-hint">Under-construction: 5%</span>
+        </div>
+      </div>
+      <p class="note-text" id="d-no-gst-note">GST: Not applicable — property not marked as under-construction in Quick Estimate.</p>
+      <p class="note-text" id="d-gst-note" style="display:none;">GST 5% applies to under-construction properties (no input tax credit).</p>
     </div>
   </div>
 
-  <div class="section-title">📋 Additional Charges</div>
-  <div class="grid-2">
-    <div class="field">
-      <label>Legal & Documentation (₹)</label>
-      <input type="number" id="legal" value="25000" oninput="calculate()">
-    </div>
-    <div class="field">
-      <label>Legal GST (%)</label>
-      <input type="number" id="legalGst" value="18" oninput="calculate()">
-    </div>
-    <div class="field">
-      <label>Advance Maintenance (₹/sft/month)</label>
-      <input type="number" id="maintRate" value="4" oninput="calculate()">
-      <span class="field-hint">Charged for 24 months</span>
-    </div>
-    <div class="field">
-      <label>Maintenance GST (%)</label>
-      <input type="number" id="maintGst" value="18" oninput="calculate()">
-    </div>
-    <div class="field">
-      <label>Corpus Fund (₹/sft)</label>
-      <input type="number" id="corpus" value="100" oninput="calculate()">
-    </div>
-  </div>
-
-  <div class="section-title">🏛️ Registration & GST</div>
-  <div class="grid-3">
-    <div class="field">
-      <label>Stamp Duty (%)</label>
-      <input type="number" id="stampDuty" value="4" step="0.1" oninput="calculate()">
-      <span class="field-hint">Telangana: 4%</span>
-    </div>
-    <div class="field">
-      <label>Registration Fee (%)</label>
-      <input type="number" id="regFee" value="0.5" step="0.1" oninput="calculate()">
-      <span class="field-hint">Hyderabad: 0.5%</span>
-    </div>
-    <div class="field">
-      <label>GST on Construction (%)</label>
-      <input type="number" id="gstRate" value="5" step="0.5" oninput="calculate()">
-      <span class="field-hint">Under-construction: 5%</span>
-    </div>
-  </div>
-
-  <!-- ===== TOTAL ===== -->
+  <!-- Total Display -->
   <div class="total-card">
     <div class="total-label">Total Cost to Purchase</div>
-    <div class="total-value" id="totalDisplay">₹0</div>
-    <div class="total-cr" id="totalCrDisplay"></div>
+    <div class="total-value" id="d-total">₹0</div>
+    <div class="total-cr" id="d-total-cr"></div>
     <div class="total-sub">
-      <div class="total-sub-item">
-        <div class="ts-label">Base Sale Value</div>
-        <div class="ts-value mono" id="saleValueDisplay">—</div>
+      <div class="total-sub-item"><div class="ts-lbl">Base Sale Value</div><div class="ts-val mono" id="d-sv">—</div></div>
+      <div class="total-sub-item"><div class="ts-lbl">Govt. Charges</div><div class="ts-val mono" id="d-govt">—</div></div>
+      <div class="total-sub-item"><div class="ts-lbl">Other Charges</div><div class="ts-val mono" id="d-other">—</div></div>
+    </div>
+  </div>
+
+  <!-- Collapsible breakdown -->
+  <div style="margin-top:10px;">
+    <div class="collapse-card open" id="dc-base">
+      <div class="collapse-header" onclick="toggleCard('dc-base')">
+        <span class="collapse-title">Base Construction Cost</span>
+        <span class="collapse-amount" id="dch-base">—</span>
+        <span class="collapse-arrow">▼</span>
       </div>
-      <div class="total-sub-item">
-        <div class="ts-label">Govt. Charges</div>
-        <div class="ts-value mono" id="govtDisplay">—</div>
+      <div class="collapse-body" id="d-body-base"></div>
+    </div>
+
+    <div class="collapse-card" id="dc-gst" style="display:none;">
+      <div class="collapse-header" onclick="toggleCard('dc-gst')">
+        <span class="collapse-title">GST on Construction</span>
+        <span class="collapse-amount" id="dch-gst">—</span>
+        <span class="collapse-arrow">▼</span>
       </div>
-      <div class="total-sub-item">
-        <div class="ts-label">Other Charges</div>
-        <div class="ts-value mono" id="otherDisplay">—</div>
+      <div class="collapse-body">
+        <div class="br-row"><span class="br-label">GST Base (Sale Value)</span><span class="br-calc" id="d-calc-gstbase"></span><span class="br-val" id="d-val-gstbase">—</span></div>
+        <div class="br-row"><span class="br-label">GST Amount</span><span class="br-calc" id="d-calc-gstrate"></span><span class="br-val" id="d-val-gstamt">—</span></div>
+        <div class="note-text">5% GST on under-construction flats (no ITC). Ready-to-move: 0%.</div>
+      </div>
+    </div>
+
+    <div class="collapse-card" id="dc-reg">
+      <div class="collapse-header" onclick="toggleCard('dc-reg')">
+        <span class="collapse-title">Registration & Stamp Duty</span>
+        <span class="collapse-amount" id="dch-reg">—</span>
+        <span class="collapse-arrow">▼</span>
+      </div>
+      <div class="collapse-body">
+        <div class="br-row"><span class="br-label">Stamp Duty</span><span class="br-calc" id="d-calc-stamp"></span><span class="br-val" id="d-val-stamp">—</span></div>
+        <div class="br-row"><span class="br-label">Registration Fee</span><span class="br-calc" id="d-calc-regfee"></span><span class="br-val" id="d-val-regfee">—</span></div>
+        <div class="br-row total-row"><span class="br-label">Total Registration</span><span class="br-calc"></span><span class="br-val" id="d-val-regtotal">—</span></div>
+        <div class="note-text">TDS 1% of sale consideration to be deducted & deposited by purchaser.</div>
+      </div>
+    </div>
+
+    <div class="collapse-card" id="dc-other">
+      <div class="collapse-header" onclick="toggleCard('dc-other')">
+        <span class="collapse-title">Additional Charges Breakdown</span>
+        <span class="collapse-amount" id="dch-other">—</span>
+        <span class="collapse-arrow">▼</span>
+      </div>
+      <div class="collapse-body" id="d-body-other"></div>
+    </div>
+
+    <div class="collapse-card" id="dc-payment">
+      <div class="collapse-header" onclick="toggleCard('dc-payment')">
+        <span class="collapse-title">Payment Schedule (Construction-Linked)</span>
+        <span class="collapse-amount" id="dch-payment">—</span>
+        <span class="collapse-arrow">▼</span>
+      </div>
+      <div class="collapse-body">
+        <table class="pay-table">
+          <thead><tr><th>Milestone</th><th>%</th><th>Amount</th></tr></thead>
+          <tbody id="d-pay-tbody"></tbody>
+        </table>
       </div>
     </div>
   </div>
 
-  <!-- ===== COLLAPSIBLE BREAKDOWN ===== -->
-  <div class="section-title mt16">📊 Detailed Breakdown</div>
-
-  <!-- Base Cost -->
-  <div class="collapse-card open" id="card-base">
-    <div class="collapse-header" onclick="toggleCard('card-base')">
-      <span class="collapse-title">Base Construction Cost</span>
-      <span class="collapse-amount" id="ch-base">—</span>
-      <span class="collapse-arrow">▼</span>
-    </div>
-    <div class="collapse-body">
-      <div class="br-row"><span class="br-label">Base Price</span><span class="br-calc" id="calc-base"></span><span class="br-val" id="val-base">—</span></div>
-      <div class="br-row"><span class="br-label">Amenities / Clubhouse</span><span class="br-calc" id="calc-amenities"></span><span class="br-val" id="val-amenities">—</span></div>
-      <div class="br-row"><span class="br-label">Floor Rise Charges</span><span class="br-calc" id="calc-floor"></span><span class="br-val" id="val-floor">—</span></div>
-      <div class="br-row"><span class="br-label">Car Parking (2 slots)</span><span class="br-calc"></span><span class="br-val" id="val-parking">—</span></div>
-      <div class="br-row"><span class="br-label">East Facing Premium</span><span class="br-calc" id="calc-east"></span><span class="br-val" id="val-east">—</span></div>
-      <div class="br-row"><span class="br-label">Corner Facing Premium</span><span class="br-calc" id="calc-corner"></span><span class="br-val" id="val-corner">—</span></div>
-      <div class="br-row total-row"><span class="br-label">Sale Value (for GST & Reg)</span><span class="br-calc"></span><span class="br-val" id="val-salevalue">—</span></div>
-    </div>
-  </div>
-
-  <!-- GST -->
-  <div class="collapse-card" id="card-gst">
-    <div class="collapse-header" onclick="toggleCard('card-gst')">
-      <span class="collapse-title">GST on Construction</span>
-      <span class="collapse-amount" id="ch-gst">—</span>
-      <span class="collapse-arrow">▼</span>
-    </div>
-    <div class="collapse-body">
-      <div class="br-row"><span class="br-label">GST Base (Sale Value)</span><span class="br-calc" id="calc-gstbase"></span><span class="br-val" id="val-gstbase">—</span></div>
-      <div class="br-row"><span class="br-label">GST Rate</span><span class="br-calc" id="calc-gstrate"></span><span class="br-val" id="val-gstamt">—</span></div>
-      <div class="br-row dimtext" style="font-size:11px; padding:4px 0;"><span style="flex:1; color:#555;">Note: 5% applies to under-construction flats (no ITC). Completed flats: 0%.</span></div>
-    </div>
-  </div>
-
-  <!-- Registration -->
-  <div class="collapse-card" id="card-reg">
-    <div class="collapse-header" onclick="toggleCard('card-reg')">
-      <span class="collapse-title">Registration & Stamp Duty</span>
-      <span class="collapse-amount" id="ch-reg">—</span>
-      <span class="collapse-arrow">▼</span>
-    </div>
-    <div class="collapse-body">
-      <div class="br-row"><span class="br-label">Stamp Duty</span><span class="br-calc" id="calc-stamp"></span><span class="br-val" id="val-stamp">—</span></div>
-      <div class="br-row"><span class="br-label">Registration Fee</span><span class="br-calc" id="calc-regfee"></span><span class="br-val" id="val-regfee">—</span></div>
-      <div class="br-row total-row"><span class="br-label">Total Registration</span><span class="br-calc"></span><span class="br-val" id="val-regtotal">—</span></div>
-      <div class="br-row dimtext" style="font-size:11px; padding:4px 0;"><span style="flex:1; color:#555;">TDS 1% of sale consideration to be deducted & deposited by purchaser.</span></div>
-    </div>
-  </div>
-
-  <!-- Other charges -->
-  <div class="collapse-card" id="card-other">
-    <div class="collapse-header" onclick="toggleCard('card-other')">
-      <span class="collapse-title">Legal, Maintenance & Corpus</span>
-      <span class="collapse-amount" id="ch-other">—</span>
-      <span class="collapse-arrow">▼</span>
-    </div>
-    <div class="collapse-body">
-      <div class="br-row"><span class="br-label">Legal & Documentation</span><span class="br-calc" id="calc-legal"></span><span class="br-val" id="val-legal">—</span></div>
-      <div class="br-row"><span class="br-label">GST on Legal</span><span class="br-calc" id="calc-legalgst"></span><span class="br-val" id="val-legalgst">—</span></div>
-      <div class="br-row"><span class="br-label">Advance Maintenance (24 months)</span><span class="br-calc" id="calc-maint"></span><span class="br-val" id="val-maint">—</span></div>
-      <div class="br-row"><span class="br-label">GST on Maintenance</span><span class="br-calc" id="calc-maintgst"></span><span class="br-val" id="val-maintgst">—</span></div>
-      <div class="br-row"><span class="br-label">Corpus Fund</span><span class="br-calc" id="calc-corpus"></span><span class="br-val" id="val-corpus">—</span></div>
-      <div class="br-row total-row"><span class="br-label">Total Other Charges</span><span class="br-calc"></span><span class="br-val" id="val-othertotal">—</span></div>
-    </div>
-  </div>
-
-  <!-- Payment Schedule -->
-  <div class="collapse-card" id="card-payment">
-    <div class="collapse-header" onclick="toggleCard('card-payment')">
-      <span class="collapse-title">Payment Schedule (Construction-Linked)</span>
-      <span class="collapse-amount" id="ch-payment">—</span>
-      <span class="collapse-arrow">▼</span>
-    </div>
-    <div class="collapse-body">
-      <table class="pay-table">
-        <thead>
-          <tr><th>Milestone</th><th>%</th><th>Amount</th></tr>
-        </thead>
-        <tbody id="pay-tbody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ===== LOAN ANALYSIS ===== -->
-  <div class="section-title mt16">🏦 Loan Analysis</div>
-
-  <div class="collapse-card" id="card-loan">
-    <div class="collapse-header" onclick="toggleCard('card-loan')">
-      <span class="collapse-title">EMI Scenarios — 20% Down Payment</span>
-      <span class="collapse-amount" id="ch-loan">3 scenarios</span>
-      <span class="collapse-arrow">▼</span>
-    </div>
-    <div class="collapse-body">
-      <div class="rate-row">
-        <label>Home Loan Interest Rate</label>
-        <input type="range" id="loanRate" min="7" max="14" step="0.1" value="8.75" oninput="updateLoanRate()">
-        <span class="rate-val" id="loanRateDisplay">8.75%</span>
-      </div>
-      <div class="rate-row" style="margin-top:-8px; margin-bottom: 0;">
-        <label style="flex:1; font-size:11px; color:#555;">Current SBI avg. ~8.75% p.a. (2025). Adjust above ↑</label>
-      </div>
-      <div class="loan-grid" id="loan-cards-container" style="margin-top:16px;"></div>
-    </div>
-  </div>
-
-  <!-- ===== EXPORT ===== -->
   <div class="btn-row">
-    <button class="btn btn-primary" onclick="exportImage()">📸 Save as Image</button>
-    <button class="btn btn-green" onclick="exportExcel()">📊 Download Excel</button>
-    <button class="btn btn-secondary" onclick="resetForm()">↺ Reset</button>
+    <button class="btn btn-green" onclick="exportDetailExcel()">📊 Export Detail Excel</button>
+    <button class="btn btn-secondary" onclick="exportSnapshot('detail')">📸 Save as Image</button>
+    <button class="btn btn-blue" id="btn-combined-from-detail" onclick="exportCombinedExcel()" style="display:none;">📋 Export Combined</button>
   </div>
+</div><!-- /section-detail -->
+
+<!-- ===== LOAN ANALYSIS SECTION ===== -->
+<div class="section-panel" id="section-loan">
+
+  <!-- Loan Inputs -->
+  <div class="loan-top">
+    <div class="loan-inputs-grid">
+      <div class="loan-field">
+        <label>Total Property Cost (₹)</label>
+        <input type="number" class="hl" id="l-total" value="0" oninput="loanTotalLocked=true; renderLoans()">
+        <span class="field-hint" id="l-total-hint">Auto from calculation</span>
+      </div>
+      <div class="loan-field">
+        <label>Own Contribution (₹)</label>
+        <input type="number" id="l-own" value="0" placeholder="0 = 20% default" oninput="renderLoans()">
+        <span class="field-hint">Amount you pay from savings</span>
+      </div>
+      <div class="loan-field">
+        <label>Interest Rate (% p.a.)</label>
+        <input type="number" id="l-rate" value="8.75" step="0.05" min="5" max="20" placeholder="8.75" oninput="renderLoans()">
+        <span class="field-hint">SBI home loan avg. ~8.75% (2025)</span>
+      </div>
+    </div>
+    <div class="loan-derived-row">
+      <div class="loan-derived">
+        <div class="ld-lbl">Loan Amount</div>
+        <div class="ld-val" id="l-loanamt">—</div>
+        <div class="ld-sub" id="l-loanamt-sub"></div>
+      </div>
+      <div class="loan-derived">
+        <div class="ld-lbl">Own Contribution</div>
+        <div class="ld-val" id="l-own-val">—</div>
+        <div class="ld-sub" id="l-own-sub"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 Scenario Cards -->
+  <div class="loan-grid" id="l-cards"></div>
+
+  <!-- Custom Year Analysis -->
+  <div class="custom-year-section">
+    <div class="cy-header">
+      <label>Show loan payoff status at year:</label>
+      <input type="number" class="cy-input" id="l-cy" value="10" min="1" max="35" oninput="renderLoans()">
+      <label>into tenure</label>
+    </div>
+    <div class="cy-grid" id="l-cy-cards"></div>
+  </div>
+
+  <!-- Advanced Loan Analysis -->
+  <div class="adv-section" id="adv-section">
+    <div class="adv-header" onclick="toggleAdv()">
+      <span style="font-size:16px;">🚀</span>
+      <span class="adv-title">Advanced: Extra Payments Projection</span>
+      <span class="adv-arrow">▼</span>
+    </div>
+    <div class="adv-body">
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;">
+        Making extra principal payments reduces tenure significantly. For example, one extra EMI per year on a 20-year loan can cut 4–5 years off your tenure.
+      </p>
+      <div class="adv-inputs-grid">
+        <div class="field">
+          <label>Extra EMIs per year</label>
+          <input type="number" id="adv-extra-emi" value="1" min="0" step="1" oninput="renderAdvLoan()">
+          <span class="field-hint">e.g. 1 = one additional EMI/year</span>
+        </div>
+        <div class="field">
+          <label>Extra Lumpsum / year (₹)</label>
+          <input type="number" id="adv-extra-lump" value="0" min="0" oninput="renderAdvLoan()">
+          <span class="field-hint">Annual bonus / savings towards principal</span>
+        </div>
+      </div>
+      <div class="adv-compare-grid" id="adv-cards"></div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-green" onclick="exportLoanExcel()">📊 Export Loan Excel</button>
+    <button class="btn btn-blue" id="btn-combined-from-loan" onclick="exportCombinedExcel()" style="display:none;">📋 Export Combined</button>
+  </div>
+</div><!-- /section-loan -->
 
 </div><!-- /main -->
-
-<!-- Export surface (hidden, used for image capture) -->
-<div id="export-surface"></div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// =========================================================
-// UTILITY
-// =========================================================
+// =====================================================================
+// UTILITIES
+// =====================================================================
 function fmt(n) {
-  if (isNaN(n) || n === null || n === undefined) return '—';
+  if (!n && n !== 0) return '—';
   return '₹' + Math.round(n).toLocaleString('en-IN');
 }
 function fmtCr(n) {
   if (!n) return '';
   const cr = n / 1e7;
   if (cr >= 1) return `(₹${cr.toFixed(2)} Cr)`;
-  const lac = n / 1e5;
-  return `(₹${lac.toFixed(2)} L)`;
+  return `(₹${(n/1e5).toFixed(2)} L)`;
 }
 function inCr(n) {
+  if (!n && n !== 0) return '—';
   const cr = n / 1e7;
   if (cr >= 1) return `₹${cr.toFixed(2)} Cr`;
   return `₹${(n/1e5).toFixed(2)} L`;
 }
 function v(id) { return parseFloat(document.getElementById(id).value) || 0; }
 function chk(id) { return document.getElementById(id).checked; }
-function set(id, txt) { const el = document.getElementById(id); if(el) el.textContent = txt; }
+function set(id, txt) { const el = document.getElementById(id); if (el) el.textContent = txt; }
+function el(id) { return document.getElementById(id); }
+function show(id) { const e = el(id); if(e) e.style.display = ''; }
+function hide(id) { const e = el(id); if(e) e.style.display = 'none'; }
 
 function showToast(msg) {
-  const t = document.getElementById('toast');
+  const t = el('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+function toggleCard(id) { el(id).classList.toggle('open'); }
+
+// =====================================================================
+// STATE
+// =====================================================================
+let QD = {};   // Quick calc data
+let DD = {};   // Detailed calc data
+let LD = {};   // Loan data (set by renderLoans)
+let loanTotalLocked = false;  // true if user manually set l-total
+let detailOpened = false;
+let loanOpened = false;
+
+// Modes for amenities / corpus / infra (sqft or lump)
+const MODES = { amenities: 'sqft', corpus: 'sqft', infra: 'sqft' };
+
+// =====================================================================
+// SECTION TOGGLE
+// =====================================================================
+function toggleSection(id) {
+  const panel = el('section-' + id);
+  const btn = el('btn-' + id);
+  const isOpen = panel.classList.contains('open');
+
+  if (isOpen) {
+    panel.classList.remove('open');
+    btn.classList.remove('active');
+  } else {
+    panel.classList.add('open');
+    btn.classList.add('active');
+
+    if (id === 'detail' && !detailOpened) {
+      detailOpened = true;
+      // Pre-fill from quick calc
+      el('d-sqft').value = v('q-sqft') || 1500;
+      el('d-rate').value = v('q-rate') || 7500;
+      el('d-stamp').value = 4;
+      el('d-regfee').value = 0.5;
+      el('d-gst').value = v('q-gst') || 5;
+      syncUCToDetail();
+      calcDetail();
+    }
+    if (id === 'loan' && !loanOpened) {
+      loanOpened = true;
+      el('l-sqft-info') && (el('l-sqft-info').textContent = '');
+      syncLoanTotal();
+      renderLoans();
+    }
+
+    // Show combined button if both sections have been used
+    updateCombinedButtons();
+  }
 }
 
-function toggleCard(id) {
-  const c = document.getElementById(id);
-  c.classList.toggle('open');
+function syncUCToDetail() {
+  const uc = chk('q-uc');
+  if (uc) {
+    show('d-gst-field'); show('d-gst-note'); hide('d-no-gst-note');
+    el('d-govt-uc-tag').style.display = '';
+    el('dc-gst').style.display = '';
+  } else {
+    hide('d-gst-field'); hide('d-gst-note'); show('d-no-gst-note');
+    el('d-govt-uc-tag').style.display = 'none';
+    el('dc-gst').style.display = 'none';
+  }
 }
 
-// =========================================================
+function syncLoanTotal() {
+  if (!loanTotalLocked) {
+    const bestTotal = DD.grandTotal || QD.total || 0;
+    el('l-total').value = Math.round(bestTotal);
+    el('l-total-hint').textContent = DD.grandTotal ? 'From Detailed Analysis' : (QD.total ? 'From Quick Estimate' : 'Enter total cost');
+  }
+}
+
+function updateCombinedButtons() {
+  const bothUsed = detailOpened && loanOpened;
+  el('btn-combined-from-detail').style.display = bothUsed ? '' : 'none';
+  el('btn-combined-from-loan').style.display = bothUsed ? '' : 'none';
+}
+
+// =====================================================================
+// MODE TOGGLES (amenities / corpus / infra)
+// =====================================================================
+function setMode(key, mode) {
+  MODES[key] = mode;
+  const sqftBtn = el(`mb-${key}-sqft`);
+  const lumpBtn = el(`mb-${key}-lump`);
+  const sqftInput = el(`d-${key}-sqft`);
+  const lumpInput = el(`d-${key}-lump`);
+  const unitEl = el(`unit-${key}`);
+
+  if (mode === 'sqft') {
+    sqftBtn.classList.add('active'); lumpBtn.classList.remove('active');
+    sqftInput.style.display = ''; lumpInput.style.display = 'none';
+    if (unitEl) unitEl.textContent = '₹/sft';
+  } else {
+    lumpBtn.classList.add('active'); sqftBtn.classList.remove('active');
+    lumpInput.style.display = ''; sqftInput.style.display = 'none';
+    if (unitEl) unitEl.textContent = '₹ total';
+  }
+  calcDetail();
+}
+
+function updateCfRow(key) {
+  const row = el(`cfrow-${key}`);
+  const checked = el(`d-incl-${key}`).checked;
+  if (checked) row.classList.remove('cf-disabled');
+  else row.classList.add('cf-disabled');
+  calcDetail();
+}
+
+// =====================================================================
 // QUICK CALC
-// =========================================================
+// =====================================================================
 function updateQuick() {
-  const sqft = parseFloat(document.getElementById('q-sqft').value) || 0;
-  const rate = parseFloat(document.getElementById('q-rate').value) || 0;
-  const total = sqft * rate;
-  document.getElementById('q-result').textContent = total ? inCr(total) : '—';
-  document.getElementById('q-result2').textContent = total ? fmt(total) : '';
+  const sqft = v('q-sqft');
+  const rate = v('q-rate');
+  const regPct = v('q-reg');
+  const uc = chk('q-uc');
+  const gstPct = uc ? v('q-gst') : 0;
+
+  // Show/hide GST field
+  if (uc) { el('qf-gst').classList.remove('hidden'); show('qr-gst-item'); }
+  else { el('qf-gst').classList.add('hidden'); hide('qr-gst-item'); }
+
+  const base = sqft * rate;
+  const reg = base * regPct / 100;
+  const gst = base * gstPct / 100;
+  const total = base + reg + gst;
+
+  set('qr-base', base ? inCr(base) : '—');
+  set('qr-reg', reg ? fmt(reg) : '₹0');
+  set('qr-gst', gst ? fmt(gst) : '₹0');
+  set('qr-total', total ? inCr(total) : '—');
+  set('qr-total2', total ? fmt(total) : '');
+
+  QD = { sqft, rate, regPct, uc, gstPct, base, reg, gst, total };
+
+  // Sync UC state to detail section if open
+  if (detailOpened) syncUCToDetail();
+
+  // Sync loan total if not locked
+  if (loanOpened && !loanTotalLocked) syncLoanTotal();
 }
 
-// =========================================================
-// MAIN CALCULATE
-// =========================================================
-let calcData = {};
-
-function calculate() {
-  const sqft = v('sqft');
-  const baseRate = v('baseRate');
-  const amenitiesRate = v('amenitiesRate');
-  const floor = v('floor');
-  const parking = v('parking');
-  const floorRiseRate = v('floorRiseRate');
-  const eastFacing = chk('eastFacing') ? 100 : 0;
-  const cornerFacing = chk('cornerFacing') ? 100 : 0;
-  const legalBase = v('legal');
-  const legalGstPct = v('legalGst');
-  const maintRate = v('maintRate');
-  const maintGstPct = v('maintGst');
-  const corpusRate = v('corpus');
-  const stampDutyPct = v('stampDuty');
-  const regFeePct = v('regFee');
-  const gstPct = v('gstRate');
+// =====================================================================
+// DETAIL CALC
+// =====================================================================
+function calcDetail() {
+  const sqft = v('d-sqft');
+  const rate = v('d-rate');
 
   // Base
-  const baseAmt = sqft * baseRate;
-  const amenitiesAmt = sqft * amenitiesRate;
-  const floorsAbove5 = Math.max(0, floor - 5);
-  const floorRiseAmt = sqft * floorRiseRate * floorsAbove5;
-  const eastAmt = sqft * eastFacing;
-  const cornerAmt = sqft * cornerFacing;
+  const baseAmt = sqft * rate;
 
-  // Sale value = base components (used for GST & registration)
-  const saleValue = baseAmt + amenitiesAmt + floorRiseAmt + parking + eastAmt + cornerAmt;
+  // Additional features
+  const inclFloor = chk('d-incl-floor');
+  const floor = inclFloor ? v('d-floor') : 0;
+  const floorrise = inclFloor ? v('d-floorrise') : 0;
+  const floorsAbove5 = Math.max(0, floor - 5);
+  const floorRiseAmt = inclFloor ? sqft * floorrise * floorsAbove5 : 0;
+
+  const inclParking = chk('d-incl-parking');
+  const parkingAmt = inclParking ? v('d-parking') : 0;
+
+  const inclEast = chk('d-incl-east');
+  const eastAmt = inclEast ? sqft * 100 : 0;
+
+  const inclCorner = chk('d-incl-corner');
+  const cornerAmt = inclCorner ? sqft * 100 : 0;
+
+  // Sale value for GST & Reg
+  const saleValue = baseAmt + floorRiseAmt + parkingAmt + eastAmt + cornerAmt;
 
   // GST
+  const uc = chk('q-uc');
+  const gstPct = uc ? v('d-gst') : 0;
   const gstAmt = saleValue * gstPct / 100;
 
   // Registration
-  const stampAmt = saleValue * stampDutyPct / 100;
-  const regFeeAmt = saleValue * regFeePct / 100;
+  const stampPct = v('d-stamp');
+  const regPct = v('d-regfee');
+  const stampAmt = saleValue * stampPct / 100;
+  const regFeeAmt = saleValue * regPct / 100;
   const regTotal = stampAmt + regFeeAmt;
 
-  // Other
-  const legalGstAmt = legalBase * legalGstPct / 100;
-  const legalTotal = legalBase + legalGstAmt;
-  const maintAmt = sqft * maintRate * 24;
-  const maintGstAmt = maintAmt * maintGstPct / 100;
-  const maintTotal = maintAmt + maintGstAmt;
-  const corpusAmt = sqft * corpusRate;
-  const otherTotal = legalTotal + maintTotal + corpusAmt;
+  // Additional charges
+  const inclAmenities = chk('d-incl-amenities');
+  let amenitiesAmt = 0;
+  if (inclAmenities) {
+    amenitiesAmt = MODES.amenities === 'sqft' ? sqft * v('d-amenities-sqft') : v('d-amenities-lump');
+  }
 
+  const inclCorpus = chk('d-incl-corpus');
+  let corpusAmt = 0;
+  if (inclCorpus) {
+    corpusAmt = MODES.corpus === 'sqft' ? sqft * v('d-corpus-sqft') : v('d-corpus-lump');
+  }
+
+  const inclInfra = chk('d-incl-infra');
+  let infraAmt = 0;
+  if (inclInfra) {
+    infraAmt = MODES.infra === 'sqft' ? sqft * v('d-infra-sqft') : v('d-infra-lump');
+  }
+
+  const inclMaint = chk('d-incl-maint');
+  const maintRate = inclMaint ? v('d-maint-rate') : 0;
+  const maintMonths = inclMaint ? v('d-maint-months') : 24;
+  const maintGstPct = v('d-maint-gst');
+  const maintBase = inclMaint ? sqft * maintRate * maintMonths : 0;
+  const maintGst = maintBase * maintGstPct / 100;
+  const maintTotal = maintBase + maintGst;
+
+  const inclLegal = chk('d-incl-legal');
+  const legalBase = inclLegal ? v('d-legal') : 0;
+  const legalGstPct = v('d-legal-gst');
+  const legalGst = legalBase * legalGstPct / 100;
+  const legalTotal = legalBase + legalGst;
+
+  const otherTotal = amenitiesAmt + corpusAmt + infraAmt + maintTotal + legalTotal;
   const grandTotal = saleValue + gstAmt + regTotal + otherTotal;
 
-  // Store
-  calcData = { sqft, baseRate, amenitiesRate, floor, parking, floorRiseRate,
-    eastFacing, cornerFacing, legalBase, legalGstPct, maintRate, maintGstPct,
-    corpusRate, stampDutyPct, regFeePct, gstPct,
-    baseAmt, amenitiesAmt, floorsAbove5, floorRiseAmt, eastAmt, cornerAmt,
-    saleValue, gstAmt, stampAmt, regFeeAmt, regTotal,
-    legalGstAmt, legalTotal, maintAmt, maintGstAmt, maintTotal, corpusAmt,
-    otherTotal, grandTotal };
+  DD = {
+    sqft, rate, baseAmt, inclFloor, floor, floorrise, floorsAbove5, floorRiseAmt,
+    inclParking, parkingAmt, eastAmt, cornerAmt, inclEast, inclCorner,
+    saleValue, uc, gstPct, gstAmt, stampPct, regPct, stampAmt, regFeeAmt, regTotal,
+    inclAmenities, amenitiesAmt, inclCorpus, corpusAmt, inclInfra, infraAmt,
+    inclMaint, maintRate, maintMonths, maintGstPct, maintBase, maintGst, maintTotal,
+    inclLegal, legalBase, legalGstPct, legalGst, legalTotal,
+    otherTotal, grandTotal
+  };
 
-  renderAll();
+  renderDetail();
+
+  // Update loan total if not locked
+  if (loanOpened && !loanTotalLocked) {
+    el('l-total').value = Math.round(grandTotal);
+    el('l-total-hint').textContent = 'From Detailed Analysis';
+    renderLoans();
+  }
 }
 
-function renderAll() {
-  const d = calcData;
+function renderDetail() {
+  const d = DD;
 
-  // Total
-  set('totalDisplay', fmt(d.grandTotal));
-  set('totalCrDisplay', fmtCr(d.grandTotal));
-  set('saleValueDisplay', inCr(d.saleValue));
-  set('govtDisplay', inCr(d.gstAmt + d.regTotal));
-  set('otherDisplay', inCr(d.otherTotal));
+  // Totals
+  set('d-total', fmt(d.grandTotal));
+  set('d-total-cr', fmtCr(d.grandTotal));
+  set('d-sv', inCr(d.saleValue));
+  set('d-govt', inCr(d.gstAmt + d.regTotal));
+  set('d-other', inCr(d.otherTotal));
+
+  // Inline calcs
+  set('dc-floor', !chk('d-incl-floor') ? '—' : (d.floorsAbove5 > 0 ? fmt(d.floorRiseAmt) : '₹0 (≤5th fl)'));
+  set('dc-parking', chk('d-incl-parking') ? fmt(d.parkingAmt) : '—');
+  set('dc-east', chk('d-incl-east') ? fmt(d.eastAmt) : '—');
+  set('dc-corner', chk('d-incl-corner') ? fmt(d.cornerAmt) : '—');
+  set('dc-amenities', chk('d-incl-amenities') ? fmt(d.amenitiesAmt) : '—');
+  set('dc-corpus', chk('d-incl-corpus') ? fmt(d.corpusAmt) : '—');
+  set('dc-infra', chk('d-incl-infra') ? fmt(d.infraAmt) : '—');
+  set('dc-maint', chk('d-incl-maint') ? fmt(d.maintTotal) : '—');
+  set('dc-legal', chk('d-incl-legal') ? fmt(d.legalTotal) : '—');
 
   // Base card
-  set('ch-base', inCr(d.saleValue));
-  set('calc-base', `${d.sqft} × ₹${d.baseRate}`);
-  set('val-base', fmt(d.baseAmt));
-  set('calc-amenities', `${d.sqft} × ₹${d.amenitiesRate}`);
-  set('val-amenities', fmt(d.amenitiesAmt));
-  set('calc-floor', d.floorsAbove5 > 0 ? `${d.sqft} × ₹${d.floorRiseRate} × ${d.floorsAbove5} floors` : 'Not applicable');
-  set('val-floor', d.floorsAbove5 > 0 ? fmt(d.floorRiseAmt) : '₹0');
-  set('val-parking', fmt(d.parking));
-  set('calc-east', d.eastFacing > 0 ? `${d.sqft} × ₹100` : '—');
-  set('val-east', d.eastFacing > 0 ? fmt(d.eastAmt) : '—');
-  set('calc-corner', d.cornerFacing > 0 ? `${d.sqft} × ₹100` : '—');
-  set('val-corner', d.cornerFacing > 0 ? fmt(d.cornerAmt) : '—');
-  set('val-salevalue', fmt(d.saleValue));
+  set('dch-base', inCr(d.saleValue));
+  let baseHtml = brRow('Base Price', `${d.sqft} × ₹${d.rate}`, fmt(d.baseAmt));
+  if (d.inclFloor && d.floorsAbove5 > 0) baseHtml += brRow('Floor Rise Charges', `${d.sqft} × ₹${d.floorrise} × ${d.floorsAbove5} fl`, fmt(d.floorRiseAmt));
+  if (d.inclParking) baseHtml += brRow('Car Parking (2 slots)', '', fmt(d.parkingAmt));
+  if (d.inclEast) baseHtml += brRow('East Facing Premium', `${d.sqft} × ₹100`, fmt(d.eastAmt));
+  if (d.inclCorner) baseHtml += brRow('Corner Facing Premium', `${d.sqft} × ₹100`, fmt(d.cornerAmt));
+  baseHtml += brRowTotal('Sale Value (GST & Reg basis)', fmt(d.saleValue));
+  el('d-body-base').innerHTML = baseHtml;
 
-  // GST
-  set('ch-gst', fmt(d.gstAmt));
-  set('calc-gstbase', fmt(d.saleValue));
-  set('val-gstbase', fmt(d.saleValue));
-  set('calc-gstrate', `${d.gstPct}% of ${inCr(d.saleValue)}`);
-  set('val-gstamt', fmt(d.gstAmt));
+  // GST card
+  if (d.uc) {
+    el('dc-gst').style.display = '';
+    set('dch-gst', fmt(d.gstAmt));
+    set('d-calc-gstbase', fmt(d.saleValue));
+    set('d-val-gstbase', fmt(d.saleValue));
+    set('d-calc-gstrate', `${d.gstPct}% of ${inCr(d.saleValue)}`);
+    set('d-val-gstamt', fmt(d.gstAmt));
+  } else {
+    el('dc-gst').style.display = 'none';
+  }
 
-  // Reg
-  set('ch-reg', fmt(d.regTotal));
-  set('calc-stamp', `${d.stampDutyPct}% of ${inCr(d.saleValue)}`);
-  set('val-stamp', fmt(d.stampAmt));
-  set('calc-regfee', `${d.regFeePct}% of ${inCr(d.saleValue)}`);
-  set('val-regfee', fmt(d.regFeeAmt));
-  set('val-regtotal', fmt(d.regTotal));
+  // Reg card
+  set('dch-reg', fmt(d.regTotal));
+  set('d-calc-stamp', `${d.stampPct}% of ${inCr(d.saleValue)}`);
+  set('d-val-stamp', fmt(d.stampAmt));
+  set('d-calc-regfee', `${d.regPct}% of ${inCr(d.saleValue)}`);
+  set('d-val-regfee', fmt(d.regFeeAmt));
+  set('d-val-regtotal', fmt(d.regTotal));
 
-  // Other
-  set('ch-other', fmt(d.otherTotal));
-  set('calc-legal', `Base ₹${d.legalBase.toLocaleString('en-IN')}`);
-  set('val-legal', fmt(d.legalBase));
-  set('calc-legalgst', `${d.legalGstPct}% on ₹${d.legalBase.toLocaleString('en-IN')}`);
-  set('val-legalgst', fmt(d.legalGstAmt));
-  set('calc-maint', `${d.sqft} × ₹${d.maintRate} × 24 mo`);
-  set('val-maint', fmt(d.maintAmt));
-  set('calc-maintgst', `${d.maintGstPct}% of maintenance`);
-  set('val-maintgst', fmt(d.maintGstAmt));
-  set('calc-corpus', `${d.sqft} × ₹${d.corpusRate}`);
-  set('val-corpus', fmt(d.corpusAmt));
-  set('val-othertotal', fmt(d.otherTotal));
+  // Other card
+  set('dch-other', fmt(d.otherTotal));
+  let otherHtml = '';
+  if (d.inclAmenities) otherHtml += brRow('Amenities / Clubhouse', MODES.amenities === 'sqft' ? `${d.sqft} × ₹${v('d-amenities-sqft')}` : 'Lumpsum', fmt(d.amenitiesAmt));
+  if (d.inclCorpus) otherHtml += brRow('Corpus Fund', MODES.corpus === 'sqft' ? `${d.sqft} × ₹${v('d-corpus-sqft')}` : 'Lumpsum', fmt(d.corpusAmt));
+  if (d.inclInfra) otherHtml += brRow('Infrastructure Charges', MODES.infra === 'sqft' ? `${d.sqft} × ₹${v('d-infra-sqft')}` : 'Lumpsum', fmt(d.infraAmt));
+  if (d.inclMaint) {
+    otherHtml += brRow('Advance Maintenance', `${d.sqft} × ₹${d.maintRate} × ${d.maintMonths} mo`, fmt(d.maintBase));
+    otherHtml += brRow('GST on Maintenance', `${d.maintGstPct}%`, fmt(d.maintGst));
+  }
+  if (d.inclLegal) {
+    otherHtml += brRow('Legal & Documentation', 'Base', fmt(d.legalBase));
+    otherHtml += brRow('GST on Legal', `${d.legalGstPct}%`, fmt(d.legalGst));
+  }
+  if (!otherHtml) otherHtml = '<div class="note-text" style="padding:8px 0;">No additional charges enabled.</div>';
+  else otherHtml += brRowTotal('Total Other Charges', fmt(d.otherTotal));
+  el('d-body-other').innerHTML = otherHtml;
 
   // Payment schedule
+  set('dch-payment', inCr(d.saleValue));
   const sv = d.saleValue;
-  const payMilestones = [
-    ['Booking Amount', Math.max(sv * 0.10, 1000000)],
-    ['On AOS (within 15 days of booking)', sv * 0.20 - Math.max(sv * 0.10, 1000000)],
-    ['On Completion of Foundation', sv * 0.15],
-    ['On Completion of 2 Basement Slabs', sv * 0.15],
-    ['On Completion of 3rd Floor Slab', sv * 0.10],
-    ['On Completion of 7th Floor Slab', sv * 0.10],
-    ['On Completion of 10th Floor Slab', sv * 0.10],
-    ['On Completion of Brickwork', sv * 0.10],
-    ['On Completion of Tiles & Flooring', sv * 0.05],
-    ['21 Days Before Registration/Handover', sv * 0.05 + d.gstAmt + d.regTotal + d.otherTotal],
+  const booking = Math.max(sv * 0.10, 1000000);
+  const milestones = [
+    ['Booking Amount', booking, '10% or ₹10L'],
+    ['On AOS (within 15 days)', sv * 0.20 - booking, '20% less Booking'],
+    ['On Completion of Foundation', sv * 0.15, '15%'],
+    ['On Completion of 2 Basement Slabs', sv * 0.15, '15%'],
+    ['On Completion of 3rd Floor Slab', sv * 0.10, '10%'],
+    ['On Completion of 7th Floor Slab', sv * 0.10, '10%'],
+    ['On Completion of 10th Floor Slab', sv * 0.10, '10%'],
+    ['On Completion of Brickwork', sv * 0.10, '10%'],
+    ['On Completion of Tiles & Flooring', sv * 0.05, '5%'],
+    ['21 Days Before Registration/Handover', sv * 0.05 + d.gstAmt + d.regTotal + d.otherTotal, '5% + All Charges'],
   ];
-  set('ch-payment', inCr(sv));
-  const tbody = document.getElementById('pay-tbody');
-  tbody.innerHTML = '';
-  let running = 0;
-  payMilestones.forEach(([label, amt], i) => {
-    running += amt;
-    const pct = i < 9 ? `${[10,20,15,15,10,10,10,10,5,5][i]}%` : '+Charges';
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${label}</td><td class="dimtext mono">${pct}</td><td>${fmt(amt)}</td>`;
-    tbody.appendChild(tr);
-  });
-  const totRow = document.createElement('tr');
-  totRow.innerHTML = `<td>TOTAL</td><td></td><td>${fmt(d.grandTotal)}</td>`;
-  tbody.appendChild(totRow);
+  const tbody = el('d-pay-tbody');
+  tbody.innerHTML = milestones.map(([lbl, amt, pct]) =>
+    `<tr><td>${lbl}</td><td class="mono dimtext">${pct}</td><td>${fmt(amt)}</td></tr>`
+  ).join('') + `<tr><td>TOTAL</td><td></td><td>${fmt(d.grandTotal)}</td></tr>`;
 
-  // Loan
-  renderLoans();
+  updateCombinedButtons();
 }
 
-// =========================================================
-// LOAN CALCULATOR
-// =========================================================
-function updateLoanRate() {
-  const rate = document.getElementById('loanRate').value;
-  document.getElementById('loanRateDisplay').textContent = parseFloat(rate).toFixed(2) + '%';
-  renderLoans();
+function brRow(label, calc, val) {
+  return `<div class="br-row"><span class="br-label">${label}</span><span class="br-calc">${calc}</span><span class="br-val">${val}</span></div>`;
+}
+function brRowTotal(label, val) {
+  return `<div class="br-row total-row"><span class="br-label">${label}</span><span class="br-calc"></span><span class="br-val">${val}</span></div>`;
 }
 
-function calcEMI(principal, annualRate, years) {
+// =====================================================================
+// LOAN CALC
+// =====================================================================
+function calcEMI(P, annualRate, years) {
   const r = annualRate / 12 / 100;
   const n = years * 12;
-  if (r === 0) return principal / n;
-  return principal * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+  if (r === 0) return P / n;
+  return P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+}
+
+function loanAtYear(P, annualRate, totalYears, checkYear) {
+  const r = annualRate / 12 / 100;
+  const n = totalYears * 12;
+  const k = Math.min(checkYear * 12, n);
+  const emi = calcEMI(P, annualRate, totalYears);
+  let balance;
+  if (r === 0) {
+    balance = P - (P / n) * k;
+  } else {
+    balance = P * (Math.pow(1+r, n) - Math.pow(1+r, k)) / (Math.pow(1+r, n) - 1);
+  }
+  balance = Math.max(0, balance);
+  const principalPaid = P - balance;
+  const interestPaid = emi * k - principalPaid;
+  return { balance, principalPaid, interestPaid: Math.max(0, interestPaid), totalPaid: emi * k };
+}
+
+function simulateLoan(P, annualRate, totalYears, extraEmiPerYear, extraLumpsumPerYear) {
+  const r = annualRate / 12 / 100;
+  const n = totalYears * 12;
+  const emi = calcEMI(P, annualRate, totalYears);
+  let balance = P;
+  let month = 0;
+  let totalInterest = 0;
+  let y5Principal = 0, y5Interest = 0, y5Captured = false;
+  const safetyLimit = n * 3;
+
+  while (balance > 0.01 && month < safetyLimit) {
+    month++;
+    const interest = balance * r;
+    const principal = Math.min(emi - interest, balance);
+    balance = Math.max(0, balance - principal);
+    totalInterest += interest;
+
+    // Extra at end of each year
+    if (month % 12 === 0 && balance > 0) {
+      const extra = Math.min(extraEmiPerYear * emi + extraLumpsumPerYear, balance);
+      balance = Math.max(0, balance - extra);
+    }
+
+    if (month === 60 && !y5Captured) {
+      y5Principal = P - balance;
+      y5Interest = totalInterest;
+      y5Captured = true;
+    }
+    if (balance <= 0.01) break;
+  }
+
+  if (!y5Captured) { y5Principal = P; y5Interest = totalInterest; }
+
+  return {
+    actualMonths: month,
+    actualYears: (month / 12).toFixed(1),
+    totalInterest: Math.max(0, totalInterest),
+    totalPaid: P + Math.max(0, totalInterest),
+    y5Principal,
+    y5Interest: Math.max(0, y5Interest),
+    monthsSaved: Math.max(0, n - month),
+    yearsSaved: Math.max(0, (n - month) / 12).toFixed(1),
+  };
 }
 
 function renderLoans() {
-  const grandTotal = calcData.grandTotal || 0;
-  const rate = parseFloat(document.getElementById('loanRate').value);
-  const downPct = 20;
-  const downAmt = grandTotal * downPct / 100;
-  const loanAmt = grandTotal - downAmt;
+  const total = v('l-total');
+  const ownInput = v('l-own');
+  const rate = parseFloat(el('l-rate').value) || 8.75;
+  const cy = parseInt(el('l-cy').value) || 10;
+
+  const own = ownInput > 0 ? ownInput : total * 0.20;
+  const loan = Math.max(0, total - own);
+
+  set('l-loanamt', inCr(loan));
+  set('l-loanamt-sub', `${inCr(total)} − own contribution`);
+  set('l-own-val', inCr(own));
+  set('l-own-sub', ownInput > 0 ? 'Custom amount' : `20% of total (default)`);
+
+  LD = { total, own, loan, rate };
 
   const scenarios = [
-    { label: '20yr · 20% Down', years: 20 },
-    { label: '30yr · 20% Down', years: 30 },
-    { label: '15yr · 20% Down', years: 15 },
+    { label: '15 Year Loan', years: 15 },
+    { label: '20 Year Loan', years: 20 },
+    { label: '30 Year Loan', years: 30 },
   ];
 
-  const container = document.getElementById('loan-cards-container');
+  const container = el('l-cards');
   container.innerHTML = '';
 
+  if (!loan) {
+    container.innerHTML = '<div class="note-text" style="padding:16px 0;">Enter total property cost above to calculate EMI scenarios.</div>';
+    el('l-cy-cards').innerHTML = '';
+    return;
+  }
+
   scenarios.forEach(sc => {
-    const emi = calcEMI(loanAmt, rate, sc.years);
+    const emi = calcEMI(loan, rate, sc.years);
     const totalPaid = emi * sc.years * 12;
-    const totalInterest = totalPaid - loanAmt;
+    const totalInterest = totalPaid - loan;
+    const y5 = loanAtYear(loan, rate, sc.years, 5);
 
     const card = document.createElement('div');
     card.className = 'loan-card';
     card.innerHTML = `
-      <div class="lc-title">${sc.label}</div>
-      <div class="loan-stat">
-        <span class="ls-label">Monthly EMI</span>
-        <span class="ls-val big">${fmt(emi)}</span>
-      </div>
-      <div class="loan-stat">
-        <span class="ls-label">Down Payment (20%)</span>
-        <span class="ls-val">${inCr(downAmt)}</span>
-      </div>
-      <div class="loan-stat">
-        <span class="ls-label">Loan Amount (80%)</span>
-        <span class="ls-val">${inCr(loanAmt)}</span>
-      </div>
-      <div class="loan-stat">
-        <span class="ls-label">Total Interest Paid</span>
-        <span class="ls-val total">${inCr(totalInterest)}</span>
-      </div>
-      <div class="loan-stat">
-        <span class="ls-label">Total Amount Paid</span>
-        <span class="ls-val">${inCr(totalPaid + downAmt)}</span>
-      </div>
-      <div class="loan-stat">
-        <span class="ls-label">Interest Rate</span>
-        <span class="ls-val">${rate.toFixed(2)}% p.a.</span>
-      </div>
-    `;
+      <div class="lc-title">${sc.label} @ ${rate.toFixed(2)}%</div>
+      <div class="loan-stat"><span class="ls-lbl">Monthly EMI</span><span class="ls-val big">${fmt(emi)}</span></div>
+      <div class="loan-stat"><span class="ls-lbl">Own Contribution</span><span class="ls-val">${inCr(own)}</span></div>
+      <div class="loan-stat"><span class="ls-lbl">Loan Amount</span><span class="ls-val">${inCr(loan)}</span></div>
+      <div class="loan-stat"><span class="ls-lbl">Total Interest</span><span class="ls-val red">${inCr(totalInterest)}</span></div>
+      <div class="loan-stat"><span class="ls-lbl">Total Amount Paid</span><span class="ls-val">${inCr(totalPaid + own)}</span></div>
+      <div class="yr-break">
+        <div class="yr-break-title">📅 At 5-Year Mark</div>
+        <div class="loan-stat"><span class="ls-lbl">Principal Paid</span><span class="ls-val blue">${inCr(y5.principalPaid)}</span></div>
+        <div class="loan-stat"><span class="ls-lbl">Interest Paid</span><span class="ls-val red">${inCr(y5.interestPaid)}</span></div>
+        <div class="loan-stat"><span class="ls-lbl">Balance Remaining</span><span class="ls-val">${inCr(y5.balance)}</span></div>
+      </div>`;
+    container.appendChild(card);
+  });
+
+  // Custom year cards
+  const cyContainer = el('l-cy-cards');
+  cyContainer.innerHTML = '';
+  if (loan) {
+    scenarios.forEach(sc => {
+      const cyData = loanAtYear(loan, rate, sc.years, cy);
+      const card = document.createElement('div');
+      card.className = 'cy-card';
+      card.innerHTML = `
+        <div class="cy-card-title">${sc.label}</div>
+        <div class="loan-stat"><span class="ls-lbl">Principal Paid</span><span class="ls-val blue">${inCr(cyData.principalPaid)}</span></div>
+        <div class="loan-stat"><span class="ls-lbl">Interest Paid</span><span class="ls-val red">${inCr(cyData.interestPaid)}</span></div>
+        <div class="loan-stat"><span class="ls-lbl">Balance Remaining</span><span class="ls-val">${inCr(cyData.balance)}</span></div>
+        <div class="loan-stat"><span class="ls-lbl">Total Paid so far</span><span class="ls-val">${inCr(cyData.totalPaid)}</span></div>`;
+      cyContainer.appendChild(card);
+    });
+  }
+
+  // Re-render advanced if open
+  if (el('adv-section').classList.contains('open')) renderAdvLoan();
+}
+
+// =====================================================================
+// ADVANCED LOAN
+// =====================================================================
+function toggleAdv() {
+  const s = el('adv-section');
+  s.classList.toggle('open');
+  if (s.classList.contains('open')) renderAdvLoan();
+}
+
+function renderAdvLoan() {
+  const loan = LD.loan || 0;
+  const rate = LD.rate || 8.75;
+  const extraEmi = v('adv-extra-emi');
+  const extraLump = v('adv-extra-lump');
+
+  const container = el('adv-cards');
+  container.innerHTML = '';
+
+  if (!loan) {
+    container.innerHTML = '<div class="note-text">Enter loan details above first.</div>';
+    return;
+  }
+
+  const scenarios = [
+    { label: '15yr', years: 15 },
+    { label: '20yr', years: 20 },
+    { label: '30yr', years: 30 },
+  ];
+
+  scenarios.forEach(sc => {
+    const emi = calcEMI(loan, rate, sc.years);
+    const normal = simulateLoan(loan, rate, sc.years, 0, 0);
+    const adv = simulateLoan(loan, rate, sc.years, extraEmi, extraLump);
+
+    const extraAnnual = extraEmi * emi + extraLump;
+    const card = document.createElement('div');
+    card.className = 'adv-card';
+    card.innerHTML = `
+      <div class="adv-card-title">${sc.label} @ ${rate.toFixed(2)}%</div>
+      <div class="loan-stat"><span class="ls-lbl">Standard EMI</span><span class="ls-val">${fmt(emi)}/mo</span></div>
+      <div class="loan-stat"><span class="ls-lbl">Extra per year</span><span class="ls-val blue">${fmt(extraAnnual)}</span></div>
+      <div class="divider" style="margin:8px 0;"></div>
+      <div class="loan-stat"><span class="ls-lbl">Normal tenure</span><span class="ls-val">${sc.years} yrs</span></div>
+      <div class="loan-stat"><span class="ls-lbl">With extra payments</span><span class="ls-val">${adv.actualYears} yrs</span></div>
+      <div class="loan-stat"><span class="ls-lbl">Time saved</span><span class="ls-val" style="color:var(--green)">${adv.yearsSaved} yrs</span></div>
+      <div class="divider" style="margin:8px 0;"></div>
+      <div class="loan-stat"><span class="ls-lbl">Normal total interest</span><span class="ls-val red">${inCr(normal.totalInterest)}</span></div>
+      <div class="loan-stat"><span class="ls-lbl">With extra total interest</span><span class="ls-val" style="color:var(--green)">${inCr(adv.totalInterest)}</span></div>
+      <div class="loan-stat"><span class="ls-lbl">Interest saved</span><span class="ls-val" style="color:var(--green)">${inCr(Math.max(0, normal.totalInterest - adv.totalInterest))}</span></div>
+      <div class="yr-break">
+        <div class="yr-break-title">📅 At 5-Year Mark (with extra)</div>
+        <div class="loan-stat"><span class="ls-lbl">Principal Paid</span><span class="ls-val blue">${inCr(adv.y5Principal)}</span></div>
+        <div class="loan-stat"><span class="ls-lbl">Interest Paid</span><span class="ls-val red">${inCr(adv.y5Interest)}</span></div>
+      </div>`;
     container.appendChild(card);
   });
 }
 
-// =========================================================
-// EXPORT — IMAGE (via canvas screenshot of a rendered summary)
-// =========================================================
-function exportImage() {
-  const d = calcData;
-  if (!d.grandTotal) { showToast('Please enter property details first'); return; }
+// =====================================================================
+// EXPORT — SNAPSHOT (Canvas PNG)
+// =====================================================================
+function exportSnapshot(src) {
+  const d = src === 'detail' ? DD : null;
+  const sqft = d ? d.sqft : (QD.sqft || 0);
+  const rate = d ? d.rate : (QD.rate || 0);
+  const total = d ? d.grandTotal : (QD.total || sqft * rate);
+  const uc = d ? d.uc : chk('q-uc');
 
-  const rate = parseFloat(document.getElementById('loanRate').value);
-  const loanAmt = d.grandTotal * 0.8;
-  const emi20 = calcEMI(loanAmt, rate, 20);
-  const emi30 = calcEMI(loanAmt, rate, 30);
+  if (!sqft || !rate) { showToast('Enter property details first'); return; }
 
-  // Build a clean export canvas
   const canvas = document.createElement('canvas');
   const scale = 2;
-  canvas.width = 800 * scale;
-  canvas.height = 980 * scale;
+  canvas.width = 760 * scale;
+  canvas.height = 800 * scale;
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
 
-  const W = 800, H = 980;
-  const pad = 40;
-
-  // Background
+  const W = 760, pad = 36;
   ctx.fillStyle = '#0f0f0f';
-  ctx.fillRect(0, 0, W, H);
-
-  // Gold top bar
+  ctx.fillRect(0, 0, W, 800);
   ctx.fillStyle = '#c9a84c';
   ctx.fillRect(0, 0, W, 4);
 
   // Header
   ctx.fillStyle = '#c9a84c';
-  ctx.font = 'bold 28px Georgia, serif';
-  ctx.fillText('Apartment Cost Analysis', pad, 54);
+  ctx.font = 'bold 26px Georgia, serif';
+  ctx.fillText('Apartment Cost Analysis', pad, 50);
   ctx.fillStyle = '#666';
-  ctx.font = '13px Arial';
-  ctx.fillText('Hyderabad · Generated ' + new Date().toLocaleDateString('en-IN'), pad, 76);
-
-  // Separator
-  ctx.fillStyle = '#2a2a2a';
-  ctx.fillRect(pad, 90, W - pad*2, 1);
-
-  // Big total
-  ctx.fillStyle = '#888';
   ctx.font = '12px Arial';
+  ctx.fillText('Hyderabad · ' + new Date().toLocaleDateString('en-IN'), pad, 70);
+  if (uc) { ctx.fillStyle = '#c9a84c'; ctx.fillText('Under Construction Property', W - pad - 180, 70); }
+
+  ctx.fillStyle = '#2a2a2a';
+  ctx.fillRect(pad, 84, W - pad*2, 1);
+
+  // Total
+  ctx.fillStyle = '#888';
+  ctx.font = '11px Arial';
   ctx.textAlign = 'center';
-  ctx.fillText('TOTAL COST TO PURCHASE', W/2, 125);
+  ctx.fillText('TOTAL COST TO PURCHASE', W/2, 116);
   ctx.fillStyle = '#c9a84c';
-  ctx.font = 'bold 48px Georgia, serif';
-  ctx.fillText(fmt(d.grandTotal), W/2, 178);
+  ctx.font = 'bold 44px Georgia, serif';
+  ctx.fillText(fmt(total || sqft*rate), W/2, 166);
   ctx.fillStyle = '#666';
-  ctx.font = '15px Arial';
-  ctx.fillText(fmtCr(d.grandTotal), W/2, 202);
+  ctx.font = '14px Arial';
+  ctx.fillText(fmtCr(total || sqft*rate), W/2, 188);
   ctx.textAlign = 'left';
 
-  // Separator
   ctx.fillStyle = '#2a2a2a';
-  ctx.fillRect(pad, 218, W - pad*2, 1);
+  ctx.fillRect(pad, 202, W - pad*2, 1);
 
-  // Three columns summary
-  const summCols = [
-    ['Property Area', `${d.sqft} sft`, ''],
-    ['Base Rate', `₹${d.baseRate}/sft`, ''],
-    ['Floor', `${d.floor}th`, ''],
+  const rows = d ? [
+    ['Carpet Area', `${d.sqft} sft`, ''],
+    ['Base Rate', `₹${d.rate}/sft`, ''],
     ['Sale Value', inCr(d.saleValue), fmt(d.saleValue)],
-    ['GST (' + d.gstPct + '%)', inCr(d.gstAmt), fmt(d.gstAmt)],
-    ['Stamp + Reg', inCr(d.regTotal), fmt(d.regTotal)],
-    ['Legal+Maint+Corpus', inCr(d.otherTotal), fmt(d.otherTotal)],
-    ['Total', inCr(d.grandTotal), fmt(d.grandTotal)],
-  ];
+    d.uc ? ['GST (' + d.gstPct + '%)', inCr(d.gstAmt), fmt(d.gstAmt)] : null,
+    ['Stamp + Registration', inCr(d.regTotal), fmt(d.regTotal)],
+    ['Other Charges', inCr(d.otherTotal), fmt(d.otherTotal)],
+    ['TOTAL', inCr(d.grandTotal), fmt(d.grandTotal)],
+  ].filter(Boolean) : [
+    ['Carpet Area', `${sqft} sft`, ''],
+    ['Base Rate', `₹${rate}/sft`, ''],
+    ['Base Cost', inCr(sqft*rate), fmt(sqft*rate)],
+    ['Registration Est.', inCr(QD.reg), fmt(QD.reg)],
+    uc ? ['GST (5%)', inCr(QD.gst), fmt(QD.gst)] : null,
+    ['ESTIMATED TOTAL', inCr(QD.total || sqft*rate), fmt(QD.total || sqft*rate)],
+  ].filter(Boolean);
 
-  let y = 250;
-  const COL1 = pad, COL2 = 320, COL3 = 560;
-
+  let y = 230;
   ctx.font = '10px Arial';
   ctx.fillStyle = '#555';
-  ctx.fillText('COMPONENT', COL1, y);
-  ctx.fillText('AMOUNT', COL2, y);
-  ctx.fillText('EXACT', COL3, y);
+  ctx.fillText('COMPONENT', pad, y);
+  ctx.fillText('AMOUNT', 360, y);
+  ctx.fillText('EXACT', 560, y);
   y += 8;
-  ctx.fillStyle = '#2a2a2a';
-  ctx.fillRect(pad, y, W - pad*2, 1);
-  y += 14;
+  ctx.fillStyle = '#2a2a2a'; ctx.fillRect(pad, y, W-pad*2, 1); y += 16;
 
-  summCols.forEach((row, i) => {
-    const isLast = i === summCols.length - 1;
-    ctx.fillStyle = isLast ? '#c9a84c' : (i % 2 === 0 ? '#bbb' : '#888');
-    ctx.font = isLast ? 'bold 14px Arial' : '13px Arial';
-    ctx.fillText(row[0], COL1, y);
-    ctx.fillStyle = isLast ? '#c9a84c' : '#ddd';
-    ctx.font = isLast ? 'bold 14px "DM Mono", monospace' : '13px monospace';
-    ctx.fillText(row[1], COL2, y);
-    ctx.fillStyle = '#666';
-    ctx.font = '12px monospace';
-    ctx.fillText(row[2], COL3, y);
-    y += 22;
-    if (!isLast) {
-      ctx.fillStyle = '#1c1c1c';
-      ctx.fillRect(pad, y - 6, W - pad*2, 1);
-    }
-  });
-
-  y += 16;
-  ctx.fillStyle = '#2a2a2a';
-  ctx.fillRect(pad, y, W - pad*2, 1);
-  y += 24;
-
-  // Loan section
-  ctx.fillStyle = '#6fa3d6';
-  ctx.font = 'bold 14px Arial';
-  ctx.fillText('LOAN ANALYSIS  (20% Down · ' + rate.toFixed(2) + '% p.a.)', pad, y);
-  y += 20;
-
-  const loanRows = [
-    ['Down Payment (20%)', inCr(d.grandTotal * 0.2)],
-    ['Loan Amount (80%)', inCr(loanAmt)],
-    ['EMI — 20 Year Loan', fmt(emi20) + '/month'],
-    ['EMI — 30 Year Loan', fmt(emi30) + '/month'],
-    ['Total Interest (20yr)', inCr(emi20*240 - loanAmt)],
-    ['Total Interest (30yr)', inCr(emi30*360 - loanAmt)],
-  ];
-
-  loanRows.forEach((row, i) => {
-    ctx.fillStyle = '#888';
-    ctx.font = '13px Arial';
+  rows.forEach((row, i) => {
+    const isLast = i === rows.length - 1;
+    ctx.fillStyle = isLast ? '#c9a84c' : (i%2===0 ? '#bbb' : '#888');
+    ctx.font = isLast ? 'bold 13px Arial' : '12px Arial';
     ctx.fillText(row[0], pad, y);
-    ctx.fillStyle = i < 2 ? '#ddd' : '#5cb88a';
-    ctx.font = '13px monospace';
-    ctx.textAlign = 'right';
-    ctx.fillText(row[1], W - pad, y);
-    ctx.textAlign = 'left';
-    y += 22;
-    ctx.fillStyle = '#1c1c1c';
-    ctx.fillRect(pad, y - 6, W - pad*2, 1);
-  });
-
-  y += 20;
-
-  // Payment schedule header
-  ctx.fillStyle = '#c9a84c';
-  ctx.font = 'bold 14px Arial';
-  ctx.fillText('PAYMENT SCHEDULE (Construction-Linked Plan)', pad, y);
-  y += 18;
-
-  const payMilestones = [
-    ['Booking', Math.max(d.saleValue * 0.10, 1000000)],
-    ['AOS (15 days)', d.saleValue * 0.20 - Math.max(d.saleValue * 0.10, 1000000)],
-    ['Foundation', d.saleValue * 0.15],
-    ['2 Basement Slabs', d.saleValue * 0.15],
-    ['3rd Floor Slab', d.saleValue * 0.10],
-    ['7th Floor Slab', d.saleValue * 0.10],
-    ['10th Floor Slab', d.saleValue * 0.10],
-    ['Brickwork', d.saleValue * 0.10],
-    ['Tiles & Flooring', d.saleValue * 0.05],
-    ['21 days before Handover', d.saleValue * 0.05 + d.gstAmt + d.regTotal + d.otherTotal],
-  ];
-  payMilestones.forEach(([label, amt]) => {
-    ctx.fillStyle = '#888';
-    ctx.font = '12px Arial';
-    ctx.fillText(label, pad, y);
-    ctx.fillStyle = '#ddd';
+    ctx.fillStyle = isLast ? '#c9a84c' : '#ddd';
     ctx.font = '12px monospace';
-    ctx.textAlign = 'right';
-    ctx.fillText(fmt(amt), W - pad, y);
-    ctx.textAlign = 'left';
-    y += 20;
+    ctx.fillText(row[1], 360, y);
+    ctx.fillStyle = '#666';
+    ctx.fillText(row[2], 560, y);
+    y += 22;
+    if (!isLast) { ctx.fillStyle = '#1c1c1c'; ctx.fillRect(pad, y-6, W-pad*2, 1); }
   });
 
-  // Footer
-  ctx.fillStyle = '#333';
-  ctx.fillRect(pad, H - 36, W - pad*2, 1);
-  ctx.fillStyle = '#444';
-  ctx.font = '11px Arial';
-  ctx.fillText('Generated by Apartment Cost Analyzer · ' + new Date().toLocaleString('en-IN'), pad, H - 16);
+  y += 10;
+  ctx.fillStyle = '#333'; ctx.fillRect(pad, 780, W-pad*2, 1);
+  ctx.fillStyle = '#444'; ctx.font = '10px Arial';
+  ctx.fillText('Apartment Cost Analyzer · ' + new Date().toLocaleString('en-IN'), pad, 796);
   ctx.textAlign = 'right';
-  ctx.fillText('Prices in INR · All charges approximate', W - pad, H - 16);
+  ctx.fillText('All charges approximate · Prices in INR', W-pad, 796);
   ctx.textAlign = 'left';
 
-  // Download
   canvas.toBlob(blob => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = 'apartment_cost_analysis.png';
-    a.click();
+    a.href = url; a.download = 'apartment_cost_snapshot.png'; a.click();
     URL.revokeObjectURL(url);
     showToast('Image saved!');
   }, 'image/png');
 }
 
-// =========================================================
-// EXPORT — EXCEL
-// inlineStr cells (no sharedStrings) + correct OOXML
-// ZIP STORE method, byte-explicit LE — tested working
-// =========================================================
-
-function _u16(b,o,v){b[o]=v&255;b[o+1]=(v>>8)&255;}
-function _u32(b,o,v){b[o]=v&255;b[o+1]=(v>>8)&255;b[o+2]=(v>>16)&255;b[o+3]=(v>>>24)&255;}
-
+// =====================================================================
+// EXCEL UTILITIES
+// =====================================================================
+function _u16(b,o,vv){b[o]=vv&255;b[o+1]=(vv>>8)&255;}
+function _u32(b,o,vv){b[o]=vv&255;b[o+1]=(vv>>8)&255;b[o+2]=(vv>>16)&255;b[o+3]=(vv>>>24)&255;}
 function buildZip(fileDict){
   const enc=new TextEncoder();
   const T=new Uint32Array(256);
@@ -1304,164 +1493,291 @@ function buildZip(fileDict){
   for(const cd of cdParts){buf.set(cd,pos);pos+=cd.length;}
   buf.set(eocd,pos);return buf;
 }
-
 function xesc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+const STYLE_XML=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="0"/><fonts count="1"><font><name val="Calibri"/><sz val="11"/></font></fonts><fills count="2"><fill><patternFill/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
 
-function exportExcel(){
-  const d=calcData;
-  if(!d.grandTotal){showToast('Please enter property details first');return;}
-  const rate=parseFloat(document.getElementById('loanRate').value);
-  const loanAmt=d.grandTotal*0.8;
-  const emi=(P,r,n)=>{const mr=r/12/100;return mr===0?P/n:P*mr*Math.pow(1+mr,n)/(Math.pow(1+mr,n)-1);};
-  const emi20=emi(loanAmt,rate,240),emi30=emi(loanAmt,rate,360),emi15=emi(loanAmt,rate,180);
-  const svv=d.saleValue;
-
-  const rows=[];
-  const R=(...cells)=>rows.push(cells);
-  const B=()=>rows.push([]);
-  const n=v=>({t:'n',v:Math.round(v)});
-  const s=v=>({t:'s',v:String(v)});
-  const fp=v=>({t:'n',v:parseFloat(parseFloat(v).toFixed(2))});
-
-  R(s('APARTMENT COST ANALYZER — HYDERABAD'));
-  R(s('Generated: '+new Date().toLocaleDateString('en-IN')));
-  B();
-  R(s('PROPERTY INPUTS'));
-  R(s('Carpet Area (sq ft)'),             s(''),  n(d.sqft));
-  R(s('Base Rate (Rs / sq ft)'),          s(''),  n(d.baseRate));
-  R(s('Floor Number'),                    s(''),  n(d.floor));
-  R(s('Amenities Rate (Rs/sft)'),         s(''),  n(d.amenitiesRate));
-  R(s('Car Parking (Rs)'),                s(''),  n(d.parking));
-  R(s('East Facing Premium (Rs/sft)'),    s(''),  n(d.eastFacing));
-  R(s('Corner Facing Premium (Rs/sft)'),  s(''),  n(d.cornerFacing));
-  R(s('Legal & Documentation (Rs)'),      s(''),  n(d.legalBase));
-  R(s('Legal GST (%)'),                   s(''),  fp(d.legalGstPct));
-  R(s('Advance Maintenance (Rs/sft/mo)'), s(''),  fp(d.maintRate));
-  R(s('Maintenance GST (%)'),             s(''),  fp(d.maintGstPct));
-  R(s('Corpus Fund (Rs/sft)'),            s(''),  n(d.corpusRate));
-  R(s('Stamp Duty (%)'),                  s(''),  fp(d.stampDutyPct));
-  R(s('Registration Fee (%)'),            s(''),  fp(d.regFeePct));
-  R(s('GST on Construction (%)'),         s(''),  fp(d.gstPct));
-  R(s('Home Loan Interest Rate (%)'),     s(''),  fp(rate));
-  B();
-  R(s('COST BREAKDOWN'));
-  R(s('Component'),s('Calculation'),s('Amount (Rs)'),s('Notes'));
-  R(s('Base Price'),             s(d.sqft+' sft x Rs'+d.baseRate),                               n(d.baseAmt),       s(''));
-  R(s('Amenities / Clubhouse'),  s(d.sqft+' x Rs'+d.amenitiesRate),                              n(d.amenitiesAmt),  s(''));
-  R(s('Floor Rise Charges'),     d.floorsAbove5>0?s(d.sqft+' x Rs'+d.floorRiseRate+' x '+d.floorsAbove5+' floors'):s('N/A below 6th floor'), n(d.floorRiseAmt), s(''));
-  R(s('Car Parking (2 slots)'),  s('Fixed'),                                                     n(d.parking),       s(''));
-  R(s('East Facing Premium'),    s(d.eastFacing>0?d.sqft+' x Rs'+d.eastFacing:'None'),           n(d.eastAmt),       s(''));
-  R(s('Corner Facing Premium'),  s(d.cornerFacing>0?d.sqft+' x Rs'+d.cornerFacing:'None'),      n(d.cornerAmt),     s(''));
-  R(s('SALE VALUE (for GST & Reg)'),s('Sum of above'),                                           n(d.saleValue),     s('Base for all % calculations'));
-  B();
-  R(s('GOVERNMENT CHARGES'));
-  R(s('GST on Construction'),    s(d.gstPct+'% of Sale Value'),                                  n(d.gstAmt),        s('5% under-construction | 0% ready-to-move'));
-  R(s('Stamp Duty'),             s(d.stampDutyPct+'% of Sale Value'),                            n(d.stampAmt),      s('Telangana: 4%'));
-  R(s('Registration Fee'),       s(d.regFeePct+'% of Sale Value'),                               n(d.regFeeAmt),     s('Hyderabad: 0.5%'));
-  R(s('Total Govt. Charges'),    s(''),                                                          n(d.gstAmt+d.regTotal),s(''));
-  B();
-  R(s('OTHER CHARGES'));
-  R(s('Legal & Documentation'),  s('Base amount'),                                               n(d.legalBase),     s(''));
-  R(s('GST on Legal'),           s(d.legalGstPct+'%'),                                           n(d.legalGstAmt),   s(''));
-  R(s('Advance Maintenance 24mo'),s(d.sqft+' x Rs'+d.maintRate+' x 24'),                        n(d.maintAmt),      s(''));
-  R(s('GST on Maintenance'),     s(d.maintGstPct+'%'),                                           n(d.maintGstAmt),   s(''));
-  R(s('Corpus Fund'),            s(d.sqft+' x Rs'+d.corpusRate),                                n(d.corpusAmt),     s(''));
-  R(s('Total Other Charges'),    s(''),                                                          n(d.otherTotal),    s(''));
-  B();
-  R(s('GRAND TOTAL - COST TO PURCHASE'),s(''),n(d.grandTotal),s(inCr(d.grandTotal)));
-  B();
-  R(s('PAYMENT SCHEDULE'));
-  R(s('Milestone'),s('Pct'),s('Amount (Rs)'),s(''));
-  const booking=Math.max(svv*0.10,1000000);
-  const payM=[
-    ['Booking Amount',booking,'10% or Rs10L'],
-    ['On AOS (15 days)',svv*0.20-booking,'20% less Booking'],
-    ['Foundation',svv*0.15,'15%'],
-    ['2 Basement Slabs',svv*0.15,'15%'],
-    ['3rd Floor Slab',svv*0.10,'10%'],
-    ['7th Floor Slab',svv*0.10,'10%'],
-    ['10th Floor Slab',svv*0.10,'10%'],
-    ['Brickwork',svv*0.10,'10%'],
-    ['Tiles & Flooring',svv*0.05,'5%'],
-    ['21 days before Handover',svv*0.05+d.gstAmt+d.regTotal+d.otherTotal,'5% + All Charges'],
-  ];
-  payM.forEach(([lbl,amt,pct])=>R(s(lbl),s(pct),n(amt),s('')));
-  R(s('TOTAL'),s(''),n(d.grandTotal),s(''));
-  B();
-  R(s('LOAN ANALYSIS (20% Down)'));
-  R(s('Scenario'),s('Down Payment (Rs)'),s('Monthly EMI (Rs)'),s('Total Interest (Rs)'));
-  R(s('20 Year @ '+rate.toFixed(2)+'%'),n(d.grandTotal*0.2),n(emi20),n(emi20*240-loanAmt));
-  R(s('30 Year @ '+rate.toFixed(2)+'%'),n(d.grandTotal*0.2),n(emi30),n(emi30*360-loanAmt));
-  R(s('15 Year @ '+rate.toFixed(2)+'%'),n(d.grandTotal*0.2),n(emi15),n(emi15*180-loanAmt));
-  R(s('Total paid 20yr incl down'),s(''),n(emi20*240+d.grandTotal*0.2),s(''));
-  R(s('Total paid 30yr incl down'),s(''),n(emi30*360+d.grandTotal*0.2),s(''));
-
-  // Build worksheet XML using inlineStr — no sharedStrings.xml file needed
+function rowsToSheetXml(rows) {
   const colL=n=>{let s='';for(;n>=0;n=Math.floor(n/26)-1)s=String.fromCharCode(65+n%26)+s;return s;};
-  let shXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols><col min="1" max="1" width="42" customWidth="1"/><col min="2" max="2" width="28" customWidth="1"/><col min="3" max="3" width="18" customWidth="1"/><col min="4" max="4" width="35" customWidth="1"/></cols><sheetData>`;
+  let xml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols><col min="1" max="1" width="44" customWidth="1"/><col min="2" max="2" width="28" customWidth="1"/><col min="3" max="3" width="18" customWidth="1"/><col min="4" max="4" width="36" customWidth="1"/></cols><sheetData>`;
   rows.forEach((row,ri)=>{
-    if(!row||row.length===0)return;
-    shXml+=`<row r="${ri+1}">`;
+    if(!row||!row.length) return;
+    xml+=`<row r="${ri+1}">`;
     row.forEach((cell,ci)=>{
-      if(!cell)return;
+      if(cell===null||cell===undefined) return;
       const ref=colL(ci)+(ri+1);
-      if(cell.t==='n'){shXml+=`<c r="${ref}"><v>${cell.v}</v></c>`;}
-      else{shXml+=`<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xesc(cell.v)}</t></is></c>`;}
+      if(typeof cell==='number') xml+=`<c r="${ref}"><v>${Math.round(cell*100)/100}</v></c>`;
+      else xml+=`<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xesc(String(cell))}</t></is></c>`;
     });
-    shXml+=`</row>`;
+    xml+=`</row>`;
   });
-  shXml+=`</sheetData></worksheet>`;
+  xml+=`</sheetData></worksheet>`;
+  return xml;
+}
 
-  // Styles matching openpyxl minimal correct structure
-  const styXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="0"/><fonts count="1"><font><name val="Calibri"/><sz val="11"/></font></fonts><fills count="2"><fill><patternFill/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+function buildExcel(sheets) {
+  // sheets: [{name, rows}]
+  const sheetEls = sheets.map((s,i) => `<sheet name="${xesc(s.name)}" sheetId="${i+1}" r:id="rId${i+2}"/>`).join('');
+  const relEls = sheets.map((s,i) => `<Relationship Id="rId${i+2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join('');
+  const overrides = sheets.map((_,i) => `<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('');
 
-  const buf=buildZip({
-    '[Content_Types].xml':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`,
-    '_rels/.rels':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`,
-    'xl/workbook.xml':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Cost Analysis" sheetId="1" r:id="rId1"/></sheets></workbook>`,
-    'xl/_rels/workbook.xml.rels':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`,
-    'xl/worksheets/sheet1.xml':shXml,
-    'xl/styles.xml':styXml,
-  });
+  const files = {
+    '[Content_Types].xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>${overrides}<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`,
+    '_rels/.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`,
+    'xl/workbook.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheetEls}</sheets></workbook>`,
+    'xl/_rels/workbook.xml.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>${relEls}</Relationships>`,
+    'xl/styles.xml': STYLE_XML,
+  };
+  sheets.forEach((s,i) => { files[`xl/worksheets/sheet${i+1}.xml`] = rowsToSheetXml(s.rows); });
+  return buildZip(files);
+}
 
-  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download='apartment_cost_analysis.xlsx';a.click();
+function downloadExcel(buf, filename) {
+  const blob = new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
   URL.revokeObjectURL(url);
-  showToast('Excel downloaded!');
 }
 
+// =====================================================================
+// EXPORT — DETAIL EXCEL
+// =====================================================================
+function buildDetailRows() {
+  const d = DD;
+  if (!d.grandTotal) return null;
+  const R = (...c) => c;
+  const B = () => [];
+  const rows = [];
+  rows.push(['APARTMENT COST ANALYZER — HYDERABAD']);
+  rows.push(['Generated: ' + new Date().toLocaleDateString('en-IN')]);
+  rows.push(B());
+  rows.push(['PROPERTY DETAILS']);
+  rows.push(['Carpet Area (sq ft)', '', d.sqft]);
+  rows.push(['Base Rate (₹/sft)', '', d.rate]);
+  rows.push(['Floor Number', '', d.floor || '—']);
+  rows.push(['Property Type', '', d.uc ? 'Under Construction' : 'Ready to Move']);
+  rows.push(B());
 
-// =========================================================
+  rows.push(['COST BREAKDOWN']);
+  rows.push(['Component', 'Calculation', 'Amount (₹)', 'Notes']);
+  rows.push(['Base Price', `${d.sqft} × ₹${d.rate}`, d.baseAmt, '']);
+  if (d.floorsAbove5 > 0) rows.push(['Floor Rise Charges', `${d.sqft} × ₹${d.floorrise} × ${d.floorsAbove5} fl`, d.floorRiseAmt, '']);
+  if (d.inclParking) rows.push(['Car Parking (2 slots)', 'Fixed', d.parkingAmt, '']);
+  if (d.inclEast) rows.push(['East Facing Premium', `${d.sqft} × ₹100`, d.eastAmt, '']);
+  if (d.inclCorner) rows.push(['Corner Facing Premium', `${d.sqft} × ₹100`, d.cornerAmt, '']);
+  rows.push(['SALE VALUE (GST & Reg basis)', 'Sum above', d.saleValue, '']);
+  rows.push(B());
+
+  rows.push(['GOVERNMENT CHARGES']);
+  if (d.uc) rows.push(['GST on Construction', `${d.gstPct}%`, d.gstAmt, '5% for under-construction']);
+  rows.push(['Stamp Duty', `${d.stampPct}%`, d.stampAmt, 'Telangana: 4%']);
+  rows.push(['Registration Fee', `${d.regPct}%`, d.regFeeAmt, 'Hyderabad: 0.5%']);
+  rows.push(['Total Govt. Charges', '', d.gstAmt + d.regTotal, '']);
+  rows.push(B());
+
+  rows.push(['OTHER CHARGES']);
+  if (d.inclAmenities) rows.push(['Amenities / Clubhouse', MODES.amenities === 'sqft' ? `${d.sqft} × ₹${v('d-amenities-sqft')}` : 'Lumpsum', d.amenitiesAmt, '']);
+  if (d.inclCorpus) rows.push(['Corpus Fund', MODES.corpus === 'sqft' ? `${d.sqft} × ₹${v('d-corpus-sqft')}` : 'Lumpsum', d.corpusAmt, '']);
+  if (d.inclInfra) rows.push(['Infrastructure Charges', MODES.infra === 'sqft' ? `${d.sqft} × ₹${v('d-infra-sqft')}` : 'Lumpsum', d.infraAmt, '']);
+  if (d.inclMaint) {
+    rows.push(['Advance Maintenance', `${d.sqft} × ₹${d.maintRate} × ${d.maintMonths} mo`, d.maintBase, '']);
+    rows.push(['GST on Maintenance', `${d.maintGstPct}%`, d.maintGst, '']);
+  }
+  if (d.inclLegal) {
+    rows.push(['Legal & Documentation', 'Base', d.legalBase, '']);
+    rows.push(['GST on Legal', `${d.legalGstPct}%`, d.legalGst, '']);
+  }
+  rows.push(['Total Other Charges', '', d.otherTotal, '']);
+  rows.push(B());
+  rows.push(['GRAND TOTAL — COST TO PURCHASE', '', d.grandTotal, inCr(d.grandTotal)]);
+  rows.push(B());
+
+  rows.push(['PAYMENT SCHEDULE (Construction-Linked)']);
+  rows.push(['Milestone', '%', 'Amount (₹)', '']);
+  const sv = d.saleValue;
+  const booking = Math.max(sv * 0.10, 1000000);
+  [['Booking Amount', booking, '10% or ₹10L'],
+   ['On AOS (15 days)', sv*0.20-booking, '20% less Booking'],
+   ['Foundation', sv*0.15, '15%'],
+   ['2 Basement Slabs', sv*0.15, '15%'],
+   ['3rd Floor Slab', sv*0.10, '10%'],
+   ['7th Floor Slab', sv*0.10, '10%'],
+   ['10th Floor Slab', sv*0.10, '10%'],
+   ['Brickwork', sv*0.10, '10%'],
+   ['Tiles & Flooring', sv*0.05, '5%'],
+   ['21 Days Before Handover', sv*0.05+d.gstAmt+d.regTotal+d.otherTotal, '5% + Charges']
+  ].forEach(([lbl, amt, pct]) => rows.push([lbl, pct, amt, '']));
+  rows.push(['TOTAL', '', d.grandTotal, '']);
+
+  return rows;
+}
+
+function buildLoanRows() {
+  const l = LD;
+  if (!l.loan) return null;
+  const rows = [];
+  rows.push(['LOAN ANALYSIS — APARTMENT COST ANALYZER']);
+  rows.push(['Generated: ' + new Date().toLocaleDateString('en-IN')]);
+  rows.push([]);
+  rows.push(['LOAN INPUTS']);
+  rows.push(['Total Property Cost (₹)', '', l.total]);
+  rows.push(['Own Contribution (₹)', '', l.own]);
+  rows.push(['Loan Amount (₹)', '', l.loan]);
+  rows.push(['Interest Rate (% p.a.)', '', l.rate]);
+  rows.push([]);
+
+  rows.push(['EMI SCENARIOS']);
+  rows.push(['Scenario', 'Monthly EMI (₹)', 'Total Interest (₹)', 'Total Paid incl. contribution (₹)']);
+  [15,20,30].forEach(yr => {
+    const emi = calcEMI(l.loan, l.rate, yr);
+    const interest = emi * yr * 12 - l.loan;
+    rows.push([`${yr} Year @ ${l.rate.toFixed(2)}%`, Math.round(emi), Math.round(interest), Math.round(emi * yr * 12 + l.own)]);
+  });
+  rows.push([]);
+
+  rows.push(['5-YEAR LOAN STATUS']);
+  rows.push(['Scenario', 'Principal Paid (₹)', 'Interest Paid (₹)', 'Balance Remaining (₹)']);
+  [15,20,30].forEach(yr => {
+    const y5 = loanAtYear(l.loan, l.rate, yr, 5);
+    rows.push([`${yr} Year loan`, Math.round(y5.principalPaid), Math.round(y5.interestPaid), Math.round(y5.balance)]);
+  });
+  rows.push([]);
+
+  const cy = parseInt(el('l-cy').value) || 10;
+  rows.push([`LOAN STATUS AT YEAR ${cy}`]);
+  rows.push(['Scenario', 'Principal Paid (₹)', 'Interest Paid (₹)', 'Balance Remaining (₹)']);
+  [15,20,30].forEach(yr => {
+    const cyData = loanAtYear(l.loan, l.rate, yr, cy);
+    rows.push([`${yr} Year loan`, Math.round(cyData.principalPaid), Math.round(cyData.interestPaid), Math.round(cyData.balance)]);
+  });
+  rows.push([]);
+
+  const extraEmi = v('adv-extra-emi');
+  const extraLump = v('adv-extra-lump');
+  if (extraEmi > 0 || extraLump > 0) {
+    rows.push(['ADVANCED — EXTRA PAYMENTS PROJECTION']);
+    rows.push([`Extra EMIs/year: ${extraEmi}`, `Extra lumpsum/year: ₹${Math.round(extraLump).toLocaleString('en-IN')}`, '', '']);
+    rows.push(['Scenario', 'Actual Tenure (yrs)', 'Years Saved', 'Interest Saved (₹)']);
+    [15,20,30].forEach(yr => {
+      const normal = simulateLoan(l.loan, l.rate, yr, 0, 0);
+      const adv = simulateLoan(l.loan, l.rate, yr, extraEmi, extraLump);
+      rows.push([`${yr} Year loan`, parseFloat(adv.actualYears), parseFloat(adv.yearsSaved), Math.round(normal.totalInterest - adv.totalInterest)]);
+    });
+  }
+
+  return rows;
+}
+
+function exportDetailExcel() {
+  const rows = buildDetailRows();
+  if (!rows) { showToast('Run Detailed Cost Analysis first'); return; }
+  const buf = buildExcel([{ name: 'Cost Analysis', rows }]);
+  downloadExcel(buf, 'apartment_cost_analysis.xlsx');
+  showToast('Detail Excel downloaded!');
+}
+
+function exportLoanExcel() {
+  const rows = buildLoanRows();
+  if (!rows) { showToast('Complete Loan Analysis first'); return; }
+  const buf = buildExcel([{ name: 'Loan Analysis', rows }]);
+  downloadExcel(buf, 'apartment_loan_analysis.xlsx');
+  showToast('Loan Excel downloaded!');
+}
+
+function exportCombinedExcel() {
+  const dRows = buildDetailRows();
+  const lRows = buildLoanRows();
+  if (!dRows && !lRows) { showToast('Complete at least one analysis first'); return; }
+  const sheets = [];
+  if (dRows) sheets.push({ name: 'Cost Analysis', rows: dRows });
+  if (lRows) sheets.push({ name: 'Loan Analysis', rows: lRows });
+  const buf = buildExcel(sheets);
+  downloadExcel(buf, 'apartment_full_analysis.xlsx');
+  showToast(`Combined Excel downloaded (${sheets.length} sheet${sheets.length>1?'s':''})!`);
+}
+
+// =====================================================================
 // RESET
-// =========================================================
-function resetForm() {
-  document.getElementById('sqft').value = 1500;
-  document.getElementById('baseRate').value = 7500;
-  document.getElementById('amenitiesRate').value = 400;
-  document.getElementById('floor').value = 1;
-  document.getElementById('parking').value = 400000;
-  document.getElementById('floorRiseRate').value = 25;
-  document.getElementById('eastFacing').checked = false;
-  document.getElementById('cornerFacing').checked = false;
-  document.getElementById('legal').value = 25000;
-  document.getElementById('legalGst').value = 18;
-  document.getElementById('maintRate').value = 4;
-  document.getElementById('maintGst').value = 18;
-  document.getElementById('corpus').value = 100;
-  document.getElementById('stampDuty').value = 4;
-  document.getElementById('regFee').value = 0.5;
-  document.getElementById('gstRate').value = 5;
-  calculate();
-  showToast('Form reset to defaults');
+// =====================================================================
+function resetAll() {
+  // Quick calc
+  el('q-sqft').value = 1500;
+  el('q-rate').value = 7500;
+  el('q-reg').value = 4.5;
+  el('q-gst').value = 5;
+  el('q-uc').checked = false;
+
+  // Detail
+  el('d-sqft').value = 1500;
+  el('d-rate').value = 7500;
+  el('d-floor').value = 1;
+  el('d-floorrise').value = 25;
+  el('d-parking').value = 400000;
+  el('d-incl-floor').checked = true;
+  el('d-incl-parking').checked = true;
+  el('d-incl-east').checked = false;
+  el('d-incl-corner').checked = false;
+  el('d-incl-amenities').checked = true;
+  el('d-incl-corpus').checked = true;
+  el('d-incl-infra').checked = false;
+  el('d-incl-maint').checked = true;
+  el('d-incl-legal').checked = true;
+  el('d-amenities-sqft').value = 400;
+  el('d-amenities-lump').value = 0;
+  el('d-corpus-sqft').value = 100;
+  el('d-corpus-lump').value = 0;
+  el('d-infra-sqft').value = 50;
+  el('d-infra-lump').value = 0;
+  el('d-maint-rate').value = 4;
+  el('d-maint-months').value = 24;
+  el('d-maint-gst').value = 18;
+  el('d-legal').value = 25000;
+  el('d-legal-gst').value = 18;
+  el('d-stamp').value = 4;
+  el('d-regfee').value = 0.5;
+  el('d-gst').value = 5;
+  ['floor','parking','east','corner','amenities','corpus','infra','maint','legal'].forEach(k => {
+    const row = el(`cfrow-${k}`);
+    const checked = el(`d-incl-${k}`).checked;
+    if (checked) row.classList.remove('cf-disabled'); else row.classList.add('cf-disabled');
+  });
+  MODES.amenities = MODES.corpus = MODES.infra = 'sqft';
+  ['amenities','corpus','infra'].forEach(k => {
+    el(`mb-${k}-sqft`).classList.add('active'); el(`mb-${k}-lump`).classList.remove('active');
+    el(`d-${k}-sqft`).style.display = ''; el(`d-${k}-lump`).style.display = 'none';
+    const u = el(`unit-${k}`); if(u) u.textContent = '₹/sft';
+  });
+
+  // Loan
+  el('l-own').value = 0;
+  el('l-rate').value = 8.75;
+  el('l-cy').value = 10;
+  el('adv-extra-emi').value = 1;
+  el('adv-extra-lump').value = 0;
+  loanTotalLocked = false;
+
+  // Re-run all calcs
+  QD = {}; DD = {}; LD = {};
+  updateQuick();
+  if (detailOpened) { syncUCToDetail(); calcDetail(); }
+  if (loanOpened) { syncLoanTotal(); renderLoans(); }
+
+  showToast('Reset to defaults');
 }
 
-// =========================================================
+// =====================================================================
+// PWA SERVICE WORKER
+// =====================================================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+
+// =====================================================================
 // INIT
-// =========================================================
+// =====================================================================
 updateQuick();
-calculate();
 </script>
 </body>
 </html>
