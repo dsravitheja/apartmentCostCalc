@@ -326,6 +326,60 @@ input:checked + .ts-slider::before { background:var(--accent); transform:transla
   .total-card { padding:18px 14px; }
   .panel-card-body { padding:14px; }
 }
+
+/* ── HUB NAVIGATION ──────────────────────── */
+.hub-nav { background:var(--surface); border-bottom:2px solid var(--border); padding:0 16px; position:sticky; top:0; z-index:100; overflow-x:auto; }
+.hub-nav-inner { max-width:960px; margin:0 auto; display:flex; }
+.hub-tab { padding:13px 20px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:var(--text-dim); background:transparent; border:none; border-bottom:2px solid transparent; cursor:pointer; transition:all .15s; white-space:nowrap; margin-bottom:-2px; }
+.hub-tab:hover:not(:disabled) { color:var(--text); }
+.hub-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.hub-tab:disabled { opacity:.35; cursor:not-allowed; }
+.hub-content { display:none; }
+.hub-content.active { display:block; }
+
+/* ── BUY vs SIP SECTION ──────────────────── */
+.sip-section { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; margin-bottom:14px; }
+.sip-header { display:flex; align-items:center; gap:10px; padding:13px 18px; cursor:pointer; user-select:none; }
+.sip-header:hover { background:rgba(255,255,255,.02); }
+.sip-title { font-size:13px; font-weight:600; color:var(--text); flex:1; }
+.sip-arrow { font-size:12px; color:var(--text-dim); transition:transform .2s; }
+.sip-section.open .sip-arrow { transform:rotate(180deg); }
+.sip-body { display:none; border-top:1px solid var(--border); padding:16px 18px; }
+.sip-section.open .sip-body { display:block; }
+.sip-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:14px; }
+@media(max-width:640px){ .sip-grid { grid-template-columns:1fr; } }
+.sip-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px; }
+.sip-card-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.1em; margin-bottom:10px; }
+.sip-scenario { border-top:1px dashed var(--border); padding-top:8px; margin-top:8px; }
+.sip-scenario:first-of-type { border-top:none; margin-top:0; padding-top:0; }
+.sip-sc-lbl { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); margin-bottom:5px; }
+.verdict-row .ls-lbl, .verdict-row .ls-val { font-weight:600; }
+.sip-custom-inputs { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:12px; padding:12px 14px; background:var(--surface); border:1px solid var(--border); border-radius:8px; }
+.sip-custom-lbl { font-size:13px; color:var(--text-mid); font-weight:600; flex-shrink:0; }
+.sip-inline-field { display:flex; align-items:center; gap:6px; }
+.sip-inline-field label { font-size:11px; color:var(--text-dim); }
+.sip-inline-input { font-family:'DM Mono',monospace; font-size:14px; color:var(--accent2); background:var(--surface2); border:1px solid var(--hl-border); border-radius:6px; padding:5px 10px; outline:none; width:72px; }
+.sip-inline-input:focus { border-color:var(--accent); }
+.sip-custom-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+@media(max-width:640px){ .sip-custom-grid { grid-template-columns:1fr; } }
+.sip-custom-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px; }
+.sip-custom-title { font-size:11px; color:var(--accent); font-weight:600; text-transform:uppercase; letter-spacing:.08em; margin-bottom:8px; }
+
+/* ── STANDALONE SIP PLANNER ──────────────── */
+.sip-planner-tabs { display:flex; gap:0; background:var(--surface2); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:18px; }
+.sip-planner-tab { flex:1; padding:10px 12px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:var(--text-dim); background:transparent; border:none; cursor:pointer; transition:all .15s; text-align:center; }
+.sip-planner-tab.active { background:var(--accent); color:#0f0f0f; }
+.sip-planner-tab:hover:not(.active) { color:var(--text); }
+.sp-result-card { background:linear-gradient(135deg,#1c1a11 0%,#1a1a1a 100%); border:1px solid var(--accent); border-radius:14px; padding:22px 18px; text-align:center; margin-bottom:14px; position:relative; overflow:hidden; }
+.sp-result-card::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:200px; height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent); }
+.sp-result-label { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-dim); margin-bottom:6px; }
+.sp-result-value { font-family:'Playfair Display',serif; font-size:clamp(26px,6vw,42px); font-weight:900; color:var(--green); line-height:1; }
+.sp-result-sub { font-size:13px; color:var(--text-dim); margin-top:5px; }
+.milestone-table { width:100%; border-collapse:collapse; font-size:12px; }
+.milestone-table th { text-align:left; padding:6px 12px; font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); border-bottom:1px solid var(--border); }
+.milestone-table td { padding:6px 12px; border-bottom:1px solid #1c1c1c; font-family:'DM Mono',monospace; }
+.milestone-table td:first-child { color:var(--text-dim); font-family:'DM Sans',sans-serif; }
+.milestone-table tr:last-child td { border-bottom:none; }
 </style>
 </head>
 <body>
@@ -337,6 +391,17 @@ input:checked + .ts-slider::before { background:var(--accent); transform:transla
   </div>
 </div>
 
+<!-- ===== HUB NAVIGATION ===== -->
+<nav class="hub-nav">
+  <div class="hub-nav-inner">
+    <button class="hub-tab active" id="ht-apartment" onclick="switchHub('apartment')">🏢 Apartment</button>
+    <button class="hub-tab" id="ht-sip" onclick="switchHub('sip')">📈 SIP Planner</button>
+    <button class="hub-tab" disabled>🏦 FD/RD <small style="font-size:9px;font-weight:400;opacity:.7">soon</small></button>
+    <button class="hub-tab" disabled>💰 Net Worth <small style="font-size:9px;font-weight:400;opacity:.7">soon</small></button>
+  </div>
+</nav>
+
+<div class="hub-content active" id="hub-apartment">
 <div class="main">
 
 <!-- ===== QUICK CALC ===== -->
@@ -755,6 +820,35 @@ input:checked + .ts-slider::before { background:var(--accent); transform:transla
     </div>
   </div>
 
+  <!-- Buy vs SIP section -->
+  <div class="sip-section" id="sip-section">
+    <div class="sip-header" onclick="toggleSIP()">
+      <span style="font-size:16px;">📈</span>
+      <span class="sip-title">Buy vs. SIP: What if you invested instead?</span>
+      <span class="sip-arrow">▼</span>
+    </div>
+    <div class="sip-body">
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;">
+        If instead of buying, you invested the same EMI amount monthly in a SIP — how much corpus would you accumulate?
+        Compare across 3 return scenarios for each loan tenure.
+      </p>
+      <div class="sip-grid" id="sip-cards"></div>
+      <div class="sip-custom-inputs">
+        <span class="sip-custom-lbl">Custom scenario:</span>
+        <div class="sip-inline-field">
+          <label>CAGR %</label>
+          <input type="number" class="sip-inline-input" id="sip-cagr" value="12" step="0.5" oninput="renderSIPComparison()">
+        </div>
+        <div class="sip-inline-field">
+          <label>Duration (yrs)</label>
+          <input type="number" class="sip-inline-input" id="sip-years" value="20" min="1" max="50" oninput="renderSIPComparison()">
+        </div>
+        <span style="font-size:10px;color:#555;">Equity MFs ≈12% · Index ≈11% · Balanced ≈9%</span>
+      </div>
+      <div class="sip-custom-grid" id="sip-custom-cards"></div>
+    </div>
+  </div>
+
   <div class="btn-row">
     <button class="btn btn-green" onclick="exportLoanExcel()">📊 Export Loan Excel</button>
     <button class="btn btn-blue" id="btn-combined-from-loan" onclick="exportCombinedExcel()" style="display:none;">📋 Export Combined</button>
@@ -762,6 +856,154 @@ input:checked + .ts-slider::before { background:var(--accent); transform:transla
 </div><!-- /section-loan -->
 
 </div><!-- /main -->
+</div><!-- /hub-apartment -->
+
+<!-- ===== SIP PLANNER HUB ===== -->
+<div class="hub-content" id="hub-sip">
+  <div class="main">
+    <div class="section-title">📈 SIP Planner</div>
+    <div class="sip-planner-tabs">
+      <button class="sip-planner-tab active" id="spt-monthly" onclick="switchSIPPlannerTab('monthly')">💰 Monthly SIP</button>
+      <button class="sip-planner-tab" id="spt-stepup" onclick="switchSIPPlannerTab('stepup')">📈 Step-up SIP</button>
+      <button class="sip-planner-tab" id="spt-lumpsum" onclick="switchSIPPlannerTab('lumpsum')">💵 Lumpsum</button>
+    </div>
+
+    <!-- Monthly SIP -->
+    <div id="spt-content-monthly">
+      <div class="panel-card">
+        <div class="panel-card-header"><span>💰</span><span class="pch-title">Monthly SIP Calculator</span></div>
+        <div class="panel-card-body">
+          <div class="grid-3">
+            <div class="field highlight">
+              <label>Monthly SIP (₹)</label>
+              <input type="number" id="sp-monthly" value="10000" oninput="updateSIPPlanner()">
+            </div>
+            <div class="field highlight">
+              <label>Expected CAGR (%)</label>
+              <input type="number" id="sp-cagr" value="12" step="0.5" oninput="updateSIPPlanner()">
+              <span class="field-hint">Equity MFs ≈12% · Index ≈11% · Balanced ≈9%</span>
+            </div>
+            <div class="field highlight">
+              <label>Investment Period (yrs)</label>
+              <input type="number" id="sp-years" value="20" min="1" max="50" oninput="updateSIPPlanner()">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sp-result-card">
+        <div class="sp-result-label">SIP Corpus after <span id="sp-years-lbl">20</span> years</div>
+        <div class="sp-result-value" id="sp-corpus">—</div>
+        <div class="sp-result-sub" id="sp-corpus-exact"></div>
+        <div class="total-sub" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+          <div class="total-sub-item"><div class="ts-lbl">Total Invested</div><div class="ts-val mono" id="sp-invested">—</div></div>
+          <div class="total-sub-item"><div class="ts-lbl">Wealth Gained</div><div class="ts-val mono" style="color:var(--green)" id="sp-gain">—</div></div>
+          <div class="total-sub-item"><div class="ts-lbl">Gains %</div><div class="ts-val mono" style="color:var(--green)" id="sp-gainpct">—</div></div>
+        </div>
+      </div>
+      <div class="panel-card">
+        <div class="panel-card-header"><span>📅</span><span class="pch-title">Corpus at Milestones</span></div>
+        <div class="panel-card-body" style="padding:0;">
+          <table class="milestone-table">
+            <thead><tr><th>Year</th><th>Invested (₹)</th><th>Corpus (₹)</th><th>Gains (₹)</th></tr></thead>
+            <tbody id="sp-milestones"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step-up SIP -->
+    <div id="spt-content-stepup" style="display:none;">
+      <div class="panel-card">
+        <div class="panel-card-header"><span>📈</span><span class="pch-title">Step-up SIP (Annual Increase)</span></div>
+        <div class="panel-card-body">
+          <div class="grid-2" style="margin-bottom:12px;">
+            <div class="field highlight">
+              <label>Starting Monthly SIP (₹)</label>
+              <input type="number" id="su-monthly" value="10000" oninput="updateStepupSIP()">
+            </div>
+            <div class="field highlight">
+              <label>Annual Step-up (%)</label>
+              <input type="number" id="su-stepup" value="10" step="1" min="0" oninput="updateStepupSIP()">
+              <span class="field-hint">Increase SIP by this % each year</span>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field highlight">
+              <label>Expected CAGR (%)</label>
+              <input type="number" id="su-cagr" value="12" step="0.5" oninput="updateStepupSIP()">
+            </div>
+            <div class="field highlight">
+              <label>Investment Period (yrs)</label>
+              <input type="number" id="su-years" value="20" min="1" max="50" oninput="updateStepupSIP()">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sp-result-card">
+        <div class="sp-result-label">Step-up SIP Corpus</div>
+        <div class="sp-result-value" id="su-corpus">—</div>
+        <div class="sp-result-sub" id="su-corpus-exact"></div>
+        <div class="total-sub" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+          <div class="total-sub-item"><div class="ts-lbl">Total Invested</div><div class="ts-val mono" id="su-invested">—</div></div>
+          <div class="total-sub-item"><div class="ts-lbl">vs. Flat SIP</div><div class="ts-val mono" style="color:var(--green)" id="su-vs-flat">—</div></div>
+          <div class="total-sub-item"><div class="ts-lbl">Final SIP/mo</div><div class="ts-val mono" id="su-final-sip">—</div></div>
+        </div>
+      </div>
+      <div class="panel-card">
+        <div class="panel-card-header"><span>📅</span><span class="pch-title">Year-by-year Milestones</span></div>
+        <div class="panel-card-body" style="padding:0;">
+          <table class="milestone-table">
+            <thead><tr><th>Year</th><th>SIP/mo (₹)</th><th>Invested (₹)</th><th>Corpus (₹)</th></tr></thead>
+            <tbody id="su-milestones"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lumpsum -->
+    <div id="spt-content-lumpsum" style="display:none;">
+      <div class="panel-card">
+        <div class="panel-card-header"><span>💵</span><span class="pch-title">Lumpsum Investment Calculator</span></div>
+        <div class="panel-card-body">
+          <div class="grid-3">
+            <div class="field highlight">
+              <label>Principal Amount (₹)</label>
+              <input type="number" id="ls-amount" value="1000000" oninput="updateLumpsum()">
+            </div>
+            <div class="field highlight">
+              <label>Expected CAGR (%)</label>
+              <input type="number" id="ls-cagr" value="12" step="0.5" oninput="updateLumpsum()">
+            </div>
+            <div class="field highlight">
+              <label>Investment Period (yrs)</label>
+              <input type="number" id="ls-years" value="20" min="1" max="50" oninput="updateLumpsum()">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sp-result-card">
+        <div class="sp-result-label">Lumpsum value after <span id="ls-years-lbl">20</span> years</div>
+        <div class="sp-result-value" id="ls-corpus">—</div>
+        <div class="sp-result-sub" id="ls-corpus-exact"></div>
+        <div class="total-sub" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+          <div class="total-sub-item"><div class="ts-lbl">Principal</div><div class="ts-val mono" id="ls-principal">—</div></div>
+          <div class="total-sub-item"><div class="ts-lbl">Wealth Gained</div><div class="ts-val mono" style="color:var(--green)" id="ls-gain">—</div></div>
+          <div class="total-sub-item"><div class="ts-lbl">Multiplier</div><div class="ts-val mono" style="color:var(--green)" id="ls-mult">—</div></div>
+        </div>
+      </div>
+      <div class="panel-card">
+        <div class="panel-card-header"><span>📅</span><span class="pch-title">Growth at Milestones</span></div>
+        <div class="panel-card-body" style="padding:0;">
+          <table class="milestone-table">
+            <thead><tr><th>Year</th><th>Value (₹)</th><th>Gain (₹)</th><th>Multiplier</th></tr></thead>
+            <tbody id="ls-milestones"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /hub-sip -->
 
 <div class="toast" id="toast"></div>
 
@@ -1287,6 +1529,8 @@ function renderLoans() {
 
   // Re-render advanced if open
   if (el('adv-section').classList.contains('open')) renderAdvLoan();
+  // Re-render SIP comparison if open
+  if (el('sip-section').classList.contains('open')) renderSIPComparison();
 }
 
 // =====================================================================
@@ -1664,6 +1908,19 @@ function buildLoanRows() {
       rows.push([`${yr} Year loan`, parseFloat(adv.actualYears), parseFloat(adv.yearsSaved), Math.round(normal.totalInterest - adv.totalInterest)]);
     });
   }
+  rows.push([]);
+
+  rows.push(['BUY vs. SIP COMPARISON']);
+  rows.push(['Scenario', 'Tenure', 'Monthly EMI=SIP', 'Total Paid (Loan)', 'SIP Corpus', 'SIP Advantage']);
+  const sipCagrs = [{label:'Conservative',cagr:9},{label:'Moderate',cagr:12},{label:'Aggressive',cagr:15}];
+  sipCagrs.forEach(sc => {
+    [15,20,30].forEach(yr => {
+      const emi = calcEMI(l.loan, l.rate, yr);
+      const totalPaid = emi * yr * 12;
+      const corpus = calcSIP(emi, sc.cagr, yr);
+      rows.push([`${sc.label} @ ${sc.cagr}%`, `${yr}yr`, Math.round(emi), Math.round(totalPaid), Math.round(corpus), Math.round(corpus - totalPaid)]);
+    });
+  });
 
   return rows;
 }
@@ -1754,6 +2011,8 @@ function resetAll() {
   el('l-cy').value = 10;
   el('adv-extra-emi').value = 1;
   el('adv-extra-lump').value = 0;
+  el('sip-cagr').value = 12;
+  el('sip-years').value = 20;
   loanTotalLocked = false;
 
   // Re-run all calcs
@@ -1763,6 +2022,234 @@ function resetAll() {
   if (loanOpened) { syncLoanTotal(); renderLoans(); }
 
   showToast('Reset to defaults');
+}
+
+// =====================================================================
+// HUB NAVIGATION
+// =====================================================================
+function switchHub(tab) {
+  document.querySelectorAll('.hub-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.hub-tab[id^="ht-"]').forEach(b => b.classList.remove('active'));
+  const content = el('hub-' + tab);
+  const btn = el('ht-' + tab);
+  if (content) content.classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (tab === 'sip') { updateSIPPlanner(); updateStepupSIP(); updateLumpsum(); }
+}
+
+// =====================================================================
+// BUY vs SIP
+// =====================================================================
+function toggleSIP() {
+  const s = el('sip-section');
+  s.classList.toggle('open');
+  if (s.classList.contains('open')) renderSIPComparison();
+}
+
+function calcSIP(monthly, annualCagr, years) {
+  const r = annualCagr / 12 / 100;
+  const n = years * 12;
+  if (r === 0) return monthly * n;
+  return monthly * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+}
+
+function renderSIPComparison() {
+  const loan = LD.loan || 0;
+  const rate = LD.rate || 8.75;
+  const container = el('sip-cards');
+  const customContainer = el('sip-custom-cards');
+
+  if (!loan) {
+    container.innerHTML = '<div class="note-text" style="padding:12px 0;">Enter loan details above first.</div>';
+    customContainer.innerHTML = '';
+    return;
+  }
+
+  const cagrs = [
+    { label: 'Conservative', cagr: 9, color: 'var(--blue)' },
+    { label: 'Moderate', cagr: 12, color: 'var(--green)' },
+    { label: 'Aggressive', cagr: 15, color: 'var(--accent)' },
+  ];
+  const tenures = [15, 20, 30];
+  const property = LD.total || 0;
+
+  container.innerHTML = '';
+  cagrs.forEach(sc => {
+    const card = document.createElement('div');
+    card.className = 'sip-card';
+    let html = `<div class="sip-card-title" style="color:${sc.color}">${sc.label} @ ${sc.cagr}% CAGR</div>`;
+
+    tenures.forEach(yr => {
+      const emi = calcEMI(loan, rate, yr);
+      const totalPaid = emi * yr * 12;
+      const totalInterest = totalPaid - loan;
+      const corpus = calcSIP(emi, sc.cagr, yr);
+      const advantage = corpus - totalPaid;
+      const sipWins = advantage > 0;
+      const breakeven = property > 0
+        ? ((Math.pow(corpus / property, 1 / yr) - 1) * 100).toFixed(1)
+        : null;
+
+      html += `
+        <div class="sip-scenario">
+          <div class="sip-sc-lbl">${yr}-year tenure</div>
+          <div class="loan-stat"><span class="ls-lbl">EMI = SIP amount</span><span class="ls-val">${fmt(emi)}/mo</span></div>
+          <div class="loan-stat"><span class="ls-lbl">Total paid (loan)</span><span class="ls-val red">${inCr(totalPaid)}</span></div>
+          <div class="loan-stat"><span class="ls-lbl">Interest cost</span><span class="ls-val red">${inCr(totalInterest)}</span></div>
+          <div class="loan-stat"><span class="ls-lbl">SIP corpus</span><span class="ls-val" style="color:${sc.color}">${inCr(corpus)}</span></div>
+          <div class="loan-stat verdict-row">
+            <span class="ls-lbl">${sipWins ? '📈 SIP wins by' : '🏢 Buying saves'}</span>
+            <span class="ls-val" style="color:${sipWins ? 'var(--green)' : 'var(--blue)'}">${inCr(Math.abs(advantage))}</span>
+          </div>
+          ${breakeven !== null ? `<div class="note-text" style="padding:3px 0;">Property needs ≥${breakeven}% p.a. growth to match SIP</div>` : ''}
+        </div>`;
+    });
+    card.innerHTML = html;
+    container.appendChild(card);
+  });
+
+  // Custom scenario
+  const customCagr = parseFloat(el('sip-cagr').value) || 12;
+  const customYears = parseInt(el('sip-years').value) || 20;
+  customContainer.innerHTML = '';
+
+  tenures.forEach(yr => {
+    const emi = calcEMI(loan, rate, yr);
+    const totalPaid = emi * customYears * 12;
+    const corpus = calcSIP(emi, customCagr, customYears);
+    const advantage = corpus - totalPaid;
+    const sipWins = advantage > 0;
+    const breakeven = property > 0
+      ? ((Math.pow(corpus / property, 1 / customYears) - 1) * 100).toFixed(1)
+      : null;
+
+    const card = document.createElement('div');
+    card.className = 'sip-custom-card';
+    card.innerHTML = `
+      <div class="sip-custom-title">EMI from ${yr}yr loan · SIP ${customYears}yr @ ${customCagr}%</div>
+      <div class="loan-stat"><span class="ls-lbl">Monthly SIP</span><span class="ls-val">${fmt(emi)}/mo</span></div>
+      <div class="loan-stat"><span class="ls-lbl">Total invested</span><span class="ls-val red">${inCr(totalPaid)}</span></div>
+      <div class="loan-stat"><span class="ls-lbl">SIP corpus</span><span class="ls-val" style="color:var(--accent)">${inCr(corpus)}</span></div>
+      <div class="loan-stat verdict-row">
+        <span class="ls-lbl">${sipWins ? '📈 SIP wins by' : '🏢 Buying saves'}</span>
+        <span class="ls-val" style="color:${sipWins ? 'var(--green)' : 'var(--blue)'}">${inCr(Math.abs(advantage))}</span>
+      </div>
+      ${breakeven !== null ? `<div class="note-text" style="padding:3px 0;">Property needs ≥${breakeven}% p.a. growth to match SIP</div>` : ''}`;
+    customContainer.appendChild(card);
+  });
+}
+
+// =====================================================================
+// SIP PLANNER (standalone hub)
+// =====================================================================
+function switchSIPPlannerTab(tab) {
+  ['monthly', 'stepup', 'lumpsum'].forEach(t => {
+    const content = el('spt-content-' + t);
+    const btn = el('spt-' + t);
+    if (content) content.style.display = t === tab ? '' : 'none';
+    if (btn) btn.classList.toggle('active', t === tab);
+  });
+}
+
+function sipMilestones(maxYears) {
+  const pts = [1, 3, 5, 7, 10, 15, 20, 25, 30].filter(y => y <= maxYears);
+  if (!pts.includes(maxYears)) pts.push(maxYears);
+  return pts;
+}
+
+function updateSIPPlanner() {
+  const monthly = v('sp-monthly');
+  const cagr = parseFloat(el('sp-cagr').value) || 12;
+  const years = parseInt(el('sp-years').value) || 20;
+
+  const corpus = calcSIP(monthly, cagr, years);
+  const invested = monthly * years * 12;
+  const gain = corpus - invested;
+
+  set('sp-years-lbl', years);
+  set('sp-corpus', inCr(corpus));
+  set('sp-corpus-exact', fmt(corpus));
+  set('sp-invested', inCr(invested));
+  set('sp-gain', inCr(gain));
+  set('sp-gainpct', invested > 0 ? (gain / invested * 100).toFixed(0) + '%' : '—');
+
+  el('sp-milestones').innerHTML = sipMilestones(years).map(y => {
+    const c = calcSIP(monthly, cagr, y);
+    const inv = monthly * y * 12;
+    return `<tr>
+      <td>${y} yr</td>
+      <td>${inCr(inv)}</td>
+      <td style="color:var(--green)">${inCr(c)}</td>
+      <td style="color:var(--green)">+${inCr(c - inv)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function calcStepupSIP(startMonthly, annualStepupPct, annualCagr, years) {
+  const r = annualCagr / 12 / 100;
+  let balance = 0, totalInvested = 0, currentSIP = startMonthly;
+  for (let yr = 1; yr <= years; yr++) {
+    for (let mo = 0; mo < 12; mo++) {
+      balance = balance * (1 + r) + currentSIP;
+      totalInvested += currentSIP;
+    }
+    currentSIP *= (1 + annualStepupPct / 100);
+  }
+  return { corpus: balance, totalInvested, finalSIP: currentSIP / (1 + annualStepupPct / 100) };
+}
+
+function updateStepupSIP() {
+  const monthly = v('su-monthly');
+  const stepup = parseFloat(el('su-stepup').value) || 10;
+  const cagr = parseFloat(el('su-cagr').value) || 12;
+  const years = parseInt(el('su-years').value) || 20;
+
+  const { corpus, totalInvested, finalSIP } = calcStepupSIP(monthly, stepup, cagr, years);
+  const flatCorpus = calcSIP(monthly, cagr, years);
+
+  set('su-corpus', inCr(corpus));
+  set('su-corpus-exact', fmt(corpus));
+  set('su-invested', inCr(totalInvested));
+  set('su-vs-flat', (corpus > flatCorpus ? '+' : '') + inCr(corpus - flatCorpus) + ' vs flat');
+  set('su-final-sip', fmt(finalSIP) + '/mo');
+
+  el('su-milestones').innerHTML = sipMilestones(years).map(y => {
+    const { corpus: c, totalInvested: inv } = calcStepupSIP(monthly, stepup, cagr, y);
+    const sipNow = monthly * Math.pow(1 + stepup / 100, y - 1);
+    return `<tr>
+      <td>${y} yr</td>
+      <td>${fmt(sipNow)}</td>
+      <td>${inCr(inv)}</td>
+      <td style="color:var(--green)">${inCr(c)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function updateLumpsum() {
+  const amount = v('ls-amount');
+  const cagr = parseFloat(el('ls-cagr').value) || 12;
+  const years = parseInt(el('ls-years').value) || 20;
+
+  const fv = amount * Math.pow(1 + cagr / 100, years);
+  const gain = fv - amount;
+  const mult = amount > 0 ? fv / amount : 0;
+
+  set('ls-years-lbl', years);
+  set('ls-corpus', inCr(fv));
+  set('ls-corpus-exact', fmt(fv));
+  set('ls-principal', inCr(amount));
+  set('ls-gain', inCr(gain));
+  set('ls-mult', mult.toFixed(2) + '×');
+
+  el('ls-milestones').innerHTML = sipMilestones(years).map(y => {
+    const val = amount * Math.pow(1 + cagr / 100, y);
+    return `<tr>
+      <td>${y} yr</td>
+      <td style="color:var(--green)">${inCr(val)}</td>
+      <td>${inCr(val - amount)}</td>
+      <td>${(val / amount).toFixed(2)}×</td>
+    </tr>`;
+  }).join('');
 }
 
 // =====================================================================
