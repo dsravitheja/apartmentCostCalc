@@ -7,9 +7,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="AptCost">
+<meta name="apple-mobile-web-app-title" content="Dhanam">
 <link rel="manifest" href="manifest.json">
-<title>Apartment Cost Analyzer — Hyderabad</title>
+<title>Dhanam — Personal Financial Hub</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
 
@@ -380,24 +380,55 @@ input:checked + .ts-slider::before { background:var(--accent); transform:transla
 .milestone-table td { padding:6px 12px; border-bottom:1px solid #1c1c1c; font-family:'DM Mono',monospace; }
 .milestone-table td:first-child { color:var(--text-dim); font-family:'DM Sans',sans-serif; }
 .milestone-table tr:last-child td { border-bottom:none; }
+/* ── CAR TAB ─────────────────────────────── */
+.car-card { background:var(--surface2); border:1px solid rgba(124,58,237,.35); border-radius:var(--radius); padding:16px 14px; }
+.car-card-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:#9b7fd4; margin-bottom:6px; }
+.car-badge { display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:2px 8px; border-radius:4px; margin-bottom:10px; }
+.car-badge.baseline { background:rgba(111,163,214,.15); color:var(--blue); }
+.car-badge.carveout { background:rgba(92,184,138,.15); color:var(--green); }
+.car-badge.additive { background:rgba(201,168,76,.12); color:var(--accent); }
+.car-stat { display:flex; justify-content:space-between; align-items:baseline; padding:5px 0; border-bottom:1px solid #1c1c1c; }
+.car-stat:last-child { border-bottom:none; }
+.car-stat-lbl { font-size:11px; color:var(--text-dim); }
+.car-stat-val { font-family:'DM Mono',monospace; font-size:13px; font-weight:500; color:var(--text); }
+.car-stat-val.big { font-family:'Playfair Display',serif; font-size:17px; font-weight:700; color:var(--green); }
+.car-stat-val.red { color:var(--red); }
+.car-stat-val.purple { color:var(--purple); }
+.car-stat-val.accent { color:var(--accent); }
+.car-divider { margin:8px 0; border-top:1px dashed var(--border); padding-top:8px; }
+.car-section-lbl { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); margin-bottom:6px; }
+.car-summary-box { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; margin-bottom:14px; }
+.car-summary-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #1c1c1c; flex-wrap:wrap; gap:8px; }
+.car-summary-row:last-child { border-bottom:none; }
+.car-summary-lbl { font-size:12px; color:var(--text-dim); }
+.car-summary-val { font-family:'DM Mono',monospace; font-size:13px; }
+.cb-derived-box { display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; }
+.cb-derived-item { flex:1; min-width:130px; padding:8px 12px; background:rgba(124,58,237,.08); border-radius:6px; border:1px solid rgba(124,58,237,.25); }
+.cb-derived-lbl { font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.07em; margin-bottom:2px; }
+.cb-derived-val { font-family:'DM Mono',monospace; font-size:15px; color:#c4b5fd; font-weight:600; }
+.depr-table { width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; }
+.depr-table th { text-align:left; padding:6px 12px; font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); border-bottom:1px solid var(--border); }
+.depr-table td { padding:6px 12px; border-bottom:1px solid #1c1c1c; font-family:'DM Mono',monospace; }
+.depr-table td:first-child { color:var(--text-dim); font-family:'DM Sans',sans-serif; }
+.depr-table tr:last-child td { border-bottom:none; }
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="header-inner">
-    <h1>Apartment Cost Analyzer</h1>
-    <p>Hyderabad · Quick estimate → Detailed breakdown → Loan analysis</p>
+    <h1>Dhanam</h1>
+    <p>Your personal financial hub · Home · Car · Grow · Worth</p>
   </div>
 </div>
 
 <!-- ===== HUB NAVIGATION ===== -->
 <nav class="hub-nav">
   <div class="hub-nav-inner">
-    <button class="hub-tab active" id="ht-apartment" onclick="switchHub('apartment')">🏢 Apartment</button>
-    <button class="hub-tab" id="ht-sip" onclick="switchHub('sip')">📈 SIP Planner</button>
-    <button class="hub-tab" disabled>🏦 FD/RD <small style="font-size:9px;font-weight:400;opacity:.7">soon</small></button>
-    <button class="hub-tab" disabled>💰 Net Worth <small style="font-size:9px;font-weight:400;opacity:.7">soon</small></button>
+    <button class="hub-tab active" id="ht-apartment" onclick="switchHub('apartment')">🏠 Dhanam Home</button>
+    <button class="hub-tab" id="ht-car" onclick="switchHub('car')">🚗 Dhanam Car</button>
+    <button class="hub-tab" id="ht-sip" onclick="switchHub('sip')">📈 Dhanam Grow</button>
+    <button class="hub-tab" disabled>💰 Dhanam Worth <small style="font-size:9px;font-weight:400;opacity:.7">soon</small></button>
   </div>
 </nav>
 
@@ -858,10 +889,114 @@ input:checked + .ts-slider::before { background:var(--accent); transform:transla
 </div><!-- /main -->
 </div><!-- /hub-apartment -->
 
+<!-- ===== DHANAM CAR HUB ===== -->
+<div class="hub-content" id="hub-car">
+  <div class="main">
+
+    <div class="section-title">🚗 Company Car Lease — Tax Analysis</div>
+    <div class="panel-card">
+      <div class="panel-card-header"><span>💼</span><span class="pch-title">Salary &amp; Car Policy Inputs</span><span class="pch-tag">Live</span></div>
+      <div class="panel-card-body">
+        <div class="grid-3">
+          <div class="field highlight">
+            <label>Basic Monthly Salary (₹)</label>
+            <input type="number" id="car-basic" value="100000" oninput="renderCarCalc()">
+          </div>
+          <div class="field">
+            <label>Monthly Bonus / Variable (₹)</label>
+            <input type="number" id="car-bonus" value="0" oninput="renderCarCalc()">
+          </div>
+          <div class="field">
+            <label>EPF Employee (%)</label>
+            <input type="number" id="car-epf-pct" value="12" step="0.5" oninput="renderCarCalc()">
+            <span class="field-hint">Applied on basic salary</span>
+          </div>
+        </div>
+        <div class="grid-3" style="margin-top:12px">
+          <div class="field highlight">
+            <label>Car EMI (₹/mo)</label>
+            <input type="number" id="car-emi" value="30000" oninput="renderCarCalc()">
+          </div>
+          <div class="field">
+            <label>Fuel Allowance (₹/mo)</label>
+            <input type="number" id="car-fuel" value="5000" oninput="renderCarCalc()">
+          </div>
+          <div class="field">
+            <label>Driver Allowance (₹/mo)</label>
+            <input type="number" id="car-driver-allow" value="0" oninput="renderCarCalc()">
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-top:14px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-mid);cursor:pointer;">
+            <input type="checkbox" id="car-big-engine" onchange="renderCarCalc()" style="accent-color:var(--purple);width:16px;height:16px;">
+            Engine &gt; 1600cc
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-mid);cursor:pointer;">
+            <input type="checkbox" id="car-has-driver" onchange="renderCarCalc()" style="accent-color:var(--purple);width:16px;height:16px;">
+            Company Driver Provided
+          </label>
+          <span style="margin-left:auto;font-size:11px;color:var(--text-dim);">Tax Regime:</span>
+          <label style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text-mid);cursor:pointer;">
+            <input type="radio" name="car-regime" value="new" checked onchange="renderCarCalc()" style="accent-color:var(--purple);">
+            New Regime (FY2025-26)
+          </label>
+          <label style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text-mid);cursor:pointer;">
+            <input type="radio" name="car-regime" value="old" onchange="renderCarCalc()" style="accent-color:var(--purple);">
+            Old Regime
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div id="car-scenario-cards" class="loan-grid" style="margin-bottom:14px;"></div>
+    <div id="car-summary" style="margin-bottom:14px;"></div>
+
+    <div class="panel-card" style="margin-bottom:28px;">
+      <div class="panel-card-header"><span>ℹ️</span><span class="pch-title">Important Notes &amp; Caveats</span></div>
+      <div class="panel-card-body">
+        <ul style="font-size:12px;color:var(--text-dim);line-height:2;padding-left:16px;">
+          <li>Perquisite per IT Rule 3(2): ≤1600cc = ₹1,800/mo · &gt;1600cc = ₹2,400/mo · company driver = +₹900/mo.</li>
+          <li>Old regime includes standard deduction (₹50,000) + 80C (₹1.5L) only. HRA, 80D excluded for simplicity.</li>
+          <li>New regime (FY2025-26): standard deduction ₹75,000; rebate u/s 87A for taxable ≤ ₹12L.</li>
+          <li>Carve-out (A): your CTC reduces by car package; employer pays EMI/fuel/driver. Your take-home reduces but no car expense.</li>
+          <li>Additive (B): car is on top of your CTC; full salary retained; only perquisite value added to taxable income.</li>
+          <li>Consult a CA for personalised tax planning before restructuring your salary.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-title">🏦 Car Buying — Loan Analysis</div>
+    <div class="loan-top">
+      <div class="loan-inputs-grid">
+        <div class="loan-field">
+          <label>On-Road Price (₹)</label>
+          <input type="number" id="cb-price" class="hl" value="1500000" oninput="renderCarLoan()">
+        </div>
+        <div class="loan-field">
+          <label>Down Payment (₹)</label>
+          <input type="number" id="cb-down" class="hl" value="300000" oninput="renderCarLoan()">
+        </div>
+        <div class="loan-field">
+          <label>Interest Rate (% p.a.)</label>
+          <input type="number" id="cb-rate" value="9.5" step="0.25" oninput="renderCarLoan()">
+        </div>
+      </div>
+      <div id="cb-derived" class="cb-derived-box"></div>
+    </div>
+
+    <div id="cb-cards" class="loan-grid" style="margin-bottom:14px;"></div>
+    <div id="cb-depreciation" class="panel-card" style="margin-bottom:28px;display:none;">
+      <div class="panel-card-header"><span>📉</span><span class="pch-title">Estimated Resale Value (IRDAI Depreciation)</span></div>
+      <div class="panel-card-body" id="cb-depr-body"></div>
+    </div>
+
+  </div>
+</div>
+
 <!-- ===== SIP PLANNER HUB ===== -->
 <div class="hub-content" id="hub-sip">
   <div class="main">
-    <div class="section-title">📈 SIP Planner</div>
+    <div class="section-title">📈 Dhanam Grow — SIP Planner</div>
     <div class="sip-planner-tabs">
       <button class="sip-planner-tab active" id="spt-monthly" onclick="switchSIPPlannerTab('monthly')">💰 Monthly SIP</button>
       <button class="sip-planner-tab" id="spt-stepup" onclick="switchSIPPlannerTab('stepup')">📈 Step-up SIP</button>
@@ -2035,6 +2170,7 @@ function switchHub(tab) {
   if (content) content.classList.add('active');
   if (btn) btn.classList.add('active');
   if (tab === 'sip') { updateSIPPlanner(); updateStepupSIP(); updateLumpsum(); }
+  if (tab === 'car') { renderCarCalc(); renderCarLoan(); }
 }
 
 // =====================================================================
@@ -2265,6 +2401,215 @@ if ('serviceWorker' in navigator) {
 // INIT
 // =====================================================================
 updateQuick();
+
+// =====================================================================
+// DHANAM CAR — TAX & LEASE CALCULATOR
+// =====================================================================
+function calcIncomeTax(annualTaxable, regime) {
+  if (annualTaxable <= 0) return 0;
+  let tax = 0;
+  if (regime === 'new') {
+    const slabs = [[400000,0],[400000,.05],[400000,.10],[400000,.15],[400000,.20],[400000,.25],[Infinity,.30]];
+    let remaining = annualTaxable;
+    for (const [size, rate] of slabs) {
+      if (remaining <= 0) break;
+      const chunk = Math.min(remaining, size);
+      tax += chunk * rate;
+      remaining -= chunk;
+    }
+    if (annualTaxable <= 1200000) tax = 0; // 87A rebate new regime
+  } else {
+    const slabs = [[250000,0],[250000,.05],[500000,.20],[Infinity,.30]];
+    let remaining = annualTaxable;
+    for (const [size, rate] of slabs) {
+      if (remaining <= 0) break;
+      const chunk = Math.min(remaining, size);
+      tax += chunk * rate;
+      remaining -= chunk;
+    }
+    if (annualTaxable <= 500000) tax = 0; // 87A rebate old regime
+  }
+  return tax * 1.04; // 4% cess
+}
+
+function calcPerquisite(bigEngine, hasDriver) {
+  return (bigEngine ? 2400 : 1800) + (hasDriver ? 900 : 0);
+}
+
+function renderCarCalc() {
+  const basic = +v('car-basic') || 0;
+  const bonus = +v('car-bonus') || 0;
+  const epfPct = +v('car-epf-pct') / 100 || 0.12;
+  const carEmi = +v('car-emi') || 0;
+  const carFuel = +v('car-fuel') || 0;
+  const carDriverAllow = +v('car-driver-allow') || 0;
+  const bigEngine = document.getElementById('car-big-engine').checked;
+  const hasDriver = document.getElementById('car-has-driver').checked;
+  const regime = document.querySelector('input[name="car-regime"]:checked').value;
+
+  const carPkg = carEmi + carFuel + carDriverAllow;
+  const perqMonthly = calcPerquisite(bigEngine, hasDriver);
+  const perqAnnual = perqMonthly * 12;
+
+  const stdDed = regime === 'new' ? 75000 : 50000;
+  const deductions80C = regime === 'old' ? 150000 : 0;
+
+  function scenarioCalc(annualGross, carOutOfPocket) {
+    const epfAnnual = Math.min(basic * 12 * epfPct, basic * 12); // EPF on basic
+    const taxable = Math.max(0, annualGross - stdDed - (regime === 'old' ? Math.min(epfAnnual, deductions80C) : 0));
+    const annualTax = calcIncomeTax(taxable, regime);
+    const monthlyTax = annualTax / 12;
+    const monthlyTakeHome = annualGross / 12 - (basic * epfPct) - monthlyTax;
+    return { annualGross, epfAnnual, taxable, annualTax, monthlyTax, monthlyTakeHome, carOutOfPocket };
+  }
+
+  // Baseline: own car, full salary, pay car costs from pocket
+  const baseGross = (basic + bonus) * 12;
+  const base = scenarioCalc(baseGross, carPkg);
+
+  // Carve-out A: effective basic reduces by car package
+  const effectiveBasic = Math.max(0, basic - carPkg);
+  const aGross = (effectiveBasic + bonus) * 12;
+  const aTaxableAdj = Math.max(0, aGross - stdDed - (regime === 'old' ? Math.min(effectiveBasic * 12 * epfPct, 150000) : 0) + perqAnnual);
+  const aTax = calcIncomeTax(aTaxableAdj, regime) ;
+  const aMonthTax = aTax / 12;
+  const aEpfMonthly = effectiveBasic * epfPct;
+  const aMonthTakeHome = aGross / 12 - aEpfMonthly - aMonthTax;
+  const scenA = { annualGross: aGross, taxable: aTaxableAdj, annualTax: aTax, monthlyTax: aMonthTax, monthlyTakeHome: aMonthTakeHome, carOutOfPocket: 0 };
+
+  // Additive B: full salary + car on top; perquisite added to taxable
+  const bGross = baseGross;
+  const bTaxable = Math.max(0, bGross - stdDed - (regime === 'old' ? Math.min(basic * 12 * epfPct, 150000) : 0) + perqAnnual);
+  const bTax = calcIncomeTax(bTaxable, regime);
+  const bMonthTax = bTax / 12;
+  const bEpfMonthly = basic * epfPct;
+  const bMonthTakeHome = bGross / 12 - bEpfMonthly - bMonthTax;
+  const scenB = { annualGross: bGross, taxable: bTaxable, annualTax: bTax, monthlyTax: bMonthTax, monthlyTakeHome: bMonthTakeHome, carOutOfPocket: 0 };
+
+  const baseNetPostCar = base.monthlyTakeHome - carPkg;
+
+  function buildCard(scen, label, badgeClass, isBase) {
+    const effective = isBase ? scen.monthlyTakeHome - carPkg : scen.monthlyTakeHome;
+    const diff = effective - baseNetPostCar;
+    const diffText = diff >= 0
+      ? `<span class="car-stat-val" style="color:var(--green)">+${fmt(diff)}/mo better</span>`
+      : `<span class="car-stat-val" style="color:var(--red)">${fmt(diff)}/mo worse</span>`;
+
+    return `<div class="car-card">
+      <div class="car-card-title">Scenario: ${label}</div>
+      <div class="car-badge ${badgeClass}">${label}</div>
+      <div class="car-stat"><span class="car-stat-lbl">Annual Gross</span><span class="car-stat-val">${fmt(scen.annualGross)}</span></div>
+      <div class="car-stat"><span class="car-stat-lbl">Taxable Income</span><span class="car-stat-val">${fmt(scen.taxable)}</span></div>
+      <div class="car-stat"><span class="car-stat-lbl">Annual Tax + Cess</span><span class="car-stat-val red">${fmt(scen.annualTax)}</span></div>
+      <div class="car-stat"><span class="car-stat-lbl">Monthly Tax</span><span class="car-stat-val red">${fmt(scen.monthlyTax)}</span></div>
+      <div class="car-divider"></div>
+      <div class="car-section-lbl">Monthly Cash Flow</div>
+      <div class="car-stat"><span class="car-stat-lbl">Take-home (pre car)</span><span class="car-stat-val big">${fmt(scen.monthlyTakeHome)}</span></div>
+      <div class="car-stat"><span class="car-stat-lbl">Car out-of-pocket</span><span class="car-stat-val red">${isBase ? '−' + fmt(carPkg) : '₹0'}</span></div>
+      <div class="car-stat"><span class="car-stat-lbl">Effective net/mo</span><span class="car-stat-val accent">${fmt(effective)}</span></div>
+      ${!isBase ? `<div class="car-divider"></div><div class="car-stat"><span class="car-stat-lbl">vs Baseline</span>${diffText}</div>` : ''}
+    </div>`;
+  }
+
+  el('car-scenario-cards').innerHTML =
+    buildCard(base, 'Baseline', 'baseline', true) +
+    buildCard(scenA, 'Carve-out A', 'carveout', false) +
+    buildCard(scenB, 'Additive B', 'additive', false);
+
+  const aAdv = (scenA.monthlyTakeHome) - baseNetPostCar;
+  const bAdv = (scenB.monthlyTakeHome) - baseNetPostCar;
+  let best = 'Baseline (own car)';
+  if (aAdv > 0 && aAdv >= bAdv) best = `Carve-out A (saves ${fmt(aAdv)}/mo)`;
+  else if (bAdv > 0) best = `Additive B (saves ${fmt(bAdv)}/mo)`;
+
+  el('car-summary').innerHTML = `<div class="car-summary-box">
+    <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:12px;">Scenario Comparison</div>
+    <div class="car-summary-row">
+      <span class="car-summary-lbl">Perquisite value (personal use)</span>
+      <span class="car-summary-val" style="color:var(--text-dim)">${fmt(perqMonthly)}/mo · ${fmt(perqAnnual)}/yr</span>
+    </div>
+    <div class="car-summary-row">
+      <span class="car-summary-lbl">Baseline — effective net (post car cost)</span>
+      <span class="car-summary-val">${fmt(baseNetPostCar)}/mo</span>
+    </div>
+    <div class="car-summary-row">
+      <span class="car-summary-lbl">Carve-out A — effective net</span>
+      <span class="car-summary-val" style="color:${aAdv >= 0 ? 'var(--green)' : 'var(--red)'}">${fmt(scenA.monthlyTakeHome)}/mo (${aAdv >= 0 ? '+' : ''}${fmt(aAdv)} vs baseline)</span>
+    </div>
+    <div class="car-summary-row">
+      <span class="car-summary-lbl">Additive B — effective net</span>
+      <span class="car-summary-val" style="color:${bAdv >= 0 ? 'var(--green)' : 'var(--red)'}">${fmt(scenB.monthlyTakeHome)}/mo (${bAdv >= 0 ? '+' : ''}${fmt(bAdv)} vs baseline)</span>
+    </div>
+    <div class="car-summary-row" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;">
+      <span class="car-summary-lbl" style="font-weight:600;color:var(--text)">🏆 Best option</span>
+      <span class="car-summary-val" style="color:var(--accent);font-weight:600">${best}</span>
+    </div>
+  </div>`;
+}
+
+// =====================================================================
+// DHANAM CAR — CAR BUYING LOAN ANALYSIS
+// =====================================================================
+function calcCarDepreciation(price, years) {
+  let val = price * 0.80; // 20% drop year 1
+  for (let y = 1; y < years; y++) val *= 0.85; // 15%/yr thereafter
+  return val;
+}
+
+function renderCarLoan() {
+  const price = +v('cb-price') || 0;
+  const down = +v('cb-down') || 0;
+  const rate = +v('cb-rate') || 9.5;
+  const loan = Math.max(0, price - down);
+
+  el('cb-derived').innerHTML = `
+    <div class="cb-derived-item"><div class="cb-derived-lbl">Loan Amount</div><div class="cb-derived-val">${fmt(loan)}</div></div>
+    <div class="cb-derived-item"><div class="cb-derived-lbl">Down Payment %</div><div class="cb-derived-val">${price > 0 ? ((down/price)*100).toFixed(1) : 0}%</div></div>
+    <div class="cb-derived-item"><div class="cb-derived-lbl">On-Road Price</div><div class="cb-derived-val">${fmt(price)}</div></div>
+  `;
+
+  if (!loan || !rate) { el('cb-cards').innerHTML = ''; return; }
+
+  const tenures = [3, 5, 7];
+  const r = rate / 12 / 100;
+
+  el('cb-cards').innerHTML = tenures.map(yr => {
+    const n = yr * 12;
+    const emi = loan * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+    const total = emi * n;
+    const interest = total - loan;
+    const intPct = (interest / loan * 100).toFixed(1);
+    return `<div class="car-card">
+      <div class="car-card-title">${yr}-Year Loan</div>
+      <div class="car-stat"><span class="car-stat-lbl">Loan Amount</span><span class="car-stat-val">${fmt(loan)}</span></div>
+      <div class="car-stat"><span class="car-stat-lbl">Interest Rate</span><span class="car-stat-val">${rate}% p.a.</span></div>
+      <div class="car-stat"><span class="car-stat-lbl">Monthly EMI</span><span class="car-stat-val big">${fmt(emi)}</span></div>
+      <div class="car-stat"><span class="car-stat-lbl">Total Paid (${n} EMIs)</span><span class="car-stat-val">${fmt(total)}</span></div>
+      <div class="car-stat"><span class="car-stat-lbl">Total Interest</span><span class="car-stat-val red">${fmt(interest)}</span></div>
+      <div class="car-stat"><span class="car-stat-lbl">Interest % of Loan</span><span class="car-stat-val red">${intPct}%</span></div>
+    </div>`;
+  }).join('');
+
+  const deprEl = el('cb-depreciation');
+  const deprBody = el('cb-depr-body');
+  if (price > 0) {
+    deprEl.style.display = '';
+    deprBody.innerHTML = `<table class="depr-table">
+      <thead><tr><th>Year</th><th>Est. Resale Value</th><th>Depreciation from New</th><th>Value Lost</th></tr></thead>
+      <tbody>
+        ${[1,2,3,5,7].map(y => {
+          const resale = calcCarDepreciation(price, y);
+          const lost = price - resale;
+          const pct = (lost/price*100).toFixed(1);
+          return `<tr><td>Year ${y}</td><td>${fmt(resale)}</td><td>${pct}% lost</td><td style="color:var(--red)">${fmt(lost)}</td></tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    <p style="font-size:11px;color:var(--text-dim);margin-top:8px;">Based on IRDAI schedule: 20% year 1, 15%/yr thereafter. Actual resale varies by brand, condition, and market.</p>`;
+  } else {
+    deprEl.style.display = 'none';
+  }
+}
 </script>
 </body>
 </html>
