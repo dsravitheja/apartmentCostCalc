@@ -1,4 +1,4 @@
-const CACHE = 'apt-cost-v1';
+const CACHE = 'apt-cost-v2';
 const ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
@@ -14,7 +14,24 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(r => r || fetch(e.request).catch(() => caches.match('./index.html')))
-  );
+  const req = e.request;
+  const isHTML = req.mode === 'navigate' ||
+    (req.headers.get('accept') || '').includes('text/html');
+
+  if (isHTML) {
+    // Network-first for the app shell so deploys appear immediately,
+    // falling back to cache when offline.
+    e.respondWith(
+      fetch(req)
+        .then(res => {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put('./index.html', copy));
+          return res;
+        })
+        .catch(() => caches.match('./index.html'))
+    );
+  } else {
+    // Cache-first for static assets (manifest, fonts, etc.).
+    e.respondWith(caches.match(req).then(r => r || fetch(req)));
+  }
 });
